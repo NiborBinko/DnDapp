@@ -363,6 +363,16 @@
             margin-bottom: 10px;
         }
         
+        .level-up-feature-item.feature-locked {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            opacity: 0.7;
+        }
+        
+        .level-up-feature-item.feature-locked span {
+            color: var(--text-muted);
+        }
+        
         .level-up-feature-item input { width: auto; margin: 0; }
         
         .ability-increase-section {
@@ -693,37 +703,38 @@
 
         const classFeatures = {
             fighter: {
-                1: { features: ['Fighting Style'], options: [] },
+                1: { features: ['Fighting Style', 'Second Wind'], options: [] },
                 2: { features: ['Action Surge'], options: [] },
-                3: { features: ['Second Wind'], options: [] },
-                5: { features: ['Extra Attack'], options: [] },
-                7: { features: ['Indomitable'], options: [] },
-                9: { features: ['Indomitable (Improved)'], options: [] },
-                11: { features: ['Extra Attack (2)'], options: [] },
-                13: { features: ['Indomitable (Greater)'], options: [] },
-                15: { features: ['Indomitable (Master)'], options: [] },
-                17: { features: ['Extra Attack (3)'], options: [] },
-                18: { 
+                3: { 
                     features: ['Martial Archetype'], 
                     options: [
                         { id: 'champion', name: 'Champion', exclusiveGroup: 'archetype' },
                         { id: 'battleMaster', name: 'Battle Master', exclusiveGroup: 'archetype' },
                         { id: 'eldritchKnight', name: 'Eldritch Knight', exclusiveGroup: 'archetype' }
                     ] 
-                }
+                },
+                4: { features: ['Ability Score Improvement'], options: [] },
+                5: { features: ['Extra Attack'], options: [] },
+                6: { features: ['Ability Score Improvement'], options: [] },
+                7: { features: ['Martial Archetype Feature'], options: [] },
+                8: { features: ['Ability Score Improvement'], options: [] },
+                9: { features: ['Indomitable (one use)'], options: [] },
+                10: { features: ['Martial Archetype Feature'], options: [] },
+                11: { features: ['Extra Attack (2)'], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: ['Indomitable (two uses)'], options: [] },
+                14: { features: ['Ability Score Improvement'], options: [] },
+                15: { features: ['Martial Archetype Feature'], options: [] },
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: ['Action Surge (two uses)', 'Indomitable (three uses)'], options: [] },
+                18: { features: ['Martial Archetype Feature'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Extra Attack (3)'], options: [] }
             },
             wizard: {
                 1: { features: ['Spellcasting'], options: [] },
-                2: { features: ['Arcane Recovery'], options: [] },
-                3: { features: ['Ritual Casting'], options: [] },
-                5: { features: ['Spell Mastery'], options: [] },
-                7: { features: ['Master of Wizards'], options: [] },
-                9: { features: ['Master of Wizards (Greater)'], options: [] },
-                11: { features: ['Spell Mastery (Greater)'], options: [] },
-                13: { features: ['Spell Mastery (Master)'], options: [] },
-                15: { features: ['Spell Mastery (Supreme)'], options: [] },
-                18: { 
-                    features: ['School Specialization'], 
+                2: { 
+                    features: ['Arcane Recovery', 'Arcane Tradition'], 
                     options: [
                         { id: 'abjurer', name: 'School of Abjuration', exclusiveGroup: 'archetype' },
                         { id: 'conjurer', name: 'School of Conjuration', exclusiveGroup: 'archetype' },
@@ -734,126 +745,319 @@
                         { id: 'necromancer', name: 'School of Necromancy', exclusiveGroup: 'archetype' },
                         { id: 'transmuter', name: 'School of Transmutation', exclusiveGroup: 'archetype' }
                     ] 
-                }
-            },
-            wizard: {
-                1: { features: ['Spellcasting'], options: [] },
-                2: { features: ['Arcane Recovery'], options: [] },
+                },
                 3: { features: ['Ritual Casting'], options: [] },
+                4: { features: ['Ability Score Improvement'], options: [] },
                 5: { features: ['Spell Mastery'], options: [] },
-                7: { features: ['Master of Wizards'], options: [] },
-                9: { features: ['Master of Wizards (Greater)'], options: [] },
-                11: { features: ['Spell Mastery (Greater)'], options: [] },
+                6: { features: ['Tradition Feature'], options: [] },
+                7: { features: ['Timeless Body'], options: [] },
+                8: { features: ['Ability Score Improvement'], options: [] },
+                9: { features: ['Spell Mastery (Greater)'], options: [] },
+                10: { features: ['Tradition Feature'], options: [] },
+                11: { features: ['Ability Score Improvement'], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
                 13: { features: ['Spell Mastery (Master)'], options: [] },
+                14: { features: ['Ability Score Improvement'], options: [] },
                 15: { features: ['Spell Mastery (Supreme)'], options: [] },
-                18: { features: ['School Specialization'], options: [
-                        { id: 'abjurer', name: 'School of Abjuration', exclusiveGroup: 'archetype' }
-                    ] }
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: ['Ability Score Improvement'], options: [] },
+                18: { features: ['Tradition Feature'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Signature Spells'], options: [] }
             },
             rogue: {
-                1: { features: ['Sneak Attack', 'Cunning Action'], options: [] },
-                2: { features: ["Thieves' Cant"], options: [] },
-                3: { features: ['Cunning Action (Dash)'], options: [] },
-                5: { features: ['Evasion'], options: [] },
-                7: { features: ['Uncanny Dodge'], options: [] },
-                9: { features: ['Reliable Talent'], options: [] },
-                11: { features: ['Cunning Action (Hide)'], options: [] },
-                13: { features: ['Blindsense'], options: [] },
+                1: { features: ['Expertise', 'Sneak Attack', "Thieves' Cant"], options: [] },
+                2: { features: ['Cunning Action'], options: [] },
+                3: { 
+                    features: ['Roguish Archetype'], 
+                    options: [
+                        { id: 'thief', name: 'Thief', exclusiveGroup: 'archetype' },
+                        { id: 'assassin', name: 'Assassin', exclusiveGroup: 'archetype' },
+                        { id: 'arcaneTrickster', name: 'Arcane Trickster', exclusiveGroup: 'archetype' }
+                    ] 
+                },
+                4: { features: ['Ability Score Improvement'], options: [] },
+                5: { features: ['Uncanny Dodge'], options: [] },
+                6: { features: ['Expertise'], options: [] },
+                7: { features: ['Evasion'], options: [] },
+                8: { features: ['Ability Score Improvement'], options: [] },
+                9: { features: ['Roguish Archetype Feature'], options: [] },
+                10: { features: ['Ability Score Improvement'], options: [] },
+                11: { features: ['Reliable Talent'], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: ['Roguish Archetype Feature'], options: [] },
+                14: { features: ['Blindsense'], options: [] },
                 15: { features: ['Slippery Mind'], options: [] },
-                17: { features: ['Elusive'], options: [] }
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: ['Roguish Archetype Feature'], options: [] },
+                18: { features: ['Elusive'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Stroke of Luck'], options: [] }
             },
             cleric: {
-                1: { features: ['Channel Divinity'], options: [] },
-                2: { features: ['Divine Domain Spells'], options: [] },
-                3: { features: ['Destroy Undead'], options: [] },
-                5: { features: ['Domain Features'], options: [
-                        { id: 'life', name: 'Domain of Life', exclusiveGroup: 'domain' },
-                        { id: 'war', name: 'Domain of War', exclusiveGroup: 'domain' },
-                        { id: 'trickery', name: 'Domain of Trickery', exclusiveGroup: 'domain' },
-                        { id: 'knowledge', name: 'Domain of Knowledge', exclusiveGroup: 'domain' }
-                    ] },
-                7: { features: ['Divine Intervention'], options: [] }
+                1: { 
+                    features: ['Spellcasting', 'Divine Domain'], 
+                    options: [
+                        { id: 'knowledge', name: 'Knowledge Domain', exclusiveGroup: 'domain' },
+                        { id: 'life', name: 'Life Domain', exclusiveGroup: 'domain' },
+                        { id: 'light', name: 'Light Domain', exclusiveGroup: 'domain' },
+                        { id: 'nature', name: 'Nature Domain', exclusiveGroup: 'domain' },
+                        { id: 'tempest', name: 'Tempest Domain', exclusiveGroup: 'domain' },
+                        { id: 'trickery', name: 'Trickery Domain', exclusiveGroup: 'domain' },
+                        { id: 'war', name: 'War Domain', exclusiveGroup: 'domain' }
+                    ] 
+                },
+                2: { features: ['Channel Divinity (1/rest)', 'Divine Domain Feature'], options: [] },
+                3: { features: [], options: [] },
+                4: { features: ['Ability Score Improvement'], options: [] },
+                5: { features: ['Destroy Undead (CR 1/2)'], options: [] },
+                6: { features: ['Channel Divinity (2/rest)', 'Divine Domain Feature'], options: [] },
+                7: { features: [], options: [] },
+                8: { features: ['Ability Score Improvement', 'Destroy Undead (CR 1)', 'Divine Domain Feature'], options: [] },
+                9: { features: [], options: [] },
+                10: { features: ['Divine Intervention'], options: [] },
+                11: { features: ['Destroy Undead (CR 2)'], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: [], options: [] },
+                14: { features: ['Destroy Undead (CR 3)'], options: [] },
+                15: { features: [], options: [] },
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: ['Destroy Undead (CR 4)', 'Divine Domain Feature'], options: [] },
+                18: { features: ['Channel Divinity (3/rest)'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Divine Intervention Improvement'], options: [] }
             },
             ranger: {
-                1: { features: ['Favored Enemy'], options: [] },
-                2: { features: ['Natural Explorer'], options: [] },
-                3: { features: ['Fighting Style'], options: [] },
-                5: { features: ['Primeval Awareness'], options: [] },
-                7: { features: ['Glands of the Wild'], options: [] },
-                9: { features: ['Vanish'], options: [] },
-                11: { features: ['Foe Slayer'], options: [] }
+                1: { features: ['Favored Enemy', 'Natural Explorer'], options: [] },
+                2: { features: ['Fighting Style', 'Spellcasting'], options: [] },
+                3: { 
+                    features: ['Ranger Archetype', 'Primeval Awareness'], 
+                    options: [
+                        { id: 'hunter', name: 'Hunter', exclusiveGroup: 'archetype' },
+                        { id: 'beastMaster', name: 'Beast Master', exclusiveGroup: 'archetype' }
+                    ] 
+                },
+                4: { features: ['Ability Score Improvement'], options: [] },
+                5: { features: ['Extra Attack'], options: [] },
+                6: { features: ['Favored Enemy improvement', 'Natural Explorer improvement'], options: [] },
+                7: { features: ['Ranger Archetype Feature'], options: [] },
+                8: { features: ['Ability Score Improvement', "Land's Stride"], options: [] },
+                9: { features: [], options: [] },
+                10: { features: ['Natural Explorer improvement', 'Hide in Plain Sight'], options: [] },
+                11: { features: ['Ranger Archetype Feature'], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: [], options: [] },
+                14: { features: ['Favored Enemy improvement', 'Vanish'], options: [] },
+                15: { features: ['Ranger Archetype Feature'], options: [] },
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: [], options: [] },
+                18: { features: ['Feral Senses'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Foe Slayer'], options: [] }
             },
             barbarian: {
-                1: { features: ['Rage'], options: [] },
-                2: { features: ['Danger Sense'], options: [] },
-                3: { features: ['Reckless Attack'], options: [] },
-                5: { features: ['Frenzy'], options: [] },
-                7: { features: ['Brutal Critical'], options: [] },
-                9: { features: ['Relentless Rage'], options: [] },
-                11: { features: ['Persistent Rage'], options: [] },
-                13: { features: ['Indomitable Might'], options: [] },
-                15: { features: ['Primal Champion'], options: [] }
+                1: { features: ['Rage', 'Unarmored Defense'], options: [] },
+                2: { features: ['Reckless Attack', 'Danger Sense'], options: [] },
+                3: { 
+                    features: ['Primal Path'], 
+                    options: [
+                        { id: 'berserker', name: 'Path of the Berserker', exclusiveGroup: 'archetype' },
+                        { id: 'totem', name: 'Path of the Totem Warrior', exclusiveGroup: 'archetype' }
+                    ] 
+                },
+                4: { features: ['Ability Score Improvement'], options: [] },
+                5: { features: ['Extra Attack', 'Fast Movement'], options: [] },
+                6: { features: ['Path Feature'], options: [] },
+                7: { features: ['Feral Instinct'], options: [] },
+                8: { features: ['Ability Score Improvement'], options: [] },
+                9: { features: ['Brutal Critical (1 die)'], options: [] },
+                10: { features: ['Path Feature'], options: [] },
+                11: { features: ['Relentless Rage'], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: ['Brutal Critical (2 dice)'], options: [] },
+                14: { features: ['Path Feature'], options: [] },
+                15: { features: ['Persistent Rage'], options: [] },
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: ['Brutal Critical (3 dice)'], options: [] },
+                18: { features: ['Indomitable Might'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Primal Champion'], options: [] }
             },
             paladin: {
-                1: { features: ['Divine Smite'], options: [] },
-                2: { features: ['Fighting Style'], options: [] },
-                3: { features: ['Divine Health'], options: [] },
-                5: { features: ['Aura of Protection'], options: [] },
-                7: { features: ['Aura of Courage'], options: [] },
-                9: { features: ['Improved Divine Smite'], options: [] },
-                11: { features: ['Cleansing Touch'], options: [] }
+                1: { features: ['Divine Sense', 'Lay on Hands'], options: [] },
+                2: { features: ['Fighting Style', 'Spellcasting', 'Divine Smite'], options: [] },
+                3: { 
+                    features: ['Divine Health', 'Sacred Oath'], 
+                    options: [
+                        { id: 'devotion', name: 'Oath of Devotion', exclusiveGroup: 'archetype' },
+                        { id: 'ancients', name: 'Oath of the Ancients', exclusiveGroup: 'archetype' },
+                        { id: 'vengeance', name: 'Oath of Vengeance', exclusiveGroup: 'archetype' }
+                    ] 
+                },
+                4: { features: ['Ability Score Improvement'], options: [] },
+                5: { features: ['Extra Attack'], options: [] },
+                6: { features: ['Aura of Protection'], options: [] },
+                7: { features: ['Sacred Oath Feature'], options: [] },
+                8: { features: ['Ability Score Improvement'], options: [] },
+                9: { features: [], options: [] },
+                10: { features: ['Aura of Courage'], options: [] },
+                11: { features: ['Improved Divine Smite'], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: [], options: [] },
+                14: { features: ['Cleansing Touch'], options: [] },
+                15: { features: ['Sacred Oath Feature'], options: [] },
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: [], options: [] },
+                18: { features: ['Aura improvements'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Sacred Oath Feature'], options: [] }
             },
             bard: {
-                1: { features: ['Bardic Inspiration'], options: [] },
-                2: { features: ['Jack of All Trades'], options: [] },
-                3: { features: ['Song of Rest'], options: [] },
-                5: { features: ['Expertise'], options: [] },
-                7: { features: ['Magical Secrets'], options: [] },
-                9: { features: ['Superior Inspiration'], options: [] },
-                11: { features: ['Magical Secrets (Greater)'], options: [] },
-                13: { features: ['Magical Secrets (Master)'], options: [] }
+                1: { features: ['Spellcasting', 'Bardic Inspiration (d6)'], options: [] },
+                2: { features: ['Jack of All Trades', 'Song of Rest (d6)'], options: [] },
+                3: { 
+                    features: ['Bard College', 'Expertise'], 
+                    options: [
+                        { id: 'lore', name: 'College of Lore', exclusiveGroup: 'archetype' },
+                        { id: 'valor', name: 'College of Valor', exclusiveGroup: 'archetype' }
+                    ] 
+                },
+                4: { features: ['Ability Score Improvement'], options: [] },
+                5: { features: ['Bardic Inspiration (d8)', 'Font of Inspiration'], options: [] },
+                6: { features: ['Countercharm', 'Bard College Feature'], options: [] },
+                7: { features: [], options: [] },
+                8: { features: ['Ability Score Improvement'], options: [] },
+                9: { features: ['Song of Rest (d8)'], options: [] },
+                10: { features: ['Bardic Inspiration (d10)', 'Expertise', 'Magical Secrets'], options: [] },
+                11: { features: [], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: ['Song of Rest (d10)'], options: [] },
+                14: { features: ['Magical Secrets', 'Bard College Feature'], options: [] },
+                15: { features: ['Bardic Inspiration (d12)'], options: [] },
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: ['Song of Rest (d12)'], options: [] },
+                18: { features: ['Magical Secrets'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Superior Inspiration'], options: [] }
             },
             druid: {
-                1: { features: ['Druid Circle'], options: [] },
-                2: { features: ['Wild Shape'], options: [] },
-                3: { features: ['Timeless Body'], options: [] },
-                5: { features: ['Beast Spells'], options: [] },
-                7: { features: ['Timeless Body (Improved)'], options: [] },
-                9: { features: ['Archdruid'], options: [] }
+                1: { features: ['Druidic', 'Spellcasting'], options: [] },
+                2: { 
+                    features: ['Wild Shape', 'Druid Circle'], 
+                    options: [
+                        { id: 'land', name: 'Circle of the Land', exclusiveGroup: 'archetype' },
+                        { id: 'moon', name: 'Circle of the Moon', exclusiveGroup: 'archetype' }
+                    ] 
+                },
+                3: { features: [], options: [] },
+                4: { features: ['Wild Shape Improvement', 'Ability Score Improvement'], options: [] },
+                5: { features: [], options: [] },
+                6: { features: ['Druid Circle Feature'], options: [] },
+                7: { features: [], options: [] },
+                8: { features: ['Wild Shape Improvement', 'Ability Score Improvement'], options: [] },
+                9: { features: [], options: [] },
+                10: { features: ['Druid Circle Feature'], options: [] },
+                11: { features: [], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: [], options: [] },
+                14: { features: ['Druid Circle Feature'], options: [] },
+                15: { features: [], options: [] },
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: [], options: [] },
+                18: { features: ['Timeless Body', 'Beast Spells'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Archdruid'], options: [] }
             },
             monk: {
-                1: { features: ['Ki'], options: [] },
-                2: { features: ['Unarmored Movement'], options: [] },
-                3: { features: ['Deflect Missiles'], options: [] },
-                5: { features: ['Stunning Strike'], options: [] },
-                7: { features: ['Ki-Empowered Strikes'], options: [] },
-                9: { features: ['Stillness of Mind'], options: [] },
-                11: { features: ['Purity of Body'], options: [] },
+                1: { features: ['Unarmored Defense', 'Martial Arts'], options: [] },
+                2: { features: ['Ki', 'Unarmored Movement'], options: [] },
+                3: { 
+                    features: ['Monastic Tradition', 'Deflect Missiles'], 
+                    options: [
+                        { id: 'openHand', name: 'Way of the Open Hand', exclusiveGroup: 'archetype' },
+                        { id: 'shadow', name: 'Way of Shadow', exclusiveGroup: 'archetype' },
+                        { id: 'fourElements', name: 'Way of the Four Elements', exclusiveGroup: 'archetype' }
+                    ] 
+                },
+                4: { features: ['Ability Score Improvement', 'Slow Fall'], options: [] },
+                5: { features: ['Extra Attack', 'Stunning Strike'], options: [] },
+                6: { features: ['Ki-Empowered Strikes', 'Monastic Tradition Feature'], options: [] },
+                7: { features: ['Evasion', 'Stillness of Mind'], options: [] },
+                8: { features: ['Ability Score Improvement'], options: [] },
+                9: { features: ['Unarmored Movement improvement'], options: [] },
+                10: { features: ['Purity of Body'], options: [] },
+                11: { features: ['Monastic Tradition Feature'], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
                 13: { features: ['Tongue of the Sun and Moon'], options: [] },
+                14: { features: ['Diamond Soul'], options: [] },
                 15: { features: ['Empty Body'], options: [] },
-                17: { features: ['Perfect Self'], options: [] }
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: ['Monastic Tradition Feature'], options: [] },
+                18: { features: ['Timeless Body'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Perfect Self'], options: [] }
             },
             sorcerer: {
-                1: { features: ['Metamagic'], options: [] },
-                2: { features: ['Spellcasting'], options: [] },
-                3: { features: ['Font of Magic'], options: [] },
-                5: { features: ['Metamagic (Improved)'], options: [] },
-                7: { features: ['Sorcerous Restoration'], options: [] },
-                9: { features: ['Metamagic (Greater)'], options: [] },
-                11: { features: ['Restoration (Greater)'], options: [] },
-                13: { features: ['Metamagic (Master)'], options: [] },
-                15: { features: ['Metamagic (Supreme)'], options: [] },
-                18: { features: ['Sorcerous Restoration'], options: [] }
+                1: { 
+                    features: ['Spellcasting', 'Sorcerous Origin'], 
+                    options: [
+                        { id: 'draconic', name: 'Draconic Bloodline', exclusiveGroup: 'archetype' },
+                        { id: 'wildMagic', name: 'Wild Magic', exclusiveGroup: 'archetype' }
+                    ] 
+                },
+                2: { features: ['Font of Magic'], options: [] },
+                3: { features: ['Metamagic'], options: [] },
+                4: { features: ['Ability Score Improvement'], options: [] },
+                5: { features: [], options: [] },
+                6: { features: ['Sorcerous Origin Feature'], options: [] },
+                7: { features: [], options: [] },
+                8: { features: ['Ability Score Improvement'], options: [] },
+                9: { features: [], options: [] },
+                10: { features: ['Metamagic'], options: [] },
+                11: { features: [], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: [], options: [] },
+                14: { features: ['Sorcerous Origin Feature'], options: [] },
+                15: { features: [], options: [] },
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: ['Metamagic'], options: [] },
+                18: { features: ['Sorcerous Origin Feature'], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Sorcerous Restoration'], options: [] }
             },
             warlock: {
-                1: { features: ['Pact Magic'], options: [] },
+                1: { 
+                    features: ['Otherworldly Patron', 'Pact Magic'], 
+                    options: [
+                        { id: 'archfey', name: 'The Archfey', exclusiveGroup: 'archetype' },
+                        { id: 'fiend', name: 'The Fiend', exclusiveGroup: 'archetype' },
+                        { id: 'greatOldOne', name: 'The Great Old One', exclusiveGroup: 'archetype' }
+                    ] 
+                },
                 2: { features: ['Eldritch Invocations'], options: [] },
-                3: { features: ['Pact Boon'], options: [] },
-                5: { features: ['Mystic Arcanum'], options: [] },
-                7: { features: ['Mystic Arcanum (Greater)'], options: [] },
-                9: { features: ['Mystic Arcanum (Master)'], options: [] },
-                11: { features: ['Mystic Arcanum (Supreme)'], options: [] },
-                13: { features: ['Eldritch Mastery'], options: [] }
+                3: { features: ['Pact Boon'], options: [
+                        { id: 'chain', name: 'Pact of the Chain', exclusiveGroup: 'boon' },
+                        { id: 'blade', name: 'Pact of the Blade', exclusiveGroup: 'boon' },
+                        { id: 'tome', name: 'Pact of the Tome', exclusiveGroup: 'boon' }
+                    ] 
+                },
+                4: { features: ['Ability Score Improvement'], options: [] },
+                5: { features: [], options: [] },
+                6: { features: ['Otherworldly Patron Feature'], options: [] },
+                7: { features: [], options: [] },
+                8: { features: ['Ability Score Improvement'], options: [] },
+                9: { features: [], options: [] },
+                10: { features: ['Otherworldly Patron Feature'], options: [] },
+                11: { features: ['Mystic Arcanum (6th level)'], options: [] },
+                12: { features: ['Ability Score Improvement'], options: [] },
+                13: { features: ['Mystic Arcanum (7th level)'], options: [] },
+                14: { features: ['Otherworldly Patron Feature'], options: [] },
+                15: { features: ['Mystic Arcanum (8th level)'], options: [] },
+                16: { features: ['Ability Score Improvement'], options: [] },
+                17: { features: ['Mystic Arcanum (9th level)'], options: [] },
+                18: { features: [], options: [] },
+                19: { features: ['Ability Score Improvement'], options: [] },
+                20: { features: ['Eldritch Master'], options: [] }
             }
         };
         
@@ -1366,20 +1570,49 @@
             document.querySelectorAll('#class-grid .card').forEach(c => c.classList.remove('selected'));
             document.getElementById('class-' + id).classList.add('selected');
             document.getElementById('class-next').disabled = false;
+            
+            const startingLevel = character.level || 1;
+            const classAbilities = [];
+            for (let lvl = 1; lvl <= startingLevel; lvl++) {
+                if (classFeatures[id] && classFeatures[id][lvl]) {
+                    const levelData = classFeatures[id][lvl];
+                    const features = levelData.features || [];
+                    features.forEach(f => {
+                        classAbilities.push(f);
+                    });
+                }
+            }
+            character.abilityIds = classAbilities;
         }
         
         function selectRace(id) {
+            const previousClassAbilities = character.abilityIds || [];
+            
             character.raceId = id;
             character.subraceName = null;
             character.stats = {};
             character.humanBonusStats = [];
             character.proficiencyIds = [];
-            character.abilityIds = [];
             character.featIds = [];
             pointsRemaining = 27;
             
             document.querySelectorAll('#race-grid .card').forEach(c => c.classList.remove('selected'));
             document.getElementById('race-' + id).classList.add('selected');
+            
+            if (character.classId) {
+                const startingLevel = character.level || 1;
+                const classAbilities = [];
+                for (let lvl = 1; lvl <= startingLevel; lvl++) {
+                    if (classFeatures[character.classId] && classFeatures[character.classId][lvl]) {
+                        const levelData = classFeatures[character.classId][lvl];
+                        const features = levelData.features || [];
+                        features.forEach(f => {
+                            classAbilities.push(f);
+                        });
+                    }
+                }
+                character.abilityIds = classAbilities;
+            }
             
             const subraceSection = document.getElementById('subrace-section');
             if (subraces[id]) {
@@ -1521,6 +1754,20 @@
             }
             if (n === 4) {
                 if (!character.featIds) character.featIds = [];
+                if (character.classId && (!character.abilityIds || character.abilityIds.length === 0)) {
+                    const startingLevel = character.level || 1;
+                    const classAbilities = [];
+                    for (let lvl = 1; lvl <= startingLevel; lvl++) {
+                        if (classFeatures[character.classId] && classFeatures[character.classId][lvl]) {
+                            const levelData = classFeatures[character.classId][lvl];
+                            const features = levelData.features || [];
+                            features.forEach(f => {
+                                classAbilities.push(f);
+                            });
+                        }
+                    }
+                    character.abilityIds = classAbilities;
+                }
                 renderAbilities();
                 renderFeats();
             }
@@ -1596,6 +1843,28 @@
             const actualAbilities = (character.abilityIds || []).filter(a => !a.startsWith('+1 '));
             const allAbilityIds = [...new Set([...raceAbilities.filter(a => !a.startsWith('+1 ')), ...actualAbilities])];
             
+            const classId = character.classId;
+            const classAbilities = [];
+            const classSelectedOptions = [];
+            
+            for (let lvl = 1; lvl <= startingLevel; lvl++) {
+                if (classFeatures[classId] && classFeatures[classId][lvl]) {
+                    const levelData = classFeatures[classId][lvl];
+                    const features = levelData.features || [];
+                    const options = levelData.options || [];
+                    
+                    features.forEach(f => {
+                        classAbilities.push(f);
+                    });
+                    
+                    options.forEach(opt => {
+                        classSelectedOptions.push({ optionId: opt.id, feature: opt.name, level: lvl, classId: classId });
+                    });
+                }
+            }
+            
+            const allAbilityIdsWithClass = [...new Set([...allAbilityIds, ...classAbilities])];
+            
             const newChar = {
                 id: Date.now().toString(36) + Math.random().toString(36).substr(2),
                 name: name,
@@ -1610,8 +1879,9 @@
                 extraSkillCount: extraSkills,
                 extraFeatCount: extraFeats,
                 proficiencyIds: [...character.proficiencyIds],
-                abilityIds: allAbilityIds,
-                featIds: [...(character.featIds || [])]
+                abilityIds: allAbilityIdsWithClass,
+                featIds: [...(character.featIds || [])],
+                selectedOptions: classSelectedOptions
             };
             
             const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
@@ -1632,6 +1902,7 @@
                 abilityIds: [],
                 featIds: [],
                 humanBonusStats: [],
+                selectedOptions: [],
                 level: 1
             };
             pointsRemaining = 27;
@@ -1647,6 +1918,21 @@
         function updateStartingLevel(level) {
             character.level = Math.max(1, Math.min(20, parseInt(level) || 1));
             document.getElementById('starting-level').value = character.level;
+            
+            if (character.classId) {
+                const startingLevel = character.level || 1;
+                const classAbilities = [];
+                for (let lvl = 1; lvl <= startingLevel; lvl++) {
+                    if (classFeatures[character.classId] && classFeatures[character.classId][lvl]) {
+                        const levelData = classFeatures[character.classId][lvl];
+                        const features = levelData.features || [];
+                        features.forEach(f => {
+                            classAbilities.push(f);
+                        });
+                    }
+                }
+                character.abilityIds = classAbilities;
+            }
         }
         
         let deleteCharacterIndex = null;
@@ -1855,25 +2141,57 @@
             
             for (let lvl = currentClassLevel + 1; lvl <= targetLevel; lvl++) {
                 if (classFeatures[classId] && classFeatures[classId][lvl]) {
-                    const newFeatures = classFeatures[classId][lvl];
-                    newFeatures.forEach(f => {
-                        availableFeaturesAtLevel.push({ feature: f, level: lvl });
-                        featuresList.push(f);
-                    });
+                    const levelData = classFeatures[classId][lvl];
+                    const features = levelData.features || [];
+                    const options = levelData.options || [];
+                    
+                    if (options.length > 0) {
+                        options.forEach(opt => {
+                            availableFeaturesAtLevel.push({ 
+                                feature: opt.name, 
+                                level: lvl, 
+                                isOption: true,
+                                optionId: opt.id,
+                                exclusiveGroup: opt.exclusiveGroup 
+                            });
+                            featuresList.push(opt.name);
+                        });
+                    } else {
+                        features.forEach(f => {
+                            availableFeaturesAtLevel.push({ feature: f, level: lvl, isOption: false });
+                            featuresList.push(f);
+                        });
+                    }
                 }
             }
             
             if (levelsGained >= 4) {
-                availableFeaturesAtLevel.push({ feature: 'Ability Score Increase', level: targetLevel });
+                availableFeaturesAtLevel.push({ feature: 'Ability Score Increase', level: targetLevel, isOption: true });
                 featuresList.push('Ability Score Increase');
             }
             
             const featuresHtml = featuresList.length > 0 
-                ? featuresList.map((f, i) => `
-                    <div class="level-up-feature-item">
-                        <span>${f}</span>
-                    </div>
-                `).join('')
+                ? featuresList.map((f, i) => {
+                    const item = availableFeaturesAtLevel.find(af => af.feature === f);
+                    const isOption = item && item.isOption;
+                    if (isOption) {
+                        return `
+                            <div class="level-up-feature-item">
+                                <label style="flex: 1; display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" class="feature-select" data-feature="${f}" data-option-id="${item.optionId || ''}" data-group="${item.exclusiveGroup || ''}">
+                                    <span>${f}</span>
+                                </label>
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="level-up-feature-item" style="background: var(--card-bg); border: 1px solid var(--border);">
+                                <span style="color: var(--text-muted);">✓ ${f}</span>
+                                <span style="font-size: 12px; color: var(--text-muted);">(auto)</span>
+                            </div>
+                        `;
+                    }
+                }).join('')
                 : '<p style="color: var(--text-muted);">No new features at this level.</p>';
             
             document.getElementById('level-up-features').innerHTML = `
@@ -1908,8 +2226,26 @@
             char.level = targetLevel;
             
             availableFeaturesAtLevel.forEach(f => {
-                if (f.feature !== 'Ability Score Increase' && !char.abilityIds.includes(f.feature)) {
-                    char.abilityIds.push(f.feature);
+                if (f.isOption) {
+                    const checkbox = document.querySelector(`input[data-feature="${f.feature}"]:checked`);
+                    if (checkbox) {
+                        if (!char.abilityIds.includes(f.feature)) {
+                            char.abilityIds.push(f.feature);
+                        }
+                        if (f.optionId && !char.selectedOptions) {
+                            char.selectedOptions = [];
+                        }
+                        if (f.optionId) {
+                            char.selectedOptions = char.selectedOptions || [];
+                            if (!char.selectedOptions.find(o => o.optionId === f.optionId)) {
+                                char.selectedOptions.push({ optionId: f.optionId, feature: f.feature, level: f.level, classId: selectedLevelUpClass.classId });
+                            }
+                        }
+                    }
+                } else {
+                    if (!char.abilityIds.includes(f.feature)) {
+                        char.abilityIds.push(f.feature);
+                    }
                 }
             });
             
