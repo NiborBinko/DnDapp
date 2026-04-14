@@ -128,6 +128,22 @@
         
         .stat-btn:disabled { opacity: 0.3; cursor: not-allowed; }
         
+        .stat-btn.selected {
+            background: #4ade80;
+            color: #1a1a2e;
+        }
+        
+        .human-bonus-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            font-size: 1.2rem;
+        }
+        
+        .human-bonus-btn.selected {
+            background: #4ade80;
+            border-color: #4ade80;
+        }
+        
         .stat-value { font-size: 1.5rem; width: 60px; text-align: center; }
         
         .stat-bonus { color: #4ade80; width: 60px; }
@@ -158,6 +174,16 @@
         }
         
         .checkbox-item input { width: auto; margin: 0; }
+        
+        .checkbox-item.race-ability {
+            background: #2a3a2e;
+            border: 1px solid #4ade80;
+        }
+        
+        .checkbox-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         
         .summary {
             background: var(--card-bg);
@@ -195,6 +221,179 @@
             color: white;
             padding: 8px 16px;
         }
+        
+        .view-btn {
+            background: #4ade80;
+            color: #1a1a2e;
+            padding: 8px 16px;
+        }
+        
+        .level-btn {
+            background: #fbbf24;
+            color: #1a1a2e;
+            padding: 8px 16px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            max-width: 700px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content.modal-small { max-width: 400px; }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .modal-header h2 { color: var(--accent); margin: 0; }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .sheet-section {
+            margin-bottom: 20px;
+        }
+        
+        .sheet-section h3 {
+            color: var(--accent);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sheet-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .sheet-stat {
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .sheet-stat-name {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .sheet-stat-value {
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .sheet-stat-bonus {
+            font-size: 0.85rem;
+            color: #4ade80;
+        }
+        
+        .sheet-class {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .sheet-class-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .sheet-class-name {
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .sheet-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .level-up-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .level-up-feature-item input { width: auto; margin: 0; }
+        
+        .ability-increase-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+        
+        .ability-score-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        
+        .ability-select {
+            width: auto;
+            margin: 0;
+        }
+        
+        .card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .character-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -204,6 +403,10 @@
         <!-- Step 1: Class Selection -->
         <div class="step active" id="step-class">
             <h2 class="step-title">Step 1: Choose Your Class</h2>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 10px;">Starting Level:</label>
+                <input type="number" id="starting-level" min="1" max="20" value="1" style="max-width: 100px;" onchange="updateStartingLevel(this.value)" oninput="updateStartingLevel(this.value)">
+            </div>
             <div class="grid" id="class-grid"></div>
             <div class="nav">
                 <button class="btn-primary" onclick="nextStep()" id="class-next" disabled>Next</button>
@@ -243,7 +446,7 @@
         <!-- Step 4: Proficiencies -->
         <div class="step" id="step-proficiencies">
             <h2 class="step-title">Step 4: Choose Proficiencies</h2>
-            <p style="color: var(--text-muted); margin-bottom: 15px;">Select up to 2 skills (placeholder - add your own)</p>
+            <p id="proficiency-instruction" style="color: var(--text-muted); margin-bottom: 15px;">Select up to 2 skills</p>
             <div class="checkbox-grid" id="proficiencies-grid"></div>
             <p id="prof-count" style="color: var(--text-muted); margin-top: 10px;">0 selected</p>
             <div class="nav">
@@ -257,10 +460,11 @@
             <h2 class="step-title">Step 5: Abilities & Feats</h2>
             <p style="color: var(--text-muted); margin-bottom: 15px;">Placeholder sections - add your own data</p>
             
-            <h3 style="margin: 20px 0 10px;">Level 1 Abilities</h3>
+            <h3 style="margin: 20px 0 10px;">Abilities</h3>
             <div class="checkbox-grid" id="abilities-grid"></div>
             
-            <h3 style="margin: 20px 0 10px;">Feats (Level 1)</h3>
+            <h3 style="margin: 20px 0 10px;">Feats</h3>
+            <p id="feats-note" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;"></p>
             <div class="checkbox-grid" id="feats-grid"></div>
             
             <div class="nav">
@@ -288,6 +492,95 @@
                 <button class="btn-primary" onclick="startNew()">Create New Character</button>
             </div>
         </div>
+        
+        <!-- Character Sheet Modal -->
+        <div class="modal" id="character-sheet-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="sheet-name">Character Name</h2>
+                    <button class="modal-close" onclick="closeCharacterSheet()">&times;</button>
+                </div>
+                <div class="modal-body" id="sheet-content"></div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeCharacterSheet()">Close</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Delete Confirmation Modal -->
+        <div class="modal" id="delete-confirm-modal">
+            <div class="modal-content modal-small">
+                <div class="modal-header">
+                    <h2>Delete Character</h2>
+                    <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong id="delete-char-name"></strong>?</p>
+                    <p style="color: var(--text-muted); margin-top: 10px;">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                    <button class="delete-btn" id="modal-confirm-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Level Up Modal -->
+        <div class="modal" id="level-up-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="level-up-title">Level Up</h2>
+                    <button class="modal-close" onclick="closeLevelUpModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="level-up-class-select" style="display: none;">
+                        <h3 style="margin-bottom: 15px;">Select Class to Level Up</h3>
+                        <div class="grid" id="level-up-class-grid"></div>
+                    </div>
+                    <div id="level-up-current">
+                        <p style="margin-bottom: 15px;">Current Level: <strong id="current-level-display">1</strong></p>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 10px;">Target Level:</label>
+                            <input type="number" id="target-level-input" min="2" max="20" value="2">
+                        </div>
+                        <button class="btn-primary" onclick="showLevelUpFeatures()" style="margin-bottom: 20px;">Show Available Features</button>
+                        <div id="level-up-features"></div>
+                        <div id="level-up-hp" style="display: none; margin-top: 20px; padding: 15px; background: var(--card-bg); border-radius: 8px;">
+                            <p style="margin-bottom: 10px;">Roll Hit Points:</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Base: <span id="hp-die"></span> + Con modifier</p>
+                            <button class="btn-secondary" onclick="rollHitPoints()">Roll d<span id="hp-die-size"></span></button>
+                            <span id="hp-roll-result" style="margin-left: 10px; font-size: 1.2rem;"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeLevelUpModal()">Cancel</button>
+                    <button class="btn-primary" id="confirm-level-up-btn" onclick="confirmLevelUp()">Confirm Level Up</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Multiclass Modal -->
+        <div class="modal" id="multiclass-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add Multiclass</h2>
+                    <button class="modal-close" onclick="closeMulticlassModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="multiclass-requirements">
+                        <h3 style="margin-bottom: 15px;">Select Class</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 15px;">Select a class to add. You must meet the stat requirements.</p>
+                        <div class="grid" id="multiclass-class-grid"></div>
+                        <div id="multiclass-check" style="margin-top: 15px;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeMulticlassModal()">Cancel</button>
+                    <button class="btn-primary" id="confirm-multiclass-btn" onclick="confirmMulticlass()" disabled>Add Class</button>
+                </div>
+            </div>
+        </div>
     </div>
     
     <script>
@@ -308,44 +601,44 @@
         ];
         
         const races = [
-            { id: 'human', name: 'Human', desc: 'Versatile and ambitious' },
-            { id: 'elf', name: 'Elf', desc: 'Graceful and long-lived', bonus_stat: 'dexterity', bonus: 2 },
-            { id: 'dwarf', name: 'Dwarf', desc: 'Stout and hardy', bonus_stat: 'constitution', bonus: 2 },
-            { id: 'halfling', name: 'Halfling', desc: 'Small and nimble', bonus_stat: 'dexterity', bonus: 2 },
-            { id: 'dragonborn', name: 'Dragonborn', desc: 'Dragon-like humanoids', bonus_stat: 'strength', bonus: 2 },
-            { id: 'gnome', name: 'Gnome', desc: 'Small and clever', bonus_stat: 'intelligence', bonus: 2 },
-            { id: 'halfelf', name: 'Half-Elf', desc: 'Best of both worlds', bonus_stat: 'charisma', bonus: 2 },
-            { id: 'halforc', name: 'Half-Orc', desc: 'Strong and fierce', bonus_stat: 'strength', bonus: 2 },
-            { id: 'tiefling', name: 'Tiefling', desc: 'Fiendish heritage', bonus_stat: 'charisma', bonus: 2 }
+            { id: 'human', name: 'Human', desc: 'Versatile and ambitious', bonuses: { chosen: 2 }, raceAbilities: ['+1 Proficiency', '+1 Feat'] },
+            { id: 'elf', name: 'Elf', desc: 'Graceful and long-lived', bonuses: { dexterity: 2 }, raceAbilities: ['Darkvision', 'Fey Ancestry'] },
+            { id: 'dwarf', name: 'Dwarf', desc: 'Stout and hardy', bonuses: { constitution: 2 }, raceAbilities: ['Darkvision', 'Dwarven Resilience'] },
+            { id: 'halfling', name: 'Halfling', desc: 'Small and nimble', bonuses: { dexterity: 2 }, raceAbilities: ['Lucky', 'Brave'] },
+            { id: 'dragonborn', name: 'Dragonborn', desc: 'Dragon-like humanoids', bonuses: { strength: 2, charisma: 1 }, raceAbilities: ['Breath Weapon'] },
+            { id: 'gnome', name: 'Gnome', desc: 'Small and clever', bonuses: { intelligence: 2 }, raceAbilities: ['Darkvision', 'Gnome Cunning'] },
+            { id: 'halfelf', name: 'Half-Elf', desc: 'Best of both worlds', bonuses: { charisma: 2 }, raceAbilities: ['Darkvision', 'Fey Ancestry'] },
+            { id: 'halforc', name: 'Half-Orc', desc: 'Strong and fierce', bonuses: { strength: 2, constitution: 1 }, raceAbilities: ['Menacing', 'Relentless Endurance'] },
+            { id: 'tiefling', name: 'Tiefling', desc: 'Fiendish heritage', bonuses: { charisma: 2, intelligence: 1 }, raceAbilities: ['Darkvision', 'Hellish Resistance'] }
         ];
         
         const subraces = {
             elf: [
-                { name: 'High Elf', bonus_stat: 'intelligence', bonus: 1 },
-                { name: 'Wood Elf', bonus_stat: 'wisdom', bonus: 1 },
-                { name: 'Drow', bonus_stat: 'charisma', bonus: 1 }
+                { name: 'High Elf', bonuses: { intelligence: 1 }, raceAbilities: ['Keen Senses'] },
+                { name: 'Wood Elf', bonuses: { wisdom: 1 }, raceAbilities: ['Mask of the Wild'] },
+                { name: 'Drow', bonuses: { charisma: 1 }, raceAbilities: ['Sunlight Sensitivity'] }
             ],
             dwarf: [
-                { name: 'Hill Dwarf', bonus_stat: 'wisdom', bonus: 1 },
-                { name: 'Mountain Dwarf', bonus_stat: 'strength', bonus: 1 }
+                { name: 'Hill Dwarf', bonuses: { wisdom: 1 }, raceAbilities: ['Dwarven Toughness'] },
+                { name: 'Mountain Dwarf', bonuses: { strength: 2 }, raceAbilities: ['Stonecunning'] }
             ],
             halfling: [
-                { name: 'Lightfoot', bonus_stat: 'charisma', bonus: 1 },
-                { name: 'Stout', bonus_stat: 'constitution', bonus: 1 }
+                { name: 'Lightfoot', bonuses: { charisma: 1 }, raceAbilities: ['Naturally Stealthy'] },
+                { name: 'Stout', bonuses: { constitution: 1 }, raceAbilities: ['Stout Resilience'] }
             ],
             gnome: [
-                { name: 'Forest Gnome', bonus_stat: 'dexterity', bonus: 1 },
-                { name: 'Rock Gnome', bonus_stat: 'constitution', bonus: 1 }
+                { name: 'Forest Gnome', bonuses: { dexterity: 1 }, raceAbilities: ['Natural Illusionist'] },
+                { name: 'Rock Gnome', bonuses: { constitution: 1 }, raceAbilities: ['Artificer\'s Lore'] }
             ],
             dragonborn: [
-                { name: 'Black', bonus_stat: null },
-                { name: 'Blue', bonus_stat: null },
-                { name: 'Green', bonus_stat: null },
-                { name: 'Red', bonus_stat: null },
-                { name: 'Silver', bonus_stat: null },
-                { name: 'Bronze', bonus_stat: null },
-                { name: 'Copper', bonus_stat: null },
-                { name: 'Gold', bonus_stat: null }
+                { name: 'Black', bonuses: {}, raceAbilities: ['Breath Weapon (Acid)'] },
+                { name: 'Blue', bonuses: {}, raceAbilities: ['Breath Weapon (Lightning)'] },
+                { name: 'Green', bonuses: {}, raceAbilities: ['Breath Weapon (Poison)'] },
+                { name: 'Red', bonuses: {}, raceAbilities: ['Breath Weapon (Fire)'] },
+                { name: 'Silver', bonuses: {}, raceAbilities: ['Breath Weapon (Cold)'] },
+                { name: 'Bronze', bonuses: {}, raceAbilities: ['Breath Weapon (Lightning)'] },
+                { name: 'Copper', bonuses: {}, raceAbilities: ['Breath Weapon (Acid)'] },
+                { name: 'Gold', bonuses: {}, raceAbilities: ['Breath Weapon (Fire)'] }
             ]
         };
         
@@ -380,7 +673,205 @@
             'Linguist', 'Lucky', 'Mage Slayer', 'Magic Initiate', 'Martial Adept'
         ];
         
-        // State
+// Config
+        const MAX_LEVEL = 20;
+        
+        const MULTICLASS_REQUIREMENTS = {
+            fighter: { stat: 'strength', min: 13 },
+            wizard: { stat: 'intelligence', min: 13 },
+            rogue: { stat: 'dexterity', min: 13 },
+            cleric: { stat: 'wisdom', min: 13 },
+            ranger: { stat: 'dexterity', min: 13 },
+            barbarian: { stat: 'strength', min: 13 },
+            paladin: { stat: 'strength', min: 13 },
+            bard: { stat: 'charisma', min: 13 },
+            druid: { stat: 'wisdom', min: 13 },
+            monk: { stat: 'wisdom', min: 13 },
+            sorcerer: { stat: 'charisma', min: 13 },
+            warlock: { stat: 'charisma', min: 13 }
+        };
+
+        const classFeatures = {
+            fighter: {
+                1: { features: ['Fighting Style'], options: [] },
+                2: { features: ['Action Surge'], options: [] },
+                3: { features: ['Second Wind'], options: [] },
+                5: { features: ['Extra Attack'], options: [] },
+                7: { features: ['Indomitable'], options: [] },
+                9: { features: ['Indomitable (Improved)'], options: [] },
+                11: { features: ['Extra Attack (2)'], options: [] },
+                13: { features: ['Indomitable (Greater)'], options: [] },
+                15: { features: ['Indomitable (Master)'], options: [] },
+                17: { features: ['Extra Attack (3)'], options: [] },
+                18: { 
+                    features: ['Martial Archetype'], 
+                    options: [
+                        { id: 'champion', name: 'Champion', exclusiveGroup: 'archetype' },
+                        { id: 'battleMaster', name: 'Battle Master', exclusiveGroup: 'archetype' },
+                        { id: 'eldritchKnight', name: 'Eldritch Knight', exclusiveGroup: 'archetype' }
+                    ] 
+                }
+            },
+            wizard: {
+                1: { features: ['Spellcasting'], options: [] },
+                2: { features: ['Arcane Recovery'], options: [] },
+                3: { features: ['Ritual Casting'], options: [] },
+                5: { features: ['Spell Mastery'], options: [] },
+                7: { features: ['Master of Wizards'], options: [] },
+                9: { features: ['Master of Wizards (Greater)'], options: [] },
+                11: { features: ['Spell Mastery (Greater)'], options: [] },
+                13: { features: ['Spell Mastery (Master)'], options: [] },
+                15: { features: ['Spell Mastery (Supreme)'], options: [] },
+                18: { 
+                    features: ['School Specialization'], 
+                    options: [
+                        { id: 'abjurer', name: 'School of Abjuration', exclusiveGroup: 'archetype' },
+                        { id: 'conjurer', name: 'School of Conjuration', exclusiveGroup: 'archetype' },
+                        { id: 'diviner', name: 'School of Divination', exclusiveGroup: 'archetype' },
+                        { id: 'enchantrer', name: 'School of Enchantment', exclusiveGroup: 'archetype' },
+                        { id: 'evoker', name: 'School of Evocation', exclusiveGroup: 'archetype' },
+                        { id: 'illusionist', name: 'School of Illusion', exclusiveGroup: 'archetype' },
+                        { id: 'necromancer', name: 'School of Necromancy', exclusiveGroup: 'archetype' },
+                        { id: 'transmuter', name: 'School of Transmutation', exclusiveGroup: 'archetype' }
+                    ] 
+                }
+            },
+            wizard: {
+                1: { features: ['Spellcasting'], options: [] },
+                2: { features: ['Arcane Recovery'], options: [] },
+                3: { features: ['Ritual Casting'], options: [] },
+                5: { features: ['Spell Mastery'], options: [] },
+                7: { features: ['Master of Wizards'], options: [] },
+                9: { features: ['Master of Wizards (Greater)'], options: [] },
+                11: { features: ['Spell Mastery (Greater)'], options: [] },
+                13: { features: ['Spell Mastery (Master)'], options: [] },
+                15: { features: ['Spell Mastery (Supreme)'], options: [] },
+                18: { features: ['School Specialization'], options: [
+                        { id: 'abjurer', name: 'School of Abjuration', exclusiveGroup: 'archetype' }
+                    ] }
+            },
+            rogue: {
+                1: { features: ['Sneak Attack', 'Cunning Action'], options: [] },
+                2: { features: ["Thieves' Cant"], options: [] },
+                3: { features: ['Cunning Action (Dash)'], options: [] },
+                5: { features: ['Evasion'], options: [] },
+                7: { features: ['Uncanny Dodge'], options: [] },
+                9: { features: ['Reliable Talent'], options: [] },
+                11: { features: ['Cunning Action (Hide)'], options: [] },
+                13: { features: ['Blindsense'], options: [] },
+                15: { features: ['Slippery Mind'], options: [] },
+                17: { features: ['Elusive'], options: [] }
+            },
+            cleric: {
+                1: { features: ['Channel Divinity'], options: [] },
+                2: { features: ['Divine Domain Spells'], options: [] },
+                3: { features: ['Destroy Undead'], options: [] },
+                5: { features: ['Domain Features'], options: [
+                        { id: 'life', name: 'Domain of Life', exclusiveGroup: 'domain' },
+                        { id: 'war', name: 'Domain of War', exclusiveGroup: 'domain' },
+                        { id: 'trickery', name: 'Domain of Trickery', exclusiveGroup: 'domain' },
+                        { id: 'knowledge', name: 'Domain of Knowledge', exclusiveGroup: 'domain' }
+                    ] },
+                7: { features: ['Divine Intervention'], options: [] }
+            },
+            ranger: {
+                1: { features: ['Favored Enemy'], options: [] },
+                2: { features: ['Natural Explorer'], options: [] },
+                3: { features: ['Fighting Style'], options: [] },
+                5: { features: ['Primeval Awareness'], options: [] },
+                7: { features: ['Glands of the Wild'], options: [] },
+                9: { features: ['Vanish'], options: [] },
+                11: { features: ['Foe Slayer'], options: [] }
+            },
+            barbarian: {
+                1: { features: ['Rage'], options: [] },
+                2: { features: ['Danger Sense'], options: [] },
+                3: { features: ['Reckless Attack'], options: [] },
+                5: { features: ['Frenzy'], options: [] },
+                7: { features: ['Brutal Critical'], options: [] },
+                9: { features: ['Relentless Rage'], options: [] },
+                11: { features: ['Persistent Rage'], options: [] },
+                13: { features: ['Indomitable Might'], options: [] },
+                15: { features: ['Primal Champion'], options: [] }
+            },
+            paladin: {
+                1: { features: ['Divine Smite'], options: [] },
+                2: { features: ['Fighting Style'], options: [] },
+                3: { features: ['Divine Health'], options: [] },
+                5: { features: ['Aura of Protection'], options: [] },
+                7: { features: ['Aura of Courage'], options: [] },
+                9: { features: ['Improved Divine Smite'], options: [] },
+                11: { features: ['Cleansing Touch'], options: [] }
+            },
+            bard: {
+                1: { features: ['Bardic Inspiration'], options: [] },
+                2: { features: ['Jack of All Trades'], options: [] },
+                3: { features: ['Song of Rest'], options: [] },
+                5: { features: ['Expertise'], options: [] },
+                7: { features: ['Magical Secrets'], options: [] },
+                9: { features: ['Superior Inspiration'], options: [] },
+                11: { features: ['Magical Secrets (Greater)'], options: [] },
+                13: { features: ['Magical Secrets (Master)'], options: [] }
+            },
+            druid: {
+                1: { features: ['Druid Circle'], options: [] },
+                2: { features: ['Wild Shape'], options: [] },
+                3: { features: ['Timeless Body'], options: [] },
+                5: { features: ['Beast Spells'], options: [] },
+                7: { features: ['Timeless Body (Improved)'], options: [] },
+                9: { features: ['Archdruid'], options: [] }
+            },
+            monk: {
+                1: { features: ['Ki'], options: [] },
+                2: { features: ['Unarmored Movement'], options: [] },
+                3: { features: ['Deflect Missiles'], options: [] },
+                5: { features: ['Stunning Strike'], options: [] },
+                7: { features: ['Ki-Empowered Strikes'], options: [] },
+                9: { features: ['Stillness of Mind'], options: [] },
+                11: { features: ['Purity of Body'], options: [] },
+                13: { features: ['Tongue of the Sun and Moon'], options: [] },
+                15: { features: ['Empty Body'], options: [] },
+                17: { features: ['Perfect Self'], options: [] }
+            },
+            sorcerer: {
+                1: { features: ['Metamagic'], options: [] },
+                2: { features: ['Spellcasting'], options: [] },
+                3: { features: ['Font of Magic'], options: [] },
+                5: { features: ['Metamagic (Improved)'], options: [] },
+                7: { features: ['Sorcerous Restoration'], options: [] },
+                9: { features: ['Metamagic (Greater)'], options: [] },
+                11: { features: ['Restoration (Greater)'], options: [] },
+                13: { features: ['Metamagic (Master)'], options: [] },
+                15: { features: ['Metamagic (Supreme)'], options: [] },
+                18: { features: ['Sorcerous Restoration'], options: [] }
+            },
+            warlock: {
+                1: { features: ['Pact Magic'], options: [] },
+                2: { features: ['Eldritch Invocations'], options: [] },
+                3: { features: ['Pact Boon'], options: [] },
+                5: { features: ['Mystic Arcanum'], options: [] },
+                7: { features: ['Mystic Arcanum (Greater)'], options: [] },
+                9: { features: ['Mystic Arcanum (Master)'], options: [] },
+                11: { features: ['Mystic Arcanum (Supreme)'], options: [] },
+                13: { features: ['Eldritch Mastery'], options: [] }
+            }
+        };
+        
+        const hitDice = {
+            fighter: 10,
+            wizard: 6,
+            rogue: 8,
+            cleric: 8,
+            ranger: 10,
+            barbarian: 12,
+            paladin: 10,
+            bard: 8,
+            druid: 8,
+            monk: 8,
+            sorcerer: 6,
+            warlock: 8
+        };
+
         let character = {
             classId: null,
             raceId: null,
@@ -388,12 +879,15 @@
             stats: {},
             proficiencyIds: [],
             abilityIds: [],
-            featIds: []
+            featIds: [],
+            level: 1
         };
-        
+
         let currentStep = 0;
         let pointsRemaining = 27;
-        let raceBonus = { stat: null, value: 0, subraceBonus: 0 };
+        
+        let viewingCharacterIndex = null;
+        let levelingCharacterIndex = null;
         
         // Init
         function init() {
@@ -403,6 +897,19 @@
             renderAbilities();
             renderFeats();
             renderSavedCharacters();
+            
+            const delModal = document.getElementById('modal-confirm-delete');
+            if (delModal) {
+                delModal.addEventListener('click', () => {
+                    const idx = deleteCharacterIndex;
+                    if (idx !== null) {
+                        deleteCharacterAtIndex(idx);
+                    }
+                    closeDeleteModal();
+                });
+            }
+            
+            showStep(6);
         }
         
         // Render functions
@@ -419,7 +926,26 @@
         function renderRaces() {
             const grid = document.getElementById('race-grid');
             grid.innerHTML = races.map(r => {
-                const bonusText = r.bonus_stat ? `+${r.bonus} ${statLabels[r.bonus_stat]}` : '+1 to all stats';
+                const bonusParts = [];
+                if (r.bonuses) {
+                    if (r.bonuses.chosen) {
+                        const raceAbs = r.raceAbilities || [];
+                        const hasFeat = raceAbs.includes('+1 Feat');
+                        const hasSkill = raceAbs.includes('+1 Proficiency');
+                        let parts = [];
+                        parts.push(`+1 on ${r.bonuses.chosen} stats`);
+                        if (hasSkill) parts.push('+1 Skill');
+                        if (hasFeat) parts.push('+1 Feat');
+                        bonusParts.push(parts.join(', '));
+                    } else {
+                        for (const [stat, val] of Object.entries(r.bonuses)) {
+                            if (stat !== 'chosen') {
+                                bonusParts.push(`+${val} ${statLabels[stat]}`);
+                            }
+                        }
+                    }
+                }
+                const bonusText = bonusParts.length > 0 ? bonusParts.join(', ') : r.desc;
                 return `
                     <div class="card" onclick="selectRace('${r.id}')" id="race-${r.id}">
                         <h3>${r.name}</h3>
@@ -435,7 +961,13 @@
             const subs = subraces[raceId] || [];
             grid.innerHTML = subs.length === 0 ? '<p>No subraces available</p>' : 
                 subs.map(s => {
-                    const bonusText = s.bonus_stat ? `+${s.bonus} ${statLabels[s.bonus_stat]}` : '';
+                    const bonusParts = [];
+                    if (s.bonuses) {
+                        for (const [stat, val] of Object.entries(s.bonuses)) {
+                            bonusParts.push(`+${val} ${statLabels[stat]}`);
+                        }
+                    }
+                    const bonusText = bonusParts.length > 0 ? bonusParts.join(', ') : '';
                     return `
                         <div class="card" onclick="selectSubrace('${s.name}')" id="subrace-${s.name}">
                             <h3>${s.name}</h3>
@@ -447,9 +979,10 @@
         
         function renderStats() {
             const container = document.getElementById('stats-container');
-            raceBonus = getRaceBonus();
+            const bonuses = getRaceBonuses();
+            const isHuman = character.raceId === 'human';
+            const humanBonusStats = character.humanBonusStats || [];
             
-            // Calculate used points so far
             let usedPoints = 0;
             stats.forEach(stat => {
                 const base = character.stats[stat] ?? 8;
@@ -458,16 +991,19 @@
             pointsRemaining = 27 - usedPoints;
             document.getElementById('points-remaining').textContent = pointsRemaining;
             
-            container.innerHTML = stats.map(stat => {
+            let humanHint = '';
+            let maxHumanBonus = 0;
+            if (isHuman && bonuses.chosen) {
+                maxHumanBonus = bonuses.chosen;
+                humanHint = `<p style="color: var(--text-muted); margin-bottom: 15px;">Click the star to select bonus stats (select ${maxHumanBonus})</p>`;
+            }
+            
+            container.innerHTML = humanHint + stats.map(stat => {
                 const base = character.stats[stat] ?? 8;
-                let bonus = 0;
-                // Human: +1 to all stats
-                if (character.raceId === 'human') {
-                    bonus = 1;
-                } else if (raceBonus.stat === stat) {
-                    bonus = raceBonus.value + raceBonus.subraceBonus;
-                }
-                const total = base + bonus;
+                const humanBonus = isHuman && humanBonusStats.includes(stat) ? 1 : 0;
+                const raceBonus = bonuses[stat] || 0;
+                const total = base + humanBonus + raceBonus;
+                const isHumanBonusSelected = isHuman && humanBonusStats.includes(stat);
                 return `
                     <div class="stat-row">
                         <div class="stat-name">${statLabels[stat]}</div>
@@ -475,23 +1011,23 @@
                             <button class="stat-btn" onclick="adjustStat('${stat}', -1)" id="btn-${stat}-minus">-</button>
                             <div class="stat-value">${base}</div>
                             <button class="stat-btn" onclick="adjustStat('${stat}', 1)" id="btn-${stat}-plus">+</button>
-                            <div class="stat-bonus">${bonus > 0 ? '+' + bonus : ''}</div>
+                            <div class="stat-bonus">${(humanBonus + raceBonus) > 0 ? '+' + (humanBonus + raceBonus) : ''}</div>
                             <div class="stat-total">${total}</div>
+                            ${isHuman ? `<button class="stat-btn human-bonus-btn ${isHumanBonusSelected ? 'selected' : ''}" onclick="toggleHumanBonusStat('${stat}')" title="Click to toggle +1 bonus">${isHumanBonusSelected ? '⭐' : '☆'}</button>` : ''}
                         </div>
                     </div>
                 `;
             }).join('');
             
-            // Update button states
+            if (isHuman) {
+                container.innerHTML += `<p style="color: var(--text-muted); margin-top: 10px;">${humanBonusStats.length}/${maxHumanBonus} bonus stats selected</p>`;
+            }
+            
             stats.forEach(stat => {
                 const base = character.stats[stat] ?? 8;
-                let bonus = 0;
-                if (character.raceId === 'human') {
-                    bonus = 1;
-                } else if (raceBonus.stat === stat) {
-                    bonus = raceBonus.value + raceBonus.subraceBonus;
-                }
-                const total = base + bonus;
+                const humanBonus = isHuman && humanBonusStats.includes(stat) ? 1 : 0;
+                const raceBonus = bonuses[stat] || 0;
+                const total = base + humanBonus + raceBonus;
                 
                 const minusBtn = document.getElementById('btn-' + stat + '-minus');
                 const plusBtn = document.getElementById('btn-' + stat + '-plus');
@@ -502,11 +1038,88 @@
                 }
             });
             
-            document.getElementById('stats-next').disabled = pointsRemaining > 0;
+            const canProceed = pointsRemaining > 0 ? false : (!isHuman || humanBonusStats.length === maxHumanBonus);
+            document.getElementById('stats-next').disabled = !canProceed;
+        }
+        
+        function toggleHumanBonusStat(stat) {
+            if (character.raceId !== 'human') return;
+            
+            const humanBonusStats = character.humanBonusStats || [];
+            const idx = humanBonusStats.indexOf(stat);
+            
+            if (idx > -1) {
+                humanBonusStats.splice(idx, 1);
+            } else if (humanBonusStats.length < 2) {
+                humanBonusStats.push(stat);
+            }
+            
+            character.humanBonusStats = humanBonusStats;
+            renderStats();
+        }
+        
+        function getRaceAbilities() {
+            if (!character.raceId) return [];
+            
+            const race = races.find(r => r.id === character.raceId);
+            let raceAbilities = [...(race.raceAbilities || [])];
+            
+            if (character.subraceName && subraces[character.raceId]) {
+                const sub = subraces[character.raceId].find(s => s.name === character.subraceName);
+                if (sub && sub.raceAbilities) {
+                    raceAbilities = raceAbilities.concat(sub.raceAbilities);
+                }
+            }
+            
+            return raceAbilities;
+        }
+        
+        function hasRaceAbility(abilityName) {
+            const raceAbs = getRaceAbilities();
+            return raceAbs.includes(abilityName);
+        }
+        
+        function getExtraSkillCount() {
+            const raceAbs = getRaceAbilities();
+            return raceAbs.filter(a => a === '+1 Proficiency').length;
+        }
+        
+        function getExtraFeatCount() {
+            const raceAbs = getRaceAbilities();
+            return raceAbs.filter(a => a === '+1 Feat').length;
+        }
+        
+        function getClassFeaturesForLevel(classId, level) {
+            if (!classId || !classFeatures[classId]) return { features: [], options: [] };
+            const allFeatures = [];
+            const allOptions = [];
+            
+            for (let lvl = 1; lvl <= level; lvl++) {
+                if (classFeatures[classId][lvl]) {
+                    const cf = classFeatures[classId][lvl];
+                    if (cf.features) {
+                        cf.features.forEach(f => {
+                            allFeatures.push({ name: f, level: lvl, source: 'class', classId: classId });
+                        });
+                    }
+                    if (cf.options) {
+                        cf.options.forEach(o => {
+                            allOptions.push({ ...o, level: lvl, source: 'class', classId: classId });
+                        });
+                    }
+                }
+            }
+            
+            return { features: allFeatures, options: allOptions };
         }
         
         function renderProficiencies() {
             const grid = document.getElementById('proficiencies-grid');
+            const extraSkills = getExtraSkillCount();
+            const maxSkills = 2 + extraSkills;
+            
+            document.getElementById('proficiency-instruction').textContent = `Select up to ${maxSkills} skills`;
+            
             grid.innerHTML = proficiencies.map(p => `
                 <label class="checkbox-item">
                     <input type="checkbox" value="${p}" onchange="toggleProficiency('${p}')">
@@ -517,22 +1130,201 @@
         
         function renderAbilities() {
             const grid = document.getElementById('abilities-grid');
-            grid.innerHTML = abilities.map(a => `
-                <label class="checkbox-item">
-                    <input type="checkbox" value="${a}" onchange="toggleAbility('${a}')">
-                    ${a}
-                </label>
-            `).join('');
+            const charLevel = character.level || 1;
+            const classId = character.classId;
+            const race = races.find(r => r.id === character.raceId);
+            const raceName = race ? race.name : '';
+            const raceAbilities = getRaceAbilities().filter(a => !a.startsWith('+1 '));
+            const classFeaturesData = getClassFeaturesForLevel(classId, charLevel);
+            const allAbilitiesList = [...new Set([...raceAbilities, ...classFeaturesData.features.map(f => f.name)])];
+            
+            let html = '';
+            
+            if (raceAbilities.length > 0) {
+                html += `<h4 style="margin: 15px 0 10px; color: var(--accent);">Race Abilities</h4>`;
+                raceAbilities.forEach(a => {
+                    const tooltip = `Locked: ${a} is a ${raceName} race ability (available at creation)`;
+                    html += `
+                        <label class="checkbox-item race-ability">
+                            <input type="checkbox" checked disabled>
+                            ${a} 🔒
+                            <span title="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
+                        </label>
+                    `;
+                });
+            }
+            
+            const currentClassFeatures = classFeaturesData.features.filter(f => f.level <= charLevel);
+            const pastClassFeatures = classFeaturesData.features.filter(f => f.level <= charLevel).map(f => f.name);
+            const futureClassFeatures = classFeaturesData.features.filter(f => f.level > charLevel);
+            
+            if (currentClassFeatures.length > 0) {
+                html += `<h4 style="margin: 15px 0 10px; color: var(--accent);">Class Features (Level ${charLevel})</h4>`;
+                currentClassFeatures.forEach(f => {
+                    const isSelected = (character.abilityIds || []).includes(f.name);
+                    const tooltip = isSelected 
+                        ? `Active: ${f.name} (${classId} - Level ${f.level})`
+                        : `Available: ${f.name} (${classId} - Level ${f.level})`;
+                    html += `
+                        <label class="checkbox-item ${isSelected ? 'race-ability' : ''}">
+                            <input type="checkbox" ${isSelected ? 'checked' : ''} ${isSelected ? 'disabled' : ''}>
+                            ${f.name} ${isSelected ? '✓' : ''}
+                            <span title="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
+                        </label>
+                    `;
+                });
+            }
+            
+            if (futureClassFeatures.length > 0) {
+                const nextFeature = futureClassFeatures[0];
+                html += `<h4 style="margin: 15px 0 10px; color: var(--text-muted);">Future Class Features</h4>`;
+                futureClassFeatures.forEach(f => {
+                    const tooltip = `Locked: ${f.name} available at ${classId} Level ${f.level}`;
+                    html += `
+                        <label class="checkbox-item disabled" style="opacity: 0.5;">
+                            <input type="checkbox" disabled>
+                            ${f.name} (Lvl ${f.level})
+                            <span title="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
+                        </label>
+                    `;
+                });
+            }
+            
+            const classOptions = classFeaturesData.options.filter(o => o.level <= charLevel);
+            if (classOptions.length > 0) {
+                html += `<h4 style="margin: 15px 0 10px; color: var(--accent);">Class Options (Choose One)</h4>`;
+                
+                const exclusiveGroups = {};
+                classOptions.forEach(o => {
+                    if (!exclusiveGroups[o.exclusiveGroup]) exclusiveGroups[o.exclusiveGroup] = [];
+                    exclusiveGroups[o.exclusiveGroup].push(o);
+                });
+                
+                for (const groupName in exclusiveGroups) {
+                    const groupOptions = exclusiveGroups[groupName];
+                    html += `<p style="color: var(--text-muted); margin: 10px 0 5px;">${groupName}:</p>`;
+                    groupOptions.forEach(o => {
+                        const isSelected = (character.abilityIds || []).includes(o.name);
+                        const tooltip = isSelected
+                            ? `Selected: ${o.name} (${classId} - Level ${o.level})`
+                            : `Available: ${o.name} (${classId} - Level ${o.level})`;
+                        const isDisabled = isSelected || groupOptions.some(go => go.name !== o.name && (character.abilityIds || []).includes(go.name));
+                        html += `
+                            <label class="checkbox-item ${isSelected ? 'race-ability' : ''}" style="${isDisabled && !isSelected ? 'opacity: 0.5;' : ''}">
+                                <input type="checkbox" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} onchange="toggleAbility('${o.name}')">
+                                ${o.name}
+                                <span title="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
+                            </label>
+                        `;
+                    });
+                }
+            }
+            
+            grid.innerHTML = html;
         }
         
         function renderFeats() {
             const grid = document.getElementById('feats-grid');
-            grid.innerHTML = feats.map(f => `
-                <label class="checkbox-item">
-                    <input type="checkbox" value="${f}" onchange="toggleFeat('${f}')">
-                    ${f}
-                </label>
-            `).join('');
+            const charLevel = character.level || 1;
+            const extraFeats = getExtraFeatCount();
+            const maxFeatsFromLevel = Math.floor(charLevel / 4);
+            const totalMaxFeats = maxFeatsFromLevel + extraFeats;
+            const currentFeatCount = (character.featIds || []).length;
+            
+            const featsNote = document.getElementById('feats-note');
+            
+            if (totalMaxFeats > 0) {
+                featsNote.textContent = `Select up to ${totalMaxFeats} feat${totalMaxFeats > 1 ? 's' : ''} (${currentFeatCount}/${totalMaxFeats} selected)`;
+            } else {
+                featsNote.textContent = `Feats available at level 4 (${currentFeatCount}/0 selected)`;
+            }
+            
+            grid.innerHTML = feats.map(f => {
+                const isSelected = (character.featIds || []).includes(f);
+                const isDisabled = !isSelected && currentFeatCount >= totalMaxFeats;
+                return `
+                    <label class="checkbox-item ${isDisabled ? 'disabled' : ''}" style="${isDisabled && !isSelected ? 'opacity: 0.5;' : ''}">
+                        <input type="checkbox" value="${f}" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} onchange="toggleFeat('${f}')">
+                        ${f}
+                    </label>
+                `;
+            }).join('');
+            
+            const featsHeading = document.querySelector('#step-abilities h3:last-of-type');
+            if (featsHeading) {
+                featsHeading.style.color = totalMaxFeats === 0 ? '#888' : '';
+            }
+        }
+        
+        function toggleAbility(id) {
+            if (!character.abilityIds) character.abilityIds = [];
+            
+            const classFeaturesData = getClassFeaturesForLevel(character.classId, character.level || 1);
+            const classOptions = classFeaturesData.options || [];
+            
+            const clickedOption = classOptions.find(o => o.name === id);
+            if (clickedOption) {
+                const isSelected = character.abilityIds.includes(id);
+                
+                if (isSelected) {
+                    const idx = character.abilityIds.indexOf(id);
+                    character.abilityIds.splice(idx, 1);
+                } else {
+                    const exclusiveGroup = clickedOption.exclusiveGroup;
+                    const groupOptions = classOptions.filter(o => o.exclusiveGroup === exclusiveGroup);
+                    groupOptions.forEach(o => {
+                        const idx = character.abilityIds.indexOf(o.name);
+                        if (idx > -1) character.abilityIds.splice(idx, 1);
+                    });
+                    character.abilityIds.push(id);
+                }
+                
+                renderAbilities();
+            }
+        }
+        
+        function toggleFeat(id) {
+            const charLevel = character.level || 1;
+            const extraFeats = getExtraFeatCount();
+            const maxFeatsFromLevel = Math.floor(charLevel / 4);
+            const totalMaxFeats = maxFeatsFromLevel + extraFeats;
+            const currentFeatCount = (character.featIds || []).length;
+            
+            const idx = (character.featIds || []).indexOf(id);
+            
+            if (idx > -1) {
+                character.featIds.splice(idx, 1);
+            } else {
+                if (currentFeatCount < totalMaxFeats) {
+                    if (!character.featIds) character.featIds = [];
+                    character.featIds.push(id);
+                } else {
+                    return;
+                }
+            }
+            
+            renderFeats();
+        }
+        
+        function getCharacterLevel(char) {
+            if (char.classes) {
+                return char.classes.reduce((sum, c) => sum + c.level, 0);
+            }
+            return char.level || 1;
+        }
+        
+        function getTotalLevel(chars) {
+            if (chars.classes) {
+                return chars.classes.reduce((sum, c) => sum + c.level, 0);
+            }
+            return chars.level || 1;
+        }
+        
+        function getCharacterClasses(char) {
+            if (char.classes) {
+                return char.classes;
+            }
+            return [{ classId: char.classId, level: char.level || 1 }];
         }
         
         function renderSavedCharacters() {
@@ -544,15 +1336,28 @@
                 return;
             }
             
-            list.innerHTML = chars.map((c, i) => `
-                <div class="character-item">
-                    <div>
-                        <strong>${c.name || 'Unnamed'}</strong>
-                        <span style="color: var(--text-muted);"> - ${c.className} ${c.raceName}</span>
+            list.innerHTML = chars.map((c, i) => {
+                const totalLevel = getTotalLevel(c);
+                const classInfo = getCharacterClasses(c).map(cc => {
+                    const cls = classes.find(cl => cl.id === cc.classId);
+                    return cls ? `${cls.name} ${cc.level}` : cc.classId;
+                }).join(' / ');
+                
+                return `
+                    <div class="character-item" data-index="${i}">
+                        <div>
+                            <strong>${c.name || 'Unnamed'}</strong>
+                            <span style="color: var(--text-muted);"> - Level ${totalLevel} ${c.raceName}</span>
+                            <span style="color: var(--accent);"> [${classInfo}]</span>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="view-btn" onclick="viewCharacter(${i})">View</button>
+                            <button class="level-btn" onclick="openLevelUp(${i})">Level Up</button>
+                            <button class="delete-btn" onclick="confirmDeleteCharacter(${i})">Delete</button>
+                        </div>
                     </div>
-                    <button class="delete-btn" onclick="deleteCharacter(${i})">Delete</button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
         
         // Selection functions
@@ -566,7 +1371,12 @@
         function selectRace(id) {
             character.raceId = id;
             character.subraceName = null;
-            raceBonus = getRaceBonus();
+            character.stats = {};
+            character.humanBonusStats = [];
+            character.proficiencyIds = [];
+            character.abilityIds = [];
+            character.featIds = [];
+            pointsRemaining = 27;
             
             document.querySelectorAll('#race-grid .card').forEach(c => c.classList.remove('selected'));
             document.getElementById('race-' + id).classList.add('selected');
@@ -595,10 +1405,12 @@
         function toggleProficiency(id) {
             const checkbox = event.target;
             const idx = character.proficiencyIds.indexOf(id);
+            const isHuman = character.raceId === 'human';
+            const maxSkills = isHuman ? 3 : 2;
             
             if (idx > -1) {
                 character.proficiencyIds.splice(idx, 1);
-            } else if (character.proficiencyIds.length < 2) {
+            } else if (character.proficiencyIds.length < maxSkills) {
                 character.proficiencyIds.push(id);
             } else {
                 checkbox.checked = false;
@@ -608,71 +1420,55 @@
             document.getElementById('prof-count').textContent = character.proficiencyIds.length + ' selected';
         }
         
-        function toggleAbility(id) {
-            const checkbox = event.target;
-            const idx = character.abilityIds.indexOf(id);
-            if (idx > -1) {
-                character.abilityIds.splice(idx, 1);
-            } else {
-                character.abilityIds.push(id);
-            }
-        }
         
-        function toggleFeat(id) {
-            const checkbox = event.target;
-            const idx = character.featIds.indexOf(id);
-            if (idx > -1) {
-                character.featIds.splice(idx, 1);
-            } else {
-                character.featIds.push(id);
-            }
-        }
         
         // Stat functions
-        function getRaceBonus() {
-            if (!character.raceId) return { stat: null, value: 0, subraceBonus: 0 };
-            
-            // Human gets +1 to all stats
-            if (character.raceId === 'human') {
-                return { stat: 'all', value: 1, subraceBonus: 0 };
-            }
+        function getRaceBonuses() {
+            if (!character.raceId) return {};
             
             const race = races.find(r => r.id === character.raceId);
-            let subraceBonus = 0;
+            let bonuses = { ...race.bonuses };
             
             if (character.subraceName && subraces[character.raceId]) {
                 const sub = subraces[character.raceId].find(s => s.name === character.subraceName);
-                if (sub && sub.bonus_stat) {
-                    subraceBonus = sub.bonus;
+                if (sub && sub.bonuses) {
+                    for (const [stat, value] of Object.entries(sub.bonuses)) {
+                        bonuses[stat] = (bonuses[stat] || 0) + value;
+                    }
                 }
             }
             
-            return {
-                stat: race.bonus_stat,
-                value: race.bonus || 0,
-                subraceBonus: subraceBonus
-            };
+            return bonuses;
+        }
+        
+        function getRaceAbilities() {
+            if (!character.raceId) return [];
+            
+            const race = races.find(r => r.id === character.raceId);
+            let raceAbilities = [...(race.raceAbilities || [])];
+            
+            if (character.subraceName && subraces[character.raceId]) {
+                const sub = subraces[character.raceId].find(s => s.name === character.subraceName);
+                if (sub && sub.raceAbilities) {
+                    raceAbilities = raceAbilities.concat(sub.raceAbilities);
+                }
+            }
+            
+            return raceAbilities;
         }
         
         function adjustStat(stat, delta) {
             const currentBase = character.stats[stat] ?? 8;
             const newBase = currentBase + delta;
             
-            // Validation
             if (newBase < 8) return;
-            if (newBase > 15) return;  // Before race bonus
+            if (newBase > 15) return;
             
-            // Calculate bonus for this specific stat
-            let bonus = 0;
-            if (character.raceId === 'human') {
-                bonus = 1;
-            } else if (raceBonus.stat === stat) {
-                bonus = raceBonus.value + raceBonus.subraceBonus;
-            }
+            const bonuses = getRaceBonuses();
+            const bonus = bonuses[stat] || 0;
             
-            if (newBase + bonus > 16) return;  // Cap at 16 after bonus
+            if (newBase + bonus > 16) return;
             
-            // Points check
             if (delta > 0 && pointsRemaining <= 0) return;
             if (delta < 0 && currentBase === 8) return;
             
@@ -709,17 +1505,33 @@
         // Navigation
         function showStep(n) {
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step-' + ['class', 'race', 'stats', 'proficiencies', 'abilities', 'summary', 'saved'][n]).classList.add('active');
-            currentStep = n;
+            const stepId = ['class', 'race', 'stats', 'proficiencies', 'abilities', 'summary', 'saved'][n];
+            const targetStep = document.getElementById('step-' + stepId);
+            if (targetStep) {
+                targetStep.classList.add('active');
+                currentStep = n;
+            }
+            
+            if (n === 2) {
+                renderStats();
+            }
+            if (n === 3) {
+                character.proficiencyIds = [];
+                renderProficiencies();
+            }
+            if (n === 4) {
+                if (!character.featIds) character.featIds = [];
+                renderAbilities();
+                renderFeats();
+            }
+            if (n === 5) {
+                if (!character.abilityIds) character.abilityIds = [];
+                if (!character.featIds) character.featIds = [];
+                renderSummary();
+            }
         }
         
         function nextStep() {
-            if (currentStep === 1) {
-                renderStats();
-            }
-            if (currentStep === 5) {
-                renderSummary();
-            }
             showStep(currentStep + 1);
         }
         
@@ -731,10 +1543,10 @@
             const cls = classes.find(c => c.id === character.classId);
             const race = races.find(r => r.id === character.raceId);
             
-            const raceBonus = getRaceBonus();
+            const bonuses = getRaceBonuses();
             const statValues = stats.map(stat => {
                 const base = character.stats[stat] || 8;
-                const bonus = raceBonus.stat === stat ? raceBonus.value + raceBonus.subraceBonus : 0;
+                const bonus = bonuses[stat] || 0;
                 return { name: statLabels[stat], base, bonus, total: base + bonus };
             });
             
@@ -776,17 +1588,30 @@
             const cls = classes.find(c => c.id === character.classId);
             const race = races.find(r => r.id === character.raceId);
             
+            const startingLevel = character.level || 1;
+            const raceAbilities = getRaceAbilities();
+            const extraSkills = getExtraSkillCount();
+            const extraFeats = getExtraFeatCount();
+            
+            const actualAbilities = (character.abilityIds || []).filter(a => !a.startsWith('+1 '));
+            const allAbilityIds = [...new Set([...raceAbilities.filter(a => !a.startsWith('+1 ')), ...actualAbilities])];
+            
             const newChar = {
+                id: Date.now().toString(36) + Math.random().toString(36).substr(2),
                 name: name,
-                classId: character.classId,
+                level: startingLevel,
+                classes: [{ classId: character.classId, level: startingLevel }],
                 className: cls ? cls.name : '',
                 raceId: character.raceId,
                 raceName: race ? race.name : '',
                 subraceName: character.subraceName,
                 stats: { ...character.stats },
+                humanBonusStats: character.humanBonusStats || [],
+                extraSkillCount: extraSkills,
+                extraFeatCount: extraFeats,
                 proficiencyIds: [...character.proficiencyIds],
-                abilityIds: [...character.abilityIds],
-                featIds: [...character.featIds]
+                abilityIds: allAbilityIds,
+                featIds: [...(character.featIds || [])]
             };
             
             const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
@@ -805,25 +1630,390 @@
                 stats: {},
                 proficiencyIds: [],
                 abilityIds: [],
-                featIds: []
+                featIds: [],
+                humanBonusStats: [],
+                level: 1
             };
             pointsRemaining = 27;
             
             document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
             document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
             document.getElementById('char-name').value = '';
+            document.getElementById('starting-level').value = 1;
             
             showStep(0);
         }
         
-        function deleteCharacter(index) {
+        function updateStartingLevel(level) {
+            character.level = Math.max(1, Math.min(20, parseInt(level) || 1));
+            document.getElementById('starting-level').value = character.level;
+        }
+        
+        let deleteCharacterIndex = null;
+        
+        function confirmDeleteCharacter(index) {
+            const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
+            const char = chars[index];
+            deleteCharacterIndex = index;
+            document.getElementById('delete-char-name').textContent = char.name || 'Unnamed';
+            document.getElementById('delete-confirm-modal').classList.add('active');
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('delete-confirm-modal').classList.remove('active');
+            deleteCharacterIndex = null;
+        }
+        
+        function deleteCharacterAtIndex(index) {
             const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
             chars.splice(index, 1);
             localStorage.setItem('dnd-characters', JSON.stringify(chars));
             renderSavedCharacters();
         }
         
-        // Start
+        function viewCharacter(index) {
+            const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
+            const char = chars[index];
+            viewingCharacterIndex = index;
+            
+            const totalLevel = getTotalLevel(char);
+            const charClasses = getCharacterClasses(char);
+            
+            let classesHtml = charClasses.map(cc => {
+                const cls = classes.find(c => c.id === cc.classId);
+                const clsName = cls ? cls.name : cc.classId;
+                return `
+                    <div class="sheet-class">
+                        <div class="sheet-class-header">
+                            <span class="sheet-class-name">${clsName}</span>
+                            <span style="color: var(--text-muted);">Level ${cc.level}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            const raceName = char.subraceName ? `${char.raceName} (${char.subraceName})` : char.raceName;
+            
+            const statsHtml = stats.map(stat => {
+                const base = char.stats[stat] || 10;
+                const mod = Math.floor((base - 10) / 2);
+                const race = races.find(r => r.id === char.raceId);
+                let bonus = 0;
+                if (char.raceId === 'human') {
+                    bonus = 1;
+                } else if (race && race.bonus_stat === stat) {
+                    bonus = race.bonus;
+                }
+                const total = base + bonus;
+                return `
+                    <div class="sheet-stat">
+                        <div class="sheet-stat-name">${statLabels[stat]}</div>
+                        <div class="sheet-stat-value">${total}</div>
+                        <div class="sheet-stat-bonus">${bonus > 0 ? '+' + bonus : ''} (${mod >= 0 ? '+' + mod : mod})</div>
+                    </div>
+                `;
+            }).join('');
+            
+            const profs = char.proficiencyIds && char.proficiencyIds.length > 0 
+                ? char.proficiencyIds.join(', ') 
+                : 'None';
+            const abilities = char.abilityIds && char.abilityIds.length > 0 
+                ? char.abilityIds.join(', ') 
+                : 'None';
+            const feats = char.featIds && char.featIds.length > 0 
+                ? char.featIds.join(', ') 
+                : 'None';
+            
+            document.getElementById('sheet-name').textContent = char.name || 'Unnamed';
+            document.getElementById('sheet-content').innerHTML = `
+                <div class="sheet-section">
+                    <h3>Class & Level</h3>
+                    <p>Level ${totalLevel}</p>
+                    ${classesHtml}
+                    <button class="btn-secondary" onclick="openMulticlass(${index})" style="margin-top: 10px;">Add Multiclass</button>
+                </div>
+                <div class="sheet-section">
+                    <h3>Race</h3>
+                    <p>${raceName}</p>
+                </div>
+                <div class="sheet-section">
+                    <h3>Ability Scores</h3>
+                    <div class="sheet-stats">${statsHtml}</div>
+                </div>
+                <div class="sheet-section">
+                    <h3>Proficiencies</h3>
+                    <p>${profs}</p>
+                </div>
+                <div class="sheet-section">
+                    <h3>Abilities</h3>
+                    <p>${abilities}</p>
+                </div>
+                <div class="sheet-section">
+                    <h3>Feats</h3>
+                    <p>${feats}</p>
+                </div>
+            `;
+            
+            document.getElementById('character-sheet-modal').classList.add('active');
+        }
+        
+        function closeCharacterSheet() {
+            document.getElementById('character-sheet-modal').classList.remove('active');
+            viewingCharacterIndex = null;
+        }
+        
+        let selectedLevelUpClass = null;
+        let availableFeaturesAtLevel = [];
+        let rolledHitPoints = 0;
+        let pendingLevelUp = null;
+        
+        function openLevelUp(index) {
+            levelingCharacterIndex = index;
+            const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
+            const char = chars[index];
+            const charClasses = getCharacterClasses(char);
+            const totalLevel = getTotalLevel(char);
+            
+            if (totalLevel >= MAX_LEVEL) {
+                alert('Character is already at max level (' + MAX_LEVEL + ')');
+                return;
+            }
+            
+            if (charClasses.length === 1) {
+                selectedLevelUpClass = charClasses[0];
+                showLevelUpForSingleClass(char, charClasses[0], totalLevel);
+            } else {
+                selectedLevelUpClass = null;
+                const grid = document.getElementById('level-up-class-grid');
+                grid.innerHTML = charClasses.map((cc, i) => {
+                    const cls = classes.find(c => c.id === cc.classId);
+                    const clsName = cls ? cls.name : cc.classId;
+                    return `
+                        <div class="card" onclick="selectLevelUpClass(${i}, ${cc.classId})" id="levelup-class-${cc.classId}">
+                            <h3>${clsName}</h3>
+                            <p>Current Level: ${cc.level}</p>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('level-up-class-select').style.display = 'block';
+                document.getElementById('level-up-current').style.display = 'none';
+                document.getElementById('level-up-features').innerHTML = '';
+                document.getElementById('level-up-hp').style.display = 'none';
+                document.getElementById('confirm-level-up-btn').disabled = true;
+                document.getElementById('level-up-modal').classList.add('active');
+            }
+        }
+        
+        function selectLevelUpClass(index, classId) {
+            const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
+            const char = chars[levelingCharacterIndex];
+            const charClasses = getCharacterClasses(char);
+            
+            selectedLevelUpClass = charClasses[index];
+            
+            document.querySelectorAll('#level-up-class-grid .card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('levelup-class-' + classId).classList.add('selected');
+            
+            showLevelUpForSingleClass(char, selectedLevelUpClass, getTotalLevel(char));
+        }
+        
+        function showLevelUpForSingleClass(char, classInfo, currentTotalLevel) {
+            const targetLevel = parseInt(document.getElementById('target-level-input').value) || classInfo.level + 1;
+            
+            document.getElementById('level-up-class-select').style.display = 'none';
+            document.getElementById('level-up-current').style.display = 'block';
+            document.getElementById('current-level-display').textContent = currentTotalLevel;
+            document.getElementById('target-level-input').max = MAX_LEVEL;
+            document.getElementById('target-level-input').value = targetLevel;
+            
+            const cls = classes.find(c => c.id === classInfo.classId);
+            const hd = hitDice[classInfo.classId] || 8;
+            document.getElementById('hp-die').textContent = 'd' + hd;
+            document.getElementById('hp-die-size').textContent = hd;
+            
+            showLevelUpFeatures();
+        }
+        
+        function showLevelUpFeatures() {
+            const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
+            const char = chars[levelingCharacterIndex];
+            const targetLevel = parseInt(document.getElementById('target-level-input').value);
+            const currentTotalLevel = getTotalLevel(char);
+            
+            if (targetLevel <= currentTotalLevel || targetLevel > MAX_LEVEL) {
+                alert('Target level must be greater than current level and at most ' + MAX_LEVEL);
+                return;
+            }
+            
+            const levelsGained = targetLevel - currentTotalLevel;
+            const classId = selectedLevelUpClass.classId;
+            const currentClassLevel = selectedLevelUpClass.level;
+            
+            availableFeaturesAtLevel = [];
+            const featuresList = [];
+            
+            for (let lvl = currentClassLevel + 1; lvl <= targetLevel; lvl++) {
+                if (classFeatures[classId] && classFeatures[classId][lvl]) {
+                    const newFeatures = classFeatures[classId][lvl];
+                    newFeatures.forEach(f => {
+                        availableFeaturesAtLevel.push({ feature: f, level: lvl });
+                        featuresList.push(f);
+                    });
+                }
+            }
+            
+            if (levelsGained >= 4) {
+                availableFeaturesAtLevel.push({ feature: 'Ability Score Increase', level: targetLevel });
+                featuresList.push('Ability Score Increase');
+            }
+            
+            const featuresHtml = featuresList.length > 0 
+                ? featuresList.map((f, i) => `
+                    <div class="level-up-feature-item">
+                        <span>${f}</span>
+                    </div>
+                `).join('')
+                : '<p style="color: var(--text-muted);">No new features at this level.</p>';
+            
+            document.getElementById('level-up-features').innerHTML = `
+                <h4 style="margin-bottom: 10px;">Available at Level ${targetLevel}:</h4>
+                ${featuresHtml}
+            `;
+            
+            document.getElementById('level-up-hp').style.display = 'block';
+            rolledHitPoints = 0;
+            document.getElementById('hp-roll-result').textContent = '';
+            document.getElementById('confirm-level-up-btn').disabled = false;
+            document.getElementById('confirm-level-up-btn').textContent = 'Confirm Level Up to ' + targetLevel;
+        }
+        
+        function rollHitPoints() {
+            const classId = selectedLevelUpClass.classId;
+            const hd = hitDice[classId] || 8;
+            const con = character.stats.constitution || 10;
+            const conMod = Math.floor((con - 10) / 2);
+            
+            const roll = Math.floor(Math.random() * hd) + 1;
+            rolledHitPoints = roll + conMod;
+            
+            document.getElementById('hp-roll-result').textContent = 'd' + hd + ' = ' + roll + ' + ' + conMod + ' = ' + rolledHitPoints;
+        }
+        
+        function confirmLevelUp() {
+            const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
+            const char = chars[levelingCharacterIndex];
+            const targetLevel = parseInt(document.getElementById('target-level-input').value);
+            
+            char.level = targetLevel;
+            
+            availableFeaturesAtLevel.forEach(f => {
+                if (f.feature !== 'Ability Score Increase' && !char.abilityIds.includes(f.feature)) {
+                    char.abilityIds.push(f.feature);
+                }
+            });
+            
+            selectedLevelUpClass.level = targetLevel;
+            
+            localStorage.setItem('dnd-characters', JSON.stringify(chars));
+            
+            closeLevelUpModal();
+            renderSavedCharacters();
+        }
+        
+        function closeLevelUpModal() {
+            document.getElementById('level-up-modal').classList.remove('active');
+            levelingCharacterIndex = null;
+            selectedLevelUpClass = null;
+            availableFeaturesAtLevel = [];
+            rolledHitPoints = 0;
+            pendingLevelUp = null;
+        }
+        
+        let pendingMulticlassClass = null;
+        
+        function openMulticlass(index) {
+            closeCharacterSheet();
+            levelingCharacterIndex = index;
+            pendingMulticlassClass = null;
+            
+            const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
+            const char = chars[index];
+            const totalLevel = getTotalLevel(char);
+            
+            if (totalLevel >= MAX_LEVEL) {
+                alert('Character is already at max level. Cannot add more classes.');
+                return;
+            }
+            
+            renderMulticlassOptions(char);
+            
+            document.getElementById('multiclass-modal').classList.add('active');
+        }
+        
+        function renderMulticlassOptions(char) {
+            const grid = document.getElementById('multiclass-class-grid');
+            const requiredStats = MULTICLASS_REQUIREMENTS;
+            
+            grid.innerHTML = classes.map(c => {
+                const req = requiredStats[c.id];
+                let canMulticlass = true;
+                let requirementText = '';
+                
+                if (req && char.stats[req.stat]) {
+                    const statValue = char.stats[req.stat];
+                    if (statValue < req.min) {
+                        canMulticlass = false;
+                        requirementText = `Needs ${statLabels[req.stat]} ${req.min}+ (have ${statValue})`;
+                    } else {
+                        requirementText = `${statLabels[req.stat]} ${req.min}+ ✓`;
+                    }
+                }
+                
+                return `
+                    <div class="card ${canMulticlass ? '' : 'disabled'}" onclick="${canMulticlass ? 'selectMulticlassClass("' + c.id + '")' : ''}" id="multi-class-${c.id}">
+                        <h3>${c.name}</h3>
+                        <p>${requirementText}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function selectMulticlassClass(classId) {
+            pendingMulticlassClass = classId;
+            
+            document.querySelectorAll('#multiclass-class-grid .card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('multi-class-' + classId).classList.add('selected');
+            
+            document.getElementById('confirm-multiclass-btn').disabled = false;
+            document.getElementById('confirm-multiclass-btn').textContent = 'Add ' + classes.find(c => c.id === classId).name;
+        }
+        
+        function confirmMulticlass() {
+            if (!pendingMulticlassClass) return;
+            
+            const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
+            const char = chars[levelingCharacterIndex];
+            
+            if (!char.classes) {
+                char.classes = [{ classId: char.classId, level: char.level || 1 }];
+            }
+            
+            char.classes.push({ classId: pendingMulticlassClass, level: 1 });
+            char.classId = char.classes[0].classId;
+            char.level = getTotalLevel(char);
+            
+            localStorage.setItem('dnd-characters', JSON.stringify(chars));
+            
+            closeMulticlassModal();
+            renderSavedCharacters();
+        }
+        
+        function closeMulticlassModal() {
+            document.getElementById('multiclass-modal').classList.remove('active');
+            pendingMulticlassClass = null;
+            levelingCharacterIndex = null;
+        }
         init();
     </script>
 </body>
