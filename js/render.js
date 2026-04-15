@@ -1,11 +1,13 @@
 function renderClasses() {
     const grid = document.getElementById('class-grid');
-    grid.innerHTML = classes.map(c => `
+    grid.innerHTML = classes.map(c => {
+        const statAbbr = statLabels[c.primaryStat] || '';
+        return `
         <div class="card" onclick="selectClass('${c.id}')" id="class-${c.id}">
-            <h3>${c.name}</h3>
+            <h3>${c.name} <span style="color: var(--accent); font-size: 0.9rem;">(${statAbbr})</span></h3>
             <p>${c.desc}</p>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function renderRaces() {
@@ -68,6 +70,9 @@ function renderStats() {
     const isHuman = character.raceId === 'human';
     const humanBonusStats = character.humanBonusStats || [];
     
+    const selectedClass = classes.find(c => c.id === character.classId);
+    const primaryStat = selectedClass?.primaryStat || null;
+    
     let usedPoints = 0;
     stats.forEach(stat => {
         const base = character.stats[stat] ?? 8;
@@ -83,7 +88,9 @@ function renderStats() {
         humanHint = `<p style="color: var(--text-muted); margin-bottom: 15px;">Click the star to select bonus stats (select ${maxHumanBonus})</p>`;
     }
     
-    container.innerHTML = humanHint + stats.map(stat => {
+    const primaryStatHint = primaryStat ? `<p style="color: var(--accent); margin-bottom: 10px;">⭐ Your ${selectedClass.name}'s primary stat is ${statLabels[primaryStat]} - consider prioritizing this!</p>` : '';
+    
+    container.innerHTML = humanHint + primaryStatHint + stats.map(stat => {
         const base = character.stats[stat] ?? 8;
         const humanBonus = isHuman && humanBonusStats.includes(stat) ? 1 : 0;
         const raceBonus = bonuses[stat] || 0;
@@ -91,14 +98,15 @@ function renderStats() {
         const modifier = Math.floor((total - 10) / 2);
         const isHumanBonusSelected = isHuman && humanBonusStats.includes(stat);
         const maxBase = (humanBonus + raceBonus) > 0 ? 16 : 15;
+        const isPrimary = stat === primaryStat;
         
         const currentCost = getStatCost(base);
         const nextCost = getStatCost(base + 1);
         const costDiff = nextCost - currentCost;
         
         return `
-            <div class="stat-row" title="${statDescriptions[stat]}">
-                <div class="stat-name">${statLabels[stat]}</div>
+            <div class="stat-row ${isPrimary ? 'primary-stat-row' : ''}" title="${statDescriptions[stat]}${isPrimary ? ' This is your ' + selectedClass.name + '\'s primary stat!' : ''}">
+                <div class="stat-name">${statLabels[stat]}${isPrimary ? ' ⭐' : ''}</div>
                 <div class="stat-controls">
                     <button class="stat-btn" onclick="adjustStat('${stat}', -1)" id="btn-${stat}-minus">-</button>
                     <div class="stat-value">${base}</div>

@@ -3,6 +3,7 @@
     {
       "id": "fighter",
       "name": "Fighter",
+      "primaryStat": "strength",
       "desc": "Warriors who excel in combat",
       "hitDie": 10,
       "multiclassRequirement": { "stat": "strength", "min": 13 },
@@ -60,6 +61,7 @@
     {
       "id": "wizard",
       "name": "Wizard",
+      "primaryStat": "intelligence",
       "desc": "Arcane spellcasters",
       "hitDie": 6,
       "multiclassRequirement": { "stat": "intelligence", "min": 13 },
@@ -115,6 +117,7 @@
     {
       "id": "rogue",
       "name": "Rogue",
+      "primaryStat": "dexterity",
       "desc": "Stealthy tricksters",
       "hitDie": 8,
       "multiclassRequirement": { "stat": "dexterity", "min": 13 },
@@ -171,6 +174,7 @@
     {
       "id": "cleric",
       "name": "Cleric",
+      "primaryStat": "wisdom",
       "desc": "Divine spellcasters",
       "hitDie": 8,
       "multiclassRequirement": { "stat": "wisdom", "min": 13 },
@@ -224,6 +228,7 @@
     {
       "id": "ranger",
       "name": "Ranger",
+      "primaryStat": "dexterity",
       "desc": "Wilderness archer",
       "hitDie": 10,
       "multiclassRequirement": { "stat": "dexterity", "min": 13 },
@@ -280,6 +285,7 @@
     {
       "id": "barbarian",
       "name": "Barbarian",
+      "primaryStat": "strength",
       "desc": "Fierce melee fighters",
       "hitDie": 12,
       "multiclassRequirement": { "stat": "strength", "min": 13 },
@@ -329,6 +335,7 @@
     {
       "id": "paladin",
       "name": "Paladin",
+      "primaryStat": "strength",
       "desc": "Holy warriors",
       "hitDie": 10,
       "multiclassRequirement": { "stat": "strength", "min": 13 },
@@ -384,6 +391,7 @@
     {
       "id": "bard",
       "name": "Bard",
+      "primaryStat": "charisma",
       "desc": "Magical performers",
       "hitDie": 8,
       "multiclassRequirement": { "stat": "charisma", "min": 13 },
@@ -445,6 +453,7 @@
     {
       "id": "druid",
       "name": "Druid",
+      "primaryStat": "wisdom",
       "desc": "Nature magic users",
       "hitDie": 8,
       "multiclassRequirement": { "stat": "wisdom", "min": 13 },
@@ -496,6 +505,7 @@
     {
       "id": "monk",
       "name": "Monk",
+      "primaryStat": "dexterity",
       "desc": "Martial artists",
       "hitDie": 8,
       "multiclassRequirement": { "stat": "wisdom", "min": 13 },
@@ -548,6 +558,7 @@
     {
       "id": "sorcerer",
       "name": "Sorcerer",
+      "primaryStat": "charisma",
       "desc": "Innate magic users",
       "hitDie": 6,
       "multiclassRequirement": { "stat": "charisma", "min": 13 },
@@ -626,6 +637,7 @@
     {
       "id": "warlock",
       "name": "Warlock",
+      "primaryStat": "charisma",
       "desc": "Pact-bound casters",
       "hitDie": 8,
       "multiclassRequirement": { "stat": "charisma", "min": 13 },

@@ -126,6 +126,11 @@ button {
     color: #1a1a2e;
 }
 
+.primary-stat-row {
+    background: #2a1a2e !important;
+    border: 1px solid var(--accent);
+}
+
 .human-bonus-btn {
     background: transparent;
     border: 1px solid var(--border);
