@@ -414,3 +414,39 @@ button {
     gap: 10px;
     margin-top: 20px;
 }
+
+/* Custom Tooltip System */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 14px;
+    background: #0f0f23;
+    color: #eee;
+    border: 1px solid #4ade80;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    max-width: 280px;
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease 0.2s, visibility 0.2s ease 0.2s;
+    z-index: 1000;
+    pointer-events: none;
+    text-align: left;
+    line-height: 1.4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}

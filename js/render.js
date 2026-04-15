@@ -2,8 +2,10 @@ function renderClasses() {
     const grid = document.getElementById('class-grid');
     grid.innerHTML = classes.map(c => {
         const statAbbr = statLabels[c.primaryStat] || '';
+        const hitDie = c.hitDie || 8;
+        const saveThrows = c.proficiencies?.savingThrows?.join(', ') || '';
         return `
-        <div class="card" onclick="selectClass('${c.id}')" id="class-${c.id}">
+        <div class="card" onclick="selectClass('${c.id}')" id="class-${c.id}" data-tooltip="Primary Stat: ${statAbbr}\nHit Die: d${hitDie}\nSaving Throws: ${saveThrows}\n\n${c.desc}">
             <h3>${c.name} <span style="color: var(--accent); font-size: 0.9rem;">(${statAbbr})</span></h3>
             <p>${c.desc}</p>
         </div>
@@ -105,16 +107,16 @@ function renderStats() {
         const costDiff = nextCost - currentCost;
         
         return `
-            <div class="stat-row ${isPrimary ? 'primary-stat-row' : ''}" title="${statDescriptions[stat]}${isPrimary ? ' This is your ' + selectedClass.name + '\'s primary stat!' : ''}">
+            <div class="stat-row ${isPrimary ? 'primary-stat-row' : ''}" data-tooltip="${statDescriptions[stat]}${isPrimary ? '\n\n⭐ This is your ' + selectedClass.name + '\'s primary stat!' : ''}">
                 <div class="stat-name">${statLabels[stat]}${isPrimary ? ' ⭐' : ''}</div>
                 <div class="stat-controls">
                     <button class="stat-btn" onclick="adjustStat('${stat}', -1)" id="btn-${stat}-minus">-</button>
                     <div class="stat-value">${base}</div>
                     <button class="stat-btn ${costDiff > 1 ? 'cost-2' : ''}" onclick="adjustStat('${stat}', 1)" id="btn-${stat}-plus" ${base >= maxBase ? 'disabled' : ''}>+${costDiff > 1 ? ` (${costDiff})` : ''}</button>
-                    <div class="stat-bonus">${(humanBonus + raceBonus) > 0 ? '+' + (humanBonus + raceBonus) : ''}</div>
+                    <div class="stat-bonus" data-tooltip="Race bonus - added after point buy, doesn't cost points">${(humanBonus + raceBonus) > 0 ? '+' + (humanBonus + raceBonus) : ''}</div>
                     <div class="stat-total">${total}</div>
-                    <div class="stat-modifier">${modifier >= 0 ? '+' : ''}${modifier}</div>
-                    ${isHuman ? `<button class="stat-btn human-bonus-btn ${isHumanBonusSelected ? 'selected' : ''}" onclick="toggleHumanBonusStat('${stat}')" title="Click to toggle +1 bonus">${isHumanBonusSelected ? '⭐' : '☆'}</button>` : ''}
+                    <div class="stat-modifier" data-tooltip="Modifier = (Stat - 10) ÷ 2&#10;Added to dice rolls using this stat">${modifier >= 0 ? '+' : ''}${modifier}</div>
+                    ${isHuman ? `<button class="stat-btn human-bonus-btn ${isHumanBonusSelected ? 'selected' : ''}" data-tooltip="Click to toggle +1 bonus (Human trait)" onclick="toggleHumanBonusStat('${stat}')">${isHumanBonusSelected ? '⭐' : '☆'}</button>` : ''}
                 </div>
             </div>
         `;
@@ -159,12 +161,14 @@ function renderProficiencies() {
     
     document.getElementById('proficiency-instruction').textContent = `Select up to ${maxSkills} skills`;
     
-    grid.innerHTML = classSkillOptions.map(skill => `
-        <label class="checkbox-item">
+    grid.innerHTML = classSkillOptions.map(skill => {
+        const desc = skillDescriptions[skill.name] || skill.description || '';
+        return `
+        <label class="checkbox-item" data-tooltip="${desc}">
             <input type="checkbox" value="${skill.name}" data-attribute="${skill.attribute}" onchange="toggleProficiency('${skill.name}')">
             ${skill.name} <span style="color: var(--text-muted); font-size: 0.85rem;">(${skill.attribute.substring(0, 3).toUpperCase()})</span>
         </label>
-    `).join('');
+    `}).join('');
 }
 
 function renderAbilities() {
@@ -187,7 +191,7 @@ function renderAbilities() {
                 <label class="checkbox-item race-ability">
                     <input type="checkbox" checked disabled>
                     ${a} 🔒
-                    <span title="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
+                    <span data-tooltip="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
                 </label>
             `;
         });
@@ -202,13 +206,13 @@ function renderAbilities() {
         currentClassFeatures.forEach(f => {
             const isSelected = (character.abilityIds || []).includes(f.name);
             const tooltip = isSelected 
-                ? `Active: ${f.name} (${classId} - Level ${f.level})`
-                : `Available: ${f.name} (${classId} - Level ${f.level})`;
+                ? `Active: ${f.name}\nClass: ${classId}\nLevel: ${f.level}`
+                : `Available: ${f.name}\nClass: ${classId}\nLevel: ${f.level}`;
             html += `
                 <label class="checkbox-item ${isSelected ? 'race-ability' : ''}">
                     <input type="checkbox" ${isSelected ? 'checked' : ''} ${isSelected ? 'disabled' : ''}>
                     ${f.name} ${isSelected ? '✓' : ''}
-                    <span title="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
+                    <span data-tooltip="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
                 </label>
             `;
         });
@@ -218,12 +222,12 @@ function renderAbilities() {
         const nextFeature = futureClassFeatures[0];
         html += `<h4 style="margin: 15px 0 10px; color: var(--text-muted);">Future Class Features</h4>`;
         futureClassFeatures.forEach(f => {
-            const tooltip = `Locked: ${f.name} available at ${classId} Level ${f.level}`;
+            const tooltip = `Locked: ${f.name}\nAvailable at ${classId} Level ${f.level}`;
             html += `
                 <label class="checkbox-item disabled" style="opacity: 0.5;">
                     <input type="checkbox" disabled>
                     ${f.name} (Lvl ${f.level})
-                    <span title="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
+                    <span data-tooltip="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
                 </label>
             `;
         });
@@ -245,14 +249,14 @@ function renderAbilities() {
             groupOptions.forEach(o => {
                 const isSelected = (character.abilityIds || []).includes(o.name);
                 const tooltip = isSelected
-                    ? `Selected: ${o.name} (${classId} - Level ${o.level})`
-                    : `Available: ${o.name} (${classId} - Level ${o.level})`;
+                    ? `Selected: ${o.name}\nClass: ${classId}\nLevel: ${o.level}`
+                    : `Available: ${o.name}\nClass: ${classId}\nLevel: ${o.level}`;
                 const isDisabled = !isSelected && groupOptions.some(go => go.name !== o.name && (character.abilityIds || []).includes(go.name));
                 html += `
                     <label class="checkbox-item ${isSelected ? 'race-ability' : ''}" style="${isDisabled && !isSelected ? 'opacity: 0.5;' : ''}">
                         <input type="checkbox" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} onchange="toggleAbility('${o.name}')">
                         ${o.name}
-                        <span title="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
+                        <span data-tooltip="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
                     </label>
                 `;
             });

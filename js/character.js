@@ -9,6 +9,67 @@ function selectClass(id) {
     character.abilityIds = featuresData.features.map(f => f.name);
 }
 
+function renderRaceTraits() {
+    const traitsSection = document.getElementById('race-traits-section');
+    const traitsList = document.getElementById('race-traits-list');
+    
+    if (!character.raceId) {
+        traitsSection.style.display = 'none';
+        return;
+    }
+    
+    const race = races.find(r => r.id === character.raceId);
+    let allAbilities = [...(race?.raceAbilities || [])];
+    let bonusesText = [];
+    
+    if (race?.bonuses) {
+        if (race.bonuses.chosen) {
+            bonusesText.push(`+1 to ${race.bonuses.chosen} stats of your choice`);
+        } else {
+            for (const [stat, val] of Object.entries(race.bonuses)) {
+                bonusesText.push(`+${val} ${statLabels[stat]}`);
+            }
+        }
+    }
+    
+    if (character.subraceName && subraces[character.raceId]) {
+        const sub = subraces[character.raceId].find(s => s.name === character.subraceName);
+        if (sub) {
+            allAbilities = [...allAbilities, ...(sub.raceAbilities || [])];
+            if (sub.bonuses) {
+                for (const [stat, val] of Object.entries(sub.bonuses)) {
+                    bonusesText.push(`+${val} ${statLabels[stat]}`);
+                }
+            }
+        }
+    }
+    
+    let html = '';
+    
+    if (bonusesText.length > 0) {
+        html += `<h4 style="color: #4ade80; margin-bottom: 8px;">Ability Score Increases</h4>`;
+        html += `<p style="margin-bottom: 12px;">${bonusesText.join(', ')}</p>`;
+    }
+    
+    if (allAbilities.length > 0) {
+        html += `<h4 style="color: var(--accent); margin-bottom: 8px;">Racial Traits</h4>`;
+        html += `<ul style="margin: 0; padding-left: 20px; color: var(--text-muted);">`;
+        allAbilities.forEach(ability => {
+            if (!ability.startsWith('+1 ')) {
+                html += `<li style="margin-bottom: 5px;">${ability}</li>`;
+            }
+        });
+        html += `</ul>`;
+    }
+    
+    if (html) {
+        traitsList.innerHTML = html;
+        traitsSection.style.display = 'block';
+    } else {
+        traitsSection.style.display = 'none';
+    }
+}
+
 function selectRace(id) {
     character.raceId = id;
     character.subraceName = null;
@@ -27,6 +88,8 @@ function selectRace(id) {
         character.abilityIds = featuresData.features.map(f => f.name);
     }
     
+    renderRaceTraits();
+    
     const subraceSection = document.getElementById('subrace-section');
     if (subraces[id]) {
         subraceSection.style.display = 'block';
@@ -44,6 +107,7 @@ function selectSubrace(name) {
     document.querySelectorAll('#subrace-grid .card').forEach(c => c.classList.remove('selected'));
     document.getElementById('subrace-' + name).classList.add('selected');
     
+    renderRaceTraits();
     renderStats();
 }
 
