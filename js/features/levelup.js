@@ -1,9 +1,16 @@
+let levelingCharacterIndex = null;
+let selectedLevelUpClass = null;
+let availableFeaturesAtLevel = [];
+let rolledHitPoints = 0;
+let pendingLevelUp = null;
+
 function openLevelUp(index) {
     levelingCharacterIndex = index;
-    const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
-    const char = chars[index];
-    const charClasses = getCharacterClasses(char);
-    const totalLevel = getTotalLevel(char);
+    const char = DnDState.loadSavedCharacter(index);
+    if (!char) return;
+
+    const charClasses = CharacterEntity.getClasses(char);
+    const totalLevel = CharacterEntity.getTotalLevel(char);
     
     if (totalLevel >= MAX_LEVEL) {
         alert('Character is already at max level (' + MAX_LEVEL + ')');
@@ -16,11 +23,12 @@ function openLevelUp(index) {
     } else {
         selectedLevelUpClass = null;
         const grid = document.getElementById('level-up-class-grid');
+        const gameData = DnDState.gameData;
         grid.innerHTML = charClasses.map((cc, i) => {
-            const cls = classes.find(c => c.id === cc.classId);
+            const cls = gameData.classes.find(c => c.id === cc.classId);
             const clsName = cls ? cls.name : cc.classId;
             return `
-                <div class="card" onclick="selectLevelUpClass(${i}, ${cc.classId})" id="levelup-class-${cc.classId}">
+                <div class="card" onclick="selectLevelUpClass(${i}, '${cc.classId}')" id="levelup-class-${cc.classId}">
                     <h3>${clsName}</h3>
                     <p>Current Level: ${cc.level}</p>
                 </div>
@@ -37,16 +45,15 @@ function openLevelUp(index) {
 }
 
 function selectLevelUpClass(index, classId) {
-    const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
-    const char = chars[levelingCharacterIndex];
-    const charClasses = getCharacterClasses(char);
+    const char = DnDState.loadSavedCharacter(levelingCharacterIndex);
+    const charClasses = CharacterEntity.getClasses(char);
     
     selectedLevelUpClass = charClasses[index];
     
     document.querySelectorAll('#level-up-class-grid .card').forEach(c => c.classList.remove('selected'));
     document.getElementById('levelup-class-' + classId).classList.add('selected');
     
-    showLevelUpForSingleClass(char, selectedLevelUpClass, getTotalLevel(char));
+    showLevelUpForSingleClass(char, selectedLevelUpClass, CharacterEntity.getTotalLevel(char));
 }
 
 function showLevelUpForSingleClass(char, classInfo, currentTotalLevel) {
@@ -58,19 +65,24 @@ function showLevelUpForSingleClass(char, classInfo, currentTotalLevel) {
     document.getElementById('target-level-input').max = MAX_LEVEL;
     document.getElementById('target-level-input').value = targetLevel;
     
-    const cls = classes.find(c => c.id === classInfo.classId);
+    const gameData = DnDState.gameData;
+    const cls = gameData.classes.find(c => c.id === classInfo.classId);
     const hd = cls?.hitDie || 8;
     document.getElementById('hp-die').textContent = 'd' + hd;
     document.getElementById('hp-die-size').textContent = hd;
     
-    showLevelUpFeatures();
+    showLevelUpFeatures(char);
 }
 
-function showLevelUpFeatures() {
-    const chars = JSON.parse(localStorage.getItem('dnd-characters') || '[]');
-    const char = chars[levelingCharacterIndex];
+function showLevelUpFeaturesFromButton() {
+    const char = DnDState.loadSavedCharacter(levelingCharacterIndex);
+    if (!char) return;
+    showLevelUpFeatures(char);
+}
+
+function showLevelUpFeatures(char) {
     const targetLevel = parseInt(document.getElementById('target-level-input').value);
-    const currentTotalLevel = getTotalLevel(char);
+    const currentTotalLevel = CharacterEntity.getTotalLevel(char);
     
     if (targetLevel <= currentTotalLevel || targetLevel > MAX_LEVEL) {
         alert('Target level must be greater than current level and at most ' + MAX_LEVEL);
@@ -146,11 +158,15 @@ function showLevelUpFeatures() {
 }
 
 function rollHitPoints() {
+    const gameData = DnDState.gameData;
+    const char = DnDState.loadSavedCharacter(levelingCharacterIndex);
+    if (!char) return;
+
     const classId = selectedLevelUpClass.classId;
-    const cls = classes.find(c => c.id === classId);
+    const cls = gameData.classes.find(c => c.id === classId);
     const hd = cls?.hitDie || 8;
-    const con = character.stats.constitution || 10;
-    const conMod = Math.floor((con - 10) / 2);
+    const con = char.stats.constitution || 10;
+    const conMod = CharacterEntity.getStatModifier(char, 'constitution');
     
     const roll = Math.floor(Math.random() * hd) + 1;
     rolledHitPoints = roll + conMod;
@@ -188,6 +204,15 @@ function confirmLevelUp() {
             }
         }
     });
+
+    if (rolledHitPoints > 0) {
+        if (!char.hitPoints) {
+            char.hitPoints = { current: 0, max: 0, temp: 0 };
+        }
+        const oldMax = char.hitPoints.max;
+        char.hitPoints.max = (oldMax || 0) + rolledHitPoints;
+        char.hitPoints.current = char.hitPoints.max;
+    }
     
     selectedLevelUpClass.level = targetLevel;
     
@@ -204,4 +229,5 @@ function closeLevelUpModal() {
     availableFeaturesAtLevel = [];
     rolledHitPoints = 0;
     pendingLevelUp = null;
+    DnDState.loadSavedCharacter(-1);
 }

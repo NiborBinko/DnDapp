@@ -29,7 +29,8 @@ const DataUtils = {
         }
 
         if (prereqs.armorProficiency) {
-            const classData = classes.find(c => c.id === character.classId);
+            const gameData = DnDState ? DnDState.gameData : { classes: [], races: [], subraces: {} };
+            const classData = gameData.classes.find(c => c.id === character.classId);
             const proficiencies = classData?.proficiencies?.armor || [];
             const hasRequired = proficiencies.includes(prereqs.armorProficiency) || 
                                (prereqs.armorProficiency === 'none' && proficiencies.length === 0);

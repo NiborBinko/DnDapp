@@ -398,3 +398,88 @@ const raceAbilitySkillMap = {
 const raceAbilityStatEffects = {
     "Dwarven Toughness": { type: "hpPerLevel", value: 1 }
 };
+
+const proficiencyDescriptions = {
+    armor: {
+        "light armor": "Padded, Leather, Studded Leather - AC 11-12. No skill needed to wear.",
+        "medium armor": "Hide, Chain Shirt, Scale Mail, Breastplate, Half Plate - AC 13-15. DEX requirement for some.",
+        "heavy armor": "Ring Mail, Chain Mail, Splint, Plate - AC 14-18. STR requirement. Cannot use Stealth.",
+        "shields": "+2 AC. Requires one free hand. Can be used with any armor."
+    },
+    weapons: {
+        "simple weapons": "Clubs, Daggers, Greatclubs, Handaxes, Javelins, Light hammers, Maces, Quarterstaffs, Sickles, Spears, Unarmed strikes, Shortbows, Slings, Light crossbows. Basic weapons available to all.",
+        "martial weapons": "Longswords, Battleaxes, Warhammers, Greataxes, Greatswords, Longbows, Heavy crossbows, Rapiers, Scimitars, Tridents, Polearms. Better weapons requiring training.",
+        "crossbow": "Light/Heavy crossbows. Heavy requires two hands to fire, but deals more damage. Loading property means you can only fire once per attack action.",
+        "firearm": "Pistols, Muskets, Rifles (if using firearms in your campaign).",
+        "improvised weapons": "Any object can be used as a weapon. Typically deals 1d4 damage.",
+        "water weapons": "Net. Ranged weapon that imposes the Grappled condition on hit."
+    },
+    tools: {
+        "thieves' tools": "Lockpicking and disabling traps. Used with Dexterity. Requires proficiency to add proficiency bonus.",
+        "disguise kit": "Creating disguises for infiltration. Used with Charisma (Deception).",
+        "forgery kit": "Creating fake documents. Used with Intelligence (Forgery).",
+        "herbalism kit": "Identifying and harvesting herbs, creating potions. Used with Wisdom (Medicine).",
+        "poisoner's kit": "Creating and applying poisons. Used with Intelligence.",
+        "cartographer's kit": "Creating maps. Used with Intelligence.",
+        "gaming set": "Dice or cards for gambling games. Used with Charisma.",
+        "musical instrument": "Performing. Used with Charisma (Performance).",
+        "smith's tools": "Metalworking, repairing armor/weapons. Used with Strength.",
+        "woodcarver's tools": "Carving wood items. Used with Dexterity.",
+        "alchemist's supplies": "Creating alchemical items. Used with Intelligence.",
+        "brewer's supplies": "Creating beverages. Used with Intelligence.",
+        "cook's utensils": "Preparing food, detecting poison. Used with Wisdom.",
+        "mason's tools": "Stonework, creating walls. Used with Strength.",
+        "carpenter's tools": "Wood construction, creating structures. Used with Strength.",
+        "painter's supplies": "Creating images. Used with Charisma.",
+        "calligrapher's supplies": "Fancy writing. Used with Dexterity."
+    },
+    savingThrows: {
+        "strength": "Athletics checks, grappling, breaking objects. Resist force effects.",
+        "dexterity": "Acrobatics, Stealth, Reflex saves. Avoiding fireballs, traps.",
+        "constitution": "Endurance, poison resistance. Surviving harsh conditions.",
+        "intelligence": "Arcana, History, Investigation, Nature, Religion checks.",
+        "wisdom": "Animal Handling, Insight, Medicine, Perception, Survival checks.",
+        "charisma": "Deception, Intimidation, Performance, Persuasion checks."
+    },
+    mastery: {
+        "strength": "Mastery in Strength weapons: Attacks deal +1 damage, +2 at 5th level.",
+        "dexterity": "Mastery in Dexterity weapons: Attacks deal +1 damage, +2 at 5th level.",
+        "versatile": "Mastery for versatile weapons: +1 damage when wielding two-handed."
+    }
+};
+
+const proficiencySources = {
+    armor: {
+        "light armor": "Class: Fighter, Paladin, Ranger, Warlock (Hexblade) | Feat: Lightly Armored",
+        "medium armor": "Class: Fighter, Paladin, Ranger | Feat: Medium Armor Master | Race: Dwarf (Mountain)",
+        "heavy armor": "Class: Fighter, Paladin | Feat: Heavily Armored | Race: Dwarf (Mountain)",
+        "shields": "Class: Fighter, Paladin, Cleric | Feat: Lightly Armored"
+    },
+    weapons: {
+        "simple weapons": "Everyone is proficient with simple weapons.",
+        "martial weapons": "Class: Fighter, Barbarian, Paladin, Ranger, Monk | Feat: Weapon Master, Martial Adept",
+        "crossbow": "Class: Fighter (Archery FS), Rogue (Assassin), Ranger | Feat: Crossbow Expert",
+        "firearm": "Feat: Gunner | Class: Artificer (Artillerist)",
+        "improvised weapons": "Feat: Tavern Brawler (grants proficiency)",
+        "water weapons": "Class: Fighter, Ranger"
+    },
+    tools: {
+        "thieves' tools": "Class: Rogue, Ranger (Gloom Stalker) | Feat: Skill Expert",
+        "disguise kit": "Class: Bard (College of Lore), Warlock (Archfey) | Feat: Skill Expert",
+        "forgery kit": "Class: Rogue | Feat: Skill Expert",
+        "herbalism kit": "Class: Druid, Ranger | Feat: Skill Expert",
+        "poisoner's kit": "Class: Rogue, Warlock (Fiend) | Feat: Skill Expert",
+        "cartographer's kit": "Class: Ranger | Feat: Skill Expert",
+        "gaming set": "Class: Bard | Feat: Skill Expert",
+        "musical instrument": "Class: Bard | Feat: Skill Expert",
+        "smith's tools": "Race: Dwarf | Feat: Skill Expert",
+        "woodcarver's tools": "Race: Gnome (Forest) | Feat: Skill Expert",
+        "alchemist's supplies": "Class: Artificer, Alchemist | Feat: Skilled",
+        "brewer's supplies": "Feat: Skilled",
+        "cook's utensils": "Feat: Healer",
+        "mason's tools": "Race: Dwarf | Feat: Skilled",
+        "carpenter's tools": "Race: Dwarf | Feat: Skilled",
+        "painter's supplies": "Feat: Skilled",
+        "calligrapher's supplies": "Feat: Skilled"
+    }
+};

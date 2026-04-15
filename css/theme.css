@@ -171,6 +171,21 @@ button {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 10px;
+    margin-bottom: 15px;
+}
+
+.section-header {
+    margin: 25px 0 10px;
+    color: #e94560;
+    display: block;
+    width: 100%;
+    clear: both;
+    font-size: 1.1rem;
+}
+
+.section-header:first-child {
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
 .checkbox-item {
@@ -190,8 +205,18 @@ button {
     border: 1px solid #4ade80;
 }
 
-.checkbox-item.disabled {
+.checkbox-item.spell-disabled {
     opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.checkbox-item.innate-spell {
+    background: #3a2a2a;
+    border: 1px solid var(--accent);
+}
+
+.checkbox-item.disabled {
+    filter: brightness(0.6);
     cursor: not-allowed;
 }
 
@@ -447,26 +472,52 @@ button {
 }
 
 [data-tooltip]:hover::after {
-    opacity: 1;
-    visibility: visible;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: #0f0f23 !important;
 }
 
-/* Disabled state for checkbox items - uses class instead of inline style */
-.checkbox-item.disabled {
-    opacity: 0.5;
+/* Disabled state for checkbox items - uses overlay instead of filter */
+.checkbox-item.disabled,
+.checkbox-item.future-item,
+.checkbox-item.coming-soon,
+.checkbox-item.feat-disabled,
+.checkbox-item.option-disabled {
+    position: relative;
+}
+
+/* Gray overlay for disabled items - doesn't affect tooltip */
+.checkbox-item.disabled::before,
+.checkbox-item.future-item::before,
+.checkbox-item.coming-soon::before,
+.checkbox-item.feat-disabled::before,
+.checkbox-item.option-disabled::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(100, 100, 100, 0.3);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 1;
 }
 
 /* Future/locked items */
 .checkbox-item.future-item {
-    opacity: 0.5;
+    filter: brightness(0.6);
 }
 
-/* Disabled feats */
+/* Coming Soon items - uses filter instead of opacity so tooltips stay opaque */
+.checkbox-item.coming-soon {
+    filter: brightness(0.6);
+}
 .checkbox-item.feat-disabled {
-    opacity: 0.5;
+    filter: brightness(0.6);
 }
 
 /* Disabled options */
 .checkbox-item.option-disabled {
-    opacity: 0.5;
+    filter: brightness(0.6);
 }
