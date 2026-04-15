@@ -159,14 +159,30 @@ function renderProficiencies() {
     const extraSkills = getExtraSkillCount();
     const maxSkills = (charClass?.proficiencies?.skills?.count || 2) + extraSkills;
     
+    const raceAbilities = getRaceAbilities();
+    const raceSkills = [];
+    raceAbilities.forEach(ability => {
+        const skill = raceAbilitySkillMap[ability];
+        if (skill) {
+            raceSkills.push(skill);
+        }
+    });
+    
     document.getElementById('proficiency-instruction').textContent = `Select up to ${maxSkills} skills`;
     
     grid.innerHTML = classSkillOptions.map(skill => {
         const desc = skillDescriptions[skill.name] || skill.description || '';
+        const isFromRace = raceSkills.includes(skill.name);
+        const isSelected = (character.proficiencyIds || []).includes(skill.name) || isFromRace;
+        
         return `
-        <label class="checkbox-item" data-tooltip="${desc}">
-            <input type="checkbox" value="${skill.name}" data-attribute="${skill.attribute}" onchange="toggleProficiency('${skill.name}')">
+        <label class="checkbox-item ${isFromRace ? 'race-ability' : ''}" data-tooltip="${desc}">
+            <input type="checkbox" value="${skill.name}" data-attribute="${skill.attribute}" 
+                ${isSelected ? 'checked' : ''} 
+                ${isFromRace ? 'disabled' : ''} 
+                onchange="toggleProficiency('${skill.name}')">
             ${skill.name} <span style="color: var(--text-muted); font-size: 0.85rem;">(${skill.attribute.substring(0, 3).toUpperCase()})</span>
+            ${isFromRace ? ' 🔒' : ''}
         </label>
     `}).join('');
 }
@@ -186,33 +202,28 @@ function renderAbilities() {
     if (raceAbilities.length > 0) {
         html += `<h4 style="margin: 15px 0 10px; color: var(--accent);">Race Abilities</h4>`;
         raceAbilities.forEach(a => {
-            const tooltip = `Locked: ${a} is a ${raceName} race ability (available at creation)`;
+            const desc = raceAbilityDescriptions[a] || '';
             html += `
-                <label class="checkbox-item race-ability">
+                <label class="checkbox-item race-ability" data-tooltip="${desc}">
                     <input type="checkbox" checked disabled>
                     ${a} 🔒
-                    <span data-tooltip="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
                 </label>
             `;
         });
     }
     
     const currentClassFeatures = classFeaturesData.features.filter(f => f.level <= charLevel);
-    const pastClassFeatures = classFeaturesData.features.filter(f => f.level <= charLevel).map(f => f.name);
     const futureClassFeatures = classFeaturesData.features.filter(f => f.level > charLevel);
     
     if (currentClassFeatures.length > 0) {
         html += `<h4 style="margin: 15px 0 10px; color: var(--accent);">Class Features (Level ${charLevel})</h4>`;
         currentClassFeatures.forEach(f => {
             const isSelected = (character.abilityIds || []).includes(f.name);
-            const tooltip = isSelected 
-                ? `Active: ${f.name}\nClass: ${classId}\nLevel: ${f.level}`
-                : `Available: ${f.name}\nClass: ${classId}\nLevel: ${f.level}`;
+            const desc = classFeatureDescriptions[f.name] || `Level ${f.level} ${classId} feature`;
             html += `
-                <label class="checkbox-item ${isSelected ? 'race-ability' : ''}">
+                <label class="checkbox-item ${isSelected ? 'race-ability' : ''}" data-tooltip="${desc}">
                     <input type="checkbox" ${isSelected ? 'checked' : ''} ${isSelected ? 'disabled' : ''}>
                     ${f.name} ${isSelected ? '✓' : ''}
-                    <span data-tooltip="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
                 </label>
             `;
         });
@@ -222,12 +233,11 @@ function renderAbilities() {
         const nextFeature = futureClassFeatures[0];
         html += `<h4 style="margin: 15px 0 10px; color: var(--text-muted);">Future Class Features</h4>`;
         futureClassFeatures.forEach(f => {
-            const tooltip = `Locked: ${f.name}\nAvailable at ${classId} Level ${f.level}`;
+            const desc = classFeatureDescriptions[f.name] || `Available at ${classId} Level ${f.level}`;
             html += `
-                <label class="checkbox-item disabled" style="opacity: 0.5;">
+                <label class="checkbox-item future-item" data-tooltip="${desc}">
                     <input type="checkbox" disabled>
                     ${f.name} (Lvl ${f.level})
-                    <span data-tooltip="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
                 </label>
             `;
         });
@@ -248,15 +258,12 @@ function renderAbilities() {
             html += `<p style="color: var(--text-muted); margin: 10px 0 5px;">${groupName}:</p>`;
             groupOptions.forEach(o => {
                 const isSelected = (character.abilityIds || []).includes(o.name);
-                const tooltip = isSelected
-                    ? `Selected: ${o.name}\nClass: ${classId}\nLevel: ${o.level}`
-                    : `Available: ${o.name}\nClass: ${classId}\nLevel: ${o.level}`;
                 const isDisabled = !isSelected && groupOptions.some(go => go.name !== o.name && (character.abilityIds || []).includes(go.name));
+                const desc = classFeatureDescriptions[o.name] || `Level ${o.level} ${classId} option`;
                 html += `
-                    <label class="checkbox-item ${isSelected ? 'race-ability' : ''}" style="${isDisabled && !isSelected ? 'opacity: 0.5;' : ''}">
+                    <label class="checkbox-item ${isSelected ? 'race-ability' : ''} ${isDisabled && !isSelected ? 'option-disabled' : ''}" data-tooltip="${desc}">
                         <input type="checkbox" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} onchange="toggleAbility('${o.name}')">
                         ${o.name}
-                        <span data-tooltip="${tooltip}" style="cursor: help; margin-left: 5px; color: #888;">ⓘ</span>
                     </label>
                 `;
             });
@@ -284,11 +291,20 @@ function renderFeats() {
     
     grid.innerHTML = feats.map(f => {
         const isSelected = (character.featIds || []).includes(f);
-        const isDisabled = !isSelected && currentFeatCount >= totalMaxFeats;
+        const prereqCheck = DataUtils.canSelectFeat(f, character);
+        const canSelect = prereqCheck.canSelect;
+        const prereqReason = prereqCheck.reason;
+        const isDisabled = !isSelected && (currentFeatCount >= totalMaxFeats || !canSelect);
+        
+        const baseDesc = featDescriptions[f] || '';
+        const fullDesc = prereqReason 
+            ? baseDesc + '\n\n⚠️ PREREQUISITE: ' + prereqReason 
+            : baseDesc;
+        
         return `
-            <label class="checkbox-item ${isDisabled ? 'disabled' : ''}" style="${isDisabled && !isSelected ? 'opacity: 0.5;' : ''}">
+            <label class="checkbox-item ${isDisabled ? 'feat-disabled' : ''}" data-tooltip="${fullDesc}">
                 <input type="checkbox" value="${f}" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} onchange="toggleFeat('${f}')">
-                ${f}
+                ${f} ${!canSelect ? '⚠️' : ''}
             </label>
         `;
     }).join('');

@@ -450,3 +450,23 @@ button {
     opacity: 1;
     visibility: visible;
 }
+
+/* Disabled state for checkbox items - uses class instead of inline style */
+.checkbox-item.disabled {
+    opacity: 0.5;
+}
+
+/* Future/locked items */
+.checkbox-item.future-item {
+    opacity: 0.5;
+}
+
+/* Disabled feats */
+.checkbox-item.feat-disabled {
+    opacity: 0.5;
+}
+
+/* Disabled options */
+.checkbox-item.option-disabled {
+    opacity: 0.5;
+}

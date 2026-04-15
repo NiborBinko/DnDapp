@@ -129,6 +129,20 @@ function toggleHumanBonusStat(stat) {
 
 function toggleProficiency(id) {
     const checkbox = event.target;
+    const raceAbilities = getRaceAbilities();
+    const raceSkills = [];
+    raceAbilities.forEach(ability => {
+        const skill = raceAbilitySkillMap[ability];
+        if (skill) {
+            raceSkills.push(skill);
+        }
+    });
+    
+    if (raceSkills.includes(id) && checkbox.checked === false) {
+        checkbox.checked = true;
+        return;
+    }
+    
     const idx = character.proficiencyIds.indexOf(id);
     const isHuman = character.raceId === 'human';
     const charClass = classes.find(c => c.id === character.classId);
@@ -181,6 +195,12 @@ function toggleFeat(id) {
     const maxFeatsFromLevel = Math.floor(charLevel / 4);
     const totalMaxFeats = maxFeatsFromLevel + extraFeats;
     const currentFeatCount = (character.featIds || []).length;
+    
+    const prereqCheck = DataUtils.canSelectFeat(id, character);
+    if (!prereqCheck.canSelect) {
+        event.target.checked = false;
+        return;
+    }
     
     const idx = (character.featIds || []).indexOf(id);
     
