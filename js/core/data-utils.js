@@ -78,12 +78,22 @@ const DataUtils = {
     },
 
     getAutoGrantedProficiencies: function(character) {
+        if (!character || !character.raceId) {
+            return {
+                skills: [], armor: [], weapons: [], tools: [],
+                languages: [], toolOptions: [], cantrips: [], innateSpells: []
+            };
+        }
+        
         const result = {
             skills: [],
             armor: [],
             weapons: [],
             tools: [],
-            languages: []
+            languages: [],
+            toolOptions: [],
+            cantrips: [],
+            innateSpells: []
         };
 
         const raceAbilities = getRaceAbilities();
@@ -92,17 +102,46 @@ const DataUtils = {
             if (skill) {
                 result.skills.push(skill);
             }
+            const armorProfs = raceAbilityArmorProficiencies[ability];
+            if (armorProfs) {
+                result.armor.push(...armorProfs);
+            }
+            const weaponProfs = raceAbilityWeaponProficiencies[ability];
+            if (weaponProfs) {
+                result.weapons.push(...weaponProfs);
+            }
+            const toolProfs = raceAbilityToolProficiencies[ability];
+            if (toolProfs) {
+                result.toolOptions.push({
+                    ability: ability,
+                    options: toolProfs.options,
+                    count: toolProfs.count
+                });
+            }
+            const cantrip = raceAbilityCantrips[ability];
+            if (cantrip) {
+                result.cantrips.push({ ability: ability, ...cantrip });
+            }
+            const innate = raceAbilityInnateSpells[ability];
+            if (innate) {
+                result.innateSpells.push({ ability: ability, spells: innate });
+            }
         });
 
         return result;
     },
 
     getRaceStatEffects: function(character) {
+        if (!character || !character.raceId) {
+            return { hpPerLevel: 0, additionalHP: 0, speed: 0, carryingCapacity: 0, darkvision: 0 };
+        }
+        
         const result = {
             hpPerLevel: 0,
             additionalHP: 0,
             speed: 0,
-            carryingCapacity: 0
+            carryingCapacity: 0,
+            darkvision: 0
         };
 
         const raceAbilities = getRaceAbilities();
@@ -117,6 +156,8 @@ const DataUtils = {
                     result.speed += effect.value;
                 } else if (effect.type === "carryingCapacity") {
                     result.carryingCapacity += effect.value;
+                } else if (effect.type === "darkvision") {
+                    result.darkvision = effect.value;
                 }
             }
         });

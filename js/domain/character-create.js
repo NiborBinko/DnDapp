@@ -96,7 +96,18 @@ function selectRace(id) {
     DnDState.character.humanBonusStats = [];
     DnDState.character.proficiencyIds = [];
     DnDState.character.featIds = [];
+    DnDState.character.toolSelectionIds = [];
+    DnDState.character.raceCantrips = [];
+    DnDState.character.raceInnateSpells = [];
     DnDState.ui.pointsRemaining = 27;
+    
+    const gameData = DnDState.gameData;
+    
+    // Use AbilitySystem to calculate race effects
+    const raceEffects = AbilitySystem.recalculate(DnDState.character, gameData);
+    DnDState.character.raceAbilityIds = raceEffects.raceAbilityIds;
+    DnDState.character.raceCantrips = raceEffects.cantrips;
+    DnDState.character.raceInnateSpells = raceEffects.innateSpells;
     
     document.querySelectorAll('#race-grid .card').forEach(c => c.classList.remove('selected'));
     document.getElementById('race-' + id).classList.add('selected');
@@ -110,7 +121,6 @@ function selectRace(id) {
     renderRaceTraits();
     
     const subraceSection = document.getElementById('subrace-section');
-    const gameData = DnDState.gameData;
     if (gameData.subraces[id]) {
         subraceSection.style.display = 'block';
         renderSubraces(id);
@@ -122,7 +132,18 @@ function selectRace(id) {
 }
 
 function selectSubrace(name) {
-    DnDState.character.subraceName = name;
+    const state = DnDState.character;
+    const gameData = DnDState.gameData;
+    
+    state.subraceName = name;
+    
+    state.subraceName = name;
+    
+    // Use AbilitySystem to recalculate with subrace
+    const raceEffects = AbilitySystem.recalculate(state, gameData);
+    state.raceAbilityIds = raceEffects.raceAbilityIds;
+    state.raceCantrips = raceEffects.cantrips || [];
+    state.raceInnateSpells = raceEffects.innateSpells || {};
     
     document.querySelectorAll('#subrace-grid .card').forEach(c => c.classList.remove('selected'));
     document.getElementById('subrace-' + name).classList.add('selected');
@@ -183,6 +204,19 @@ function toggleProficiency(id) {
     }
     
     document.getElementById('prof-count').textContent = state.proficiencyIds.length + ' selected';
+}
+
+function toggleToolSelection(toolId) {
+    const state = DnDState.character;
+    if (!state.toolSelectionIds) state.toolSelectionIds = [];
+    const checkbox = event.target;
+    
+    const idx = state.toolSelectionIds.indexOf(toolId);
+    if (idx > -1) {
+        state.toolSelectionIds.splice(idx, 1);
+    } else {
+        state.toolSelectionIds.push(toolId);
+    }
 }
 
 function toggleAbility(id) {

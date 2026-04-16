@@ -1,0 +1,54 @@
+{
+  "armor": {
+    "light armor": "Padded, Leather, Studded Leather - AC 11-12. No skill needed to wear.",
+    "medium armor": "Hide, Chain Shirt, Scale Mail, Breastplate, Half Plate - AC 13-15. DEX requirement for some.",
+    "heavy armor": "Ring Mail, Chain Mail, Splint, Plate - AC 14-18. STR requirement. Cannot use Stealth.",
+    "shields": "+2 AC. Requires one free hand. Can be used with any armor."
+  },
+  "weapons": {
+    "simple weapons": "Clubs, Daggers, Greatclubs, Handaxes, Javelins, Light hammers, Maces, Quarterstaffs, Sickles, Spears, Unarmed strikes, Shortbows, Slings, Light crossbows. Basic weapons available to all.",
+    "martial weapons": "Longswords, Battleaxes, Warhammers, Greataxes, Greatswords, Longbows, Heavy crossbows, Rapiers, Scimitars, Tridents, Polearms. Better weapons requiring training.",
+    "crossbow": "Light/Heavy crossbows. Heavy requires two hands to fire, but deals more damage. Loading property means you can only fire once per attack action.",
+    "firearm": "Pistols, Muskets, Rifles (if using firearms in your campaign).",
+    "improvised weapons": "Any object can be used as a weapon. Typically deals 1d4 damage.",
+    "water weapons": "Net. Ranged weapon that imposes the Grappled condition on hit.",
+    "longsword": "Versatile 1d8 / 1d10 damage. Common martial weapon.",
+    "shortsword": "Finesse 1d6 damage. Common martial weapon.",
+    "shortbow": "Ranged 1d6 damage. Common martial weapon.",
+    "longbow": "Heavy ranged 1d8 damage. Requires two hands.",
+    "rapier": "Finesse 1d8 damage. Common martial weapon.",
+    "hand crossbow": "Ranged 1d6 damage. Light and reload properties."
+  },
+  "tools": {
+    "thieves' tools": "Lockpicking and disabling traps. Used with Dexterity. Requires proficiency to add proficiency bonus.",
+    "disguise kit": "Creating disguises for infiltration. Used with Charisma (Deception).",
+    "forgery kit": "Creating fake documents. Used with Intelligence (Forgery).",
+    "herbalism kit": "Identifying and harvesting herbs, creating potions. Used with Wisdom (Medicine).",
+    "poisoner's kit": "Creating and applying poisons. Used with Intelligence.",
+    "cartographer's kit": "Creating maps. Used with Intelligence.",
+    "gaming set": "Dice or cards for gambling games. Used with Charisma.",
+    "musical instrument": "Performing. Used with Charisma (Performance).",
+    "smith's tools": "Metalworking, repairing armor/weapons. Used with Strength.",
+    "woodcarver's tools": "Carving wood items. Used with Dexterity.",
+    "alchemist's supplies": "Creating alchemical items. Used with Intelligence.",
+    "brewer's supplies": "Creating beverages. Used with Intelligence.",
+    "cook's utensils": "Preparing food, detecting poison. Used with Wisdom.",
+    "mason's tools": "Stonework, creating walls. Used with Strength.",
+    "carpenter's tools": "Wood construction, creating structures. Used with Strength.",
+    "painter's supplies": "Creating images. Used with Charisma.",
+    "calligrapher's supplies": "Fancy writing. Used with Dexterity."
+  },
+  "savingThrows": {
+    "strength": "Athletics checks, grappling, breaking objects. Resist force effects.",
+    "dexterity": "Acrobatics, Stealth, Reflex saves. Avoiding fireballs, traps.",
+    "constitution": "Endurance, poison resistance. Surviving harsh conditions.",
+    "intelligence": "Arcana, History, Investigation, Nature, Religion checks.",
+    "wisdom": "Animal Handling, Insight, Medicine, Perception, Survival checks.",
+    "charisma": "Deception, Intimidation, Performance, Persuasion checks."
+  },
+  "mastery": {
+    "strength": "Mastery in Strength weapons: Attacks deal +1 damage, +2 at 5th level.",
+    "dexterity": "Mastery in Dexterity weapons: Attacks deal +1 damage, +2 at 5th level.",
+    "versatile": "Mastery for versatile weapons: +1 damage when wielding two-handed."
+  }
+}

@@ -46,6 +46,15 @@ function viewCharacter(index) {
         `;
     }).join('');
     
+    const raceAbilities = char.raceAbilityIds && char.raceAbilityIds.length > 0 
+        ? char.raceAbilityIds.join(', ') 
+        : 'None';
+    const raceCantrips = char.raceCantrips && char.raceCantrips.length > 0
+        ? char.raceCantrips.map(c => c.spell || c.spellList).join(', ')
+        : 'None';
+    const raceInnate = char.raceInnateSpells && char.raceInnateSpells.length > 0
+        ? char.raceInnateSpells.map(i => Object.keys(i.spells || {}).join(', ')).join(', ')
+        : 'None';
     const profs = char.proficiencyIds && char.proficiencyIds.length > 0 
         ? char.proficiencyIds.join(', ') 
         : 'None';
@@ -67,6 +76,18 @@ function viewCharacter(index) {
         <div class="sheet-section">
             <h3>Race</h3>
             <p>${raceName}</p>
+        </div>
+        <div class="sheet-section">
+            <h3>Race Abilities</h3>
+            <p>${raceAbilities}</p>
+        </div>
+        <div class="sheet-section">
+            <h3>Race Cantrips</h3>
+            <p>${raceCantrips}</p>
+        </div>
+        <div class="sheet-section">
+            <h3>Race Innate Spells</h3>
+            <p>${raceInnate}</p>
         </div>
         <div class="sheet-section">
             <h3>Ability Scores</h3>

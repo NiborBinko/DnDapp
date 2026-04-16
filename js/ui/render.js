@@ -157,7 +157,18 @@ function renderProficiencies() {
     const grid = document.getElementById('proficiencies-grid');
     const state = DnDState.character;
     const gameData = DnDState.gameData;
+    
+    if (!state.classId) {
+        grid.innerHTML = '<p style="color: var(--text-muted);">Select a class first to see proficiencies.</p>';
+        return;
+    }
+    
     const charClass = gameData.classes.find(c => c.id === state.classId);
+    if (!charClass) {
+        grid.innerHTML = '<p style="color: var(--text-muted);">Select a class first to see proficiencies.</p>';
+        return;
+    }
+    
     const classSkillOptions = charClass?.proficiencies?.skills?.options || [];
     const extraSkills = getExtraSkillCount();
     const maxSkills = (charClass?.proficiencies?.skills?.count || 2) + extraSkills;
@@ -197,60 +208,122 @@ function renderProficiencies() {
     const classTools = charClass?.proficiencies?.tools || [];
     const classSaves = charClass?.proficiencies?.savingThrows || [];
     
-    if (classArmor.length > 0) {
+// Get race proficiencies first
+    const raceProfs = AbilitySystem.getProficiencies(state, gameData, state.classId);
+    
+    // Process and combine class + race ARMOR proficiencies
+    const processedArmor = [];
+    const armorTypes = ['light armor', 'medium armor', 'heavy armor', 'shields'];
+    armorTypes.forEach(armor => {
+        const hasClassProf = classArmor.includes(armor) || classArmor.includes(armor.replace(' armor', ''));
+        if (hasClassProf) {
+            processedArmor.push({ name: armor, source: 'Class: ' + charClass.name });
+        }
+    });
+    // Add race armor proficiencies
+    if (raceProfs.armor) {
+        raceProfs.armor.forEach(armor => {
+            if (!processedArmor.find(a => a.name === armor)) {
+                processedArmor.push({ name: armor, source: 'Race: ' + state.raceId });
+            }
+        });
+    }
+    
+    // Render merged ARMOR section
+    if (processedArmor.length > 0) {
         html += `<h4 class="section-header">Armor Proficiencies</h4>`;
         html += `<div class="checkbox-grid">`;
-        const armorTypes = ['light armor', 'medium armor', 'heavy armor', 'shields'];
-        html += armorTypes.map(armor => {
-            const hasProficiency = classArmor.includes(armor) || classArmor.includes(armor.replace(' armor', ''));
-            if (!hasProficiency) return '';
-            const desc = proficiencyDescriptions.armor[armor] || '';
-            const source = 'Class: ' + charClass.name;
-            
+        html += processedArmor.map(arm => {
+            const desc = proficiencyDescriptions.armor[arm.name] || '';
             return `
-            <label class="checkbox-item race-ability" data-tooltip="${desc}\n\n📍 ${source}">
+            <label class="checkbox-item race-ability" data-tooltip="${desc}\n\n📍 ${arm.source}">
                 <input type="checkbox" checked disabled>
-                ${armor.charAt(0).toUpperCase() + armor.slice(1)} 🔒
+                ${arm.name.charAt(0).toUpperCase() + arm.name.slice(1)} 🔒
             </label>
         `}).join('');
         html += `</div>`;
     }
     
-    if (classWeapons.length > 0) {
+    // Process and combine class + race WEAPON proficiencies
+    const processedWeapons = [];
+    const weaponTypes = ['simple weapons', 'martial weapons'];
+    weaponTypes.forEach(weapon => {
+        const hasClassProf = classWeapons.includes(weapon) || classWeapons.includes(weapon.replace(' weapons', ''));
+        if (hasClassProf) {
+            processedWeapons.push({ name: weapon, source: 'Class: ' + charClass.name });
+        }
+    });
+    // Add race weapon proficiencies
+    if (raceProfs.weapons) {
+        raceProfs.weapons.forEach(weapon => {
+            if (!processedWeapons.find(w => w.name === weapon)) {
+                processedWeapons.push({ name: weapon, source: 'Race: ' + state.raceId });
+            }
+        });
+    }
+    
+    // Render merged WEAPON section
+    if (processedWeapons.length > 0) {
         html += `<h4 class="section-header">Weapon Proficiencies</h4>`;
         html += `<div class="checkbox-grid">`;
-        const weaponTypes = ['simple weapons', 'martial weapons'];
-        html += weaponTypes.map(weapon => {
-            const hasProficiency = classWeapons.includes(weapon) || classWeapons.includes(weapon.replace(' weapons', ''));
-            if (!hasProficiency) return '';
-            const desc = proficiencyDescriptions.weapons[weapon] || '';
-            const source = 'Class: ' + charClass.name;
-            
+        html += processedWeapons.map(wp => {
+            const desc = proficiencyDescriptions.weapons[wp.name] || '';
             return `
-            <label class="checkbox-item race-ability" data-tooltip="${desc}\n\n📍 ${source}">
+            <label class="checkbox-item race-ability" data-tooltip="${desc}\n\n📍 ${wp.source}">
                 <input type="checkbox" checked disabled>
-                ${weapon.charAt(0).toUpperCase() + weapon.slice(1)} 🔒
+                ${wp.name.charAt(0).toUpperCase() + wp.name.slice(1)} 🔒
             </label>
         `}).join('');
         html += `</div>`;
     }
     
-    if (classTools.length > 0) {
+    // Race tool selection (separate since it requires user choice)
+    if (raceProfs.toolOptions && raceProfs.toolOptions.length > 0) {
+        raceProfs.toolOptions.forEach(toolOption => {
+            html += `<h4 class="section-header">${toolOption.ability} (Select ${toolOption.count})</h4>`;
+            html += `<div class="checkbox-grid">`;
+            html += toolOption.options.map(tool => {
+                const selected = (state.toolSelectionIds || []).includes(tool);
+                const desc = proficiencyDescriptions.tools[tool] || '';
+                
+                return `
+                <label class="checkbox-item" data-tooltip="${desc}">
+                    <input type="checkbox" value="${tool}" 
+                        ${selected ? 'checked' : ''} 
+                        onchange="toggleToolSelection('${tool}')">
+                    ${tool}
+                </label>
+            `}).join('');
+            html += `</div>`;
+        });
+}
+    
+    // Process and combine class + race TOOLS
+    const processedTools = [];
+    // Add class tools
+    classTools.forEach(tool => {
+        processedTools.push({ name: tool, source: 'Class: ' + charClass.name });
+    });
+    // Note: Race tools currently require selection (toolOptions), handled separately above
+    // Add race required selection tools to a separate list
+    const raceRequiredTools = raceProfs.toolOptions || [];
+    
+    // Render TOOLS (from class only for now - race tools require user selection)
+    if (processedTools.length > 0) {
         html += `<h4 class="section-header">Tool Proficiencies</h4>`;
         html += `<div class="checkbox-grid">`;
-        html += classTools.map(tool => {
-            const desc = proficiencyDescriptions.tools[tool] || '';
-            const source = 'Class: ' + charClass.name;
-            
+        html += processedTools.map(tl => {
+            const desc = proficiencyDescriptions.tools[tl.name] || '';
             return `
-            <label class="checkbox-item race-ability" data-tooltip="${desc}\n\n📍 ${source}">
+            <label class="checkbox-item race-ability" data-tooltip="${desc}\n\n📍 ${tl.source}">
                 <input type="checkbox" checked disabled>
-                ${tool} 🔒
+                ${tl.name} 🔒
             </label>
         `}).join('');
         html += `</div>`;
     }
     
+    // Render SAVING THROWS
     if (classSaves.length > 0) {
         html += `<h4 class="section-header">Saving Throws</h4>`;
         html += `<div class="checkbox-grid">`;

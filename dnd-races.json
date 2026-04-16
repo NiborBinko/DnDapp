@@ -1,0 +1,336 @@
+{
+  "races": [
+    {
+      "id": "human",
+      "name": "Human",
+      "desc": "Versatile and ambitious",
+      "size": "Medium",
+      "speed": 30,
+      "languages": [
+        "Common",
+        "One extra language of your choice"
+      ],
+      "bonuses": {
+        "chosen": 2
+      },
+      "raceAbilities": [
+        "+1 Proficiency",
+        "+1 Feat"
+      ]
+    },
+    {
+      "id": "elf",
+      "name": "Elf",
+      "desc": "Graceful and long-lived",
+      "size": "Medium",
+      "speed": 30,
+      "languages": [
+        "Common",
+        "Elvish"
+      ],
+      "bonuses": {
+        "dexterity": 2
+      },
+      "raceAbilities": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Trance"
+      ]
+    },
+    {
+      "id": "dwarf",
+      "name": "Dwarf",
+      "desc": "Stout and hardy",
+      "size": "Medium",
+      "speed": 25,
+      "languages": [
+        "Common",
+        "Dwarvish"
+      ],
+      "bonuses": {
+        "constitution": 2
+      },
+      "raceAbilities": [
+        "Darkvision",
+        "Dwarven Resilience",
+        "Stonecunning",
+        "Dwarven Tool Proficiency"
+      ]
+    },
+    {
+      "id": "halfling",
+      "name": "Halfling",
+      "desc": "Small and nimble",
+      "size": "Small",
+      "speed": 25,
+      "languages": [
+        "Common",
+        "Halfling"
+      ],
+      "bonuses": {
+        "dexterity": 2
+      },
+      "raceAbilities": [
+        "Lucky",
+        "Brave"
+      ]
+    },
+    {
+      "id": "dragonborn",
+      "name": "Dragonborn",
+      "desc": "Dragon-like humanoids",
+      "size": "Medium",
+      "speed": 30,
+      "languages": [
+        "Common",
+        "Draconic"
+      ],
+      "bonuses": {
+        "strength": 2,
+        "charisma": 1
+      },
+      "raceAbilities": []
+    },
+    {
+      "id": "gnome",
+      "name": "Gnome",
+      "desc": "Small and clever",
+      "size": "Small",
+      "speed": 25,
+      "languages": [
+        "Common",
+        "Gnomish"
+      ],
+      "bonuses": {
+        "intelligence": 2
+      },
+      "raceAbilities": [
+        "Darkvision",
+        "Gnome Cunning"
+      ]
+    },
+    {
+      "id": "halfelf",
+      "name": "Half-Elf",
+      "desc": "Best of both worlds",
+      "size": "Medium",
+      "speed": 30,
+      "languages": [
+        "Common",
+        "Elvish",
+        "One extra language of your choice"
+      ],
+      "bonuses": {
+        "charisma": 2
+      },
+      "raceAbilities": [
+        "Darkvision",
+        "Fey Ancestry"
+      ]
+    },
+    {
+      "id": "halforc",
+      "name": "Half-Orc",
+      "desc": "Strong and fierce",
+      "size": "Medium",
+      "speed": 30,
+      "languages": [
+        "Common",
+        "Orcish"
+      ],
+      "bonuses": {
+        "strength": 2,
+        "constitution": 1
+      },
+      "raceAbilities": [
+        "Menacing",
+        "Relentless Endurance"
+      ]
+    },
+    {
+      "id": "tiefling",
+      "name": "Tiefling",
+      "desc": "Fiendish heritage",
+      "size": "Medium",
+      "speed": 30,
+      "languages": [
+        "Common",
+        "Infernal"
+      ],
+      "bonuses": {
+        "charisma": 2,
+        "intelligence": 1
+      },
+      "raceAbilities": [
+        "Darkvision",
+        "Hellish Resistance"
+      ]
+    }
+  ],
+  "subraces": {
+    "elf": [
+      {
+        "name": "High Elf",
+        "bonuses": {
+          "intelligence": 1
+        },
+        "raceAbilities": [
+          "Elf Weapon Training",
+          "High Elf Cantrip"
+        ],
+        "languages": [
+          "One extra language of your choice"
+        ]
+      },
+      {
+        "name": "Wood Elf",
+        "speed": 35,
+        "bonuses": {
+          "wisdom": 1
+        },
+        "raceAbilities": [
+          "Mask of the Wild",
+          "Fleet Footed",
+          "Elf Weapon Training"
+        ]
+      },
+      {
+        "name": "Drow",
+        "bonuses": {
+          "charisma": 1
+        },
+        "raceAbilities": [
+          "Superior Darkvision",
+          "Drow Magic",
+          "Sunlight Sensitivity",
+          "Drow Weapon Training"
+        ]
+      }
+    ],
+    "dwarf": [
+      {
+        "name": "Hill Dwarf",
+        "speed": 25,
+        "bonuses": {
+          "wisdom": 1
+        },
+        "raceAbilities": [
+          "Dwarven Toughness"
+        ]
+      },
+      {
+        "name": "Mountain Dwarf",
+        "speed": 25,
+        "bonuses": {
+          "strength": 2
+        },
+        "raceAbilities": [
+          "Dwarven Armor Training"
+        ]
+      }
+    ],
+    "halfling": [
+      {
+        "name": "Lightfoot",
+        "speed": 25,
+        "bonuses": {
+          "charisma": 1
+        },
+        "raceAbilities": [
+          "Naturally Stealthy"
+        ]
+      },
+      {
+        "name": "Stout",
+        "speed": 25,
+        "bonuses": {
+          "constitution": 1
+        },
+        "raceAbilities": [
+          "Stout Resilience"
+        ]
+      }
+    ],
+    "gnome": [
+      {
+        "name": "Forest Gnome",
+        "speed": 25,
+        "bonuses": {
+          "dexterity": 1
+        },
+        "raceAbilities": [
+          "Natural Illusionist"
+        ]
+      },
+      {
+        "name": "Rock Gnome",
+        "speed": 25,
+        "bonuses": {
+          "constitution": 1
+        },
+        "raceAbilities": [
+          "Artificer's Lore"
+        ]
+      }
+    ],
+    "dragonborn": [
+      {
+        "name": "Black",
+        "bonuses": {},
+        "raceAbilities": [
+          "Breath Weapon (Acid)"
+        ]
+      },
+      {
+        "name": "Blue",
+        "bonuses": {},
+        "raceAbilities": [
+          "Breath Weapon (Lightning)"
+        ]
+      },
+      {
+        "name": "Green",
+        "bonuses": {},
+        "raceAbilities": [
+          "Breath Weapon (Poison)"
+        ]
+      },
+      {
+        "name": "Red",
+        "bonuses": {},
+        "raceAbilities": [
+          "Breath Weapon (Fire)"
+        ]
+      },
+      {
+        "name": "Silver",
+        "bonuses": {},
+        "raceAbilities": [
+          "Breath Weapon (Cold)"
+        ]
+      },
+      {
+        "name": "Bronze",
+        "bonuses": {},
+        "raceAbilities": [
+          "Breath Weapon (Lightning)"
+        ]
+      },
+      {
+        "name": "Copper",
+        "bonuses": {},
+        "raceAbilities": [
+          "Breath Weapon (Acid)"
+        ]
+      },
+      {
+        "name": "Gold",
+        "bonuses": {},
+        "raceAbilities": [
+          "Breath Weapon (Fire)"
+        ]
+      }
+    ]
+  }
+}

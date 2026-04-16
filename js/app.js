@@ -1,17 +1,43 @@
 function init() {
     const dataFiles = [
-        fetch('dnd-data.json'),
+        fetch('dnd-classes.json'),
+        fetch('dnd-races.json'),
+        fetch('dnd-feats.json'),
+        fetch('descriptions/race-abilities.json'),
+        fetch('descriptions/race-ability-effects.json'),
+        fetch('descriptions/proficiencies.json'),
         fetch('dnd-spell-lists.json'),
         fetch('js/domain/spells.json')
     ];
     
     Promise.all(dataFiles)
-        .then(([dataResponse, spellListsResponse, spellDataResponse]) => {
-            return Promise.all([dataResponse.json(), spellListsResponse.json(), spellDataResponse.json()]);
+        .then(([classesResp, racesResp, featsResp, raceDescResp, raceEffectsResp, profDescResp, spellListsResp, spellDataResp]) => {
+            return Promise.all([
+                classesResp.json(),
+                racesResp.json(),
+                featsResp.json(),
+                raceDescResp.json(),
+                raceEffectsResp.json(),
+                profDescResp.json(),
+                spellListsResp.json(),
+                spellDataResp.json()
+            ]);
         })
-        .then(([data, spellLists, spellData]) => {
-            DnDState.init(data);
+        .then(([classes, races, feats, raceAbilitiesDesc, raceEffects, profDesc, spellLists, spellData]) => {
+            // Combine data into DnDState format
+            const gameData = {
+                classes: classes.classes,
+                races: races.races,
+                subraces: races.subraces,
+                feats: feats.feats,
+                statLabels: classes.statLabels
+            };
+            
+            DnDState.init(gameData);
             SpellManager.init(spellData, spellLists);
+            
+            // Initialize AbilitySystem with description data
+            AbilitySystem.init(raceAbilitiesDesc, raceEffects, profDesc);
             
             initializeApp();
         })

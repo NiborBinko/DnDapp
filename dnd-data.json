@@ -794,8 +794,8 @@
   },
   "races": [
     { "id": "human", "name": "Human", "desc": "Versatile and ambitious", "size": "Medium", "speed": 30, "languages": ["Common", "One extra language of your choice"], "bonuses": { "chosen": 2 }, "raceAbilities": ["+1 Proficiency", "+1 Feat"] },
-    { "id": "elf", "name": "Elf", "desc": "Graceful and long-lived", "size": "Medium", "speed": 30, "languages": ["Common", "Elvish"], "bonuses": { "dexterity": 2 }, "raceAbilities": ["Darkvision", "Fey Ancestry"] },
-    { "id": "dwarf", "name": "Dwarf", "desc": "Stout and hardy", "size": "Medium", "speed": 25, "languages": ["Common", "Dwarvish"], "bonuses": { "constitution": 2 }, "raceAbilities": ["Darkvision", "Dwarven Resilience"] },
+    { "id": "elf", "name": "Elf", "desc": "Graceful and long-lived", "size": "Medium", "speed": 30, "languages": ["Common", "Elvish"], "bonuses": { "dexterity": 2 }, "raceAbilities": ["Darkvision", "Fey Ancestry", "Keen Senses", "Trance"] },
+    { "id": "dwarf", "name": "Dwarf", "desc": "Stout and hardy", "size": "Medium", "speed": 25, "languages": ["Common", "Dwarvish"], "bonuses": { "constitution": 2 }, "raceAbilities": ["Darkvision", "Dwarven Resilience", "Stonecunning", "Dwarven Tool Proficiency"] },
     { "id": "halfling", "name": "Halfling", "desc": "Small and nimble", "size": "Small", "speed": 25, "languages": ["Common", "Halfling"], "bonuses": { "dexterity": 2 }, "raceAbilities": ["Lucky", "Brave"] },
     { "id": "dragonborn", "name": "Dragonborn", "desc": "Dragon-like humanoids", "size": "Medium", "speed": 30, "languages": ["Common", "Draconic"], "bonuses": { "strength": 2, "charisma": 1 }, "raceAbilities": [] },
     { "id": "gnome", "name": "Gnome", "desc": "Small and clever", "size": "Small", "speed": 25, "languages": ["Common", "Gnomish"], "bonuses": { "intelligence": 2 }, "raceAbilities": ["Darkvision", "Gnome Cunning"] },
@@ -805,13 +805,13 @@
   ],
   "subraces": {
     "elf": [
-      { "name": "High Elf", "bonuses": { "intelligence": 1 }, "raceAbilities": ["Keen Senses"] },
-      { "name": "Wood Elf", "speed": 35, "bonuses": { "wisdom": 1 }, "raceAbilities": ["Mask of the Wild"] },
-      { "name": "Drow", "bonuses": { "charisma": 1 }, "raceAbilities": ["Sunlight Sensitivity"] }
+      { "name": "High Elf", "bonuses": { "intelligence": 1 }, "raceAbilities": ["Elf Weapon Training", "High Elf Cantrip"], "languages": ["One extra language of your choice"] },
+      { "name": "Wood Elf", "speed": 35, "bonuses": { "wisdom": 1 }, "raceAbilities": ["Mask of the Wild", "Fleet Footed", "Elf Weapon Training"] },
+      { "name": "Drow", "bonuses": { "charisma": 1 }, "raceAbilities": ["Superior Darkvision", "Drow Magic", "Sunlight Sensitivity", "Drow Weapon Training"] }
     ],
     "dwarf": [
       { "name": "Hill Dwarf", "speed": 25, "bonuses": { "wisdom": 1 }, "raceAbilities": ["Dwarven Toughness"] },
-      { "name": "Mountain Dwarf", "speed": 25, "bonuses": { "strength": 2 }, "raceAbilities": ["Stonecunning"] }
+      { "name": "Mountain Dwarf", "speed": 25, "bonuses": { "strength": 2 }, "raceAbilities": ["Dwarven Armor Training"] }
     ],
     "halfling": [
       { "name": "Lightfoot", "speed": 25, "bonuses": { "charisma": 1 }, "raceAbilities": ["Naturally Stealthy"] },

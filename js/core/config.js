@@ -54,11 +54,20 @@ const raceAbilityDescriptions = {
     "Mask of the Wild": "You can attempt to hide even when only lightly obscured by foliage, rain, snow, or mist.",
     "Sunlight Sensitivity": "You have disadvantage on attack rolls and Wisdom (Perception) checks that rely on sight when you or your target is in sunlight.",
     "Dwarven Toughness": "Your hit point maximum increases by 1, and it increases by 1 every time you gain a level.",
-    "Stonecunning": "You have expertise in History checks related to stonework.",
+    "Stonecunning": "You have proficiency with History checks related to stonework. When asked about stonework, your History check is made with proficiency (doubled).",
+    "Dwarven Tool Proficiency": "You gain proficiency with artisan's tools (smith's tools, brewer's supplies, or mason's tools). Choose one.",
+    "Dwarven Armor Training": "You have proficiency with light armor, medium armor, and shields.",
     "Naturally Stealthy": "You can attempt to hide even when only obscured by a creature that is at least one size larger than you.",
     "Stout Resilience": "You have advantage on saving throws against poison, and you have resistance to poison damage.",
     "Natural Illusionist": "You know the Minor Illusion cantrip. Intelligence is your spellcasting ability for it.",
     "Artificer's Lore": "Whenever you make an Intelligence (History) check related to magical or mechanical items, alchemical objects, or technological devices, you can add twice your proficiency bonus.",
+    "Trance": "Elves don't need to sleep. They spend 4 hours in a trance-like meditative state to gain the same benefit other races get from 8 hours of sleep.",
+    "Elf Weapon Training": "You have proficiency with the longsword, shortsword, shortbow, and longbow.",
+    "High Elf Cantrip": "You know one cantrip of your choice from the Wizard spell list. Intelligence is your spellcasting ability for it.",
+    "Fleet Footed": "Your base walking speed increases by 5 feet.",
+    "Superior Darkvision": "You can see in dim light within 120 feet as if it were bright light, and in darkness as if it were dim light.",
+    "Drow Magic": "You know the Dancing Lights cantrip. At 3rd level, you can cast Faerie Fire once per long rest. At 5th level, you can cast Darkness once per long rest.",
+    "Drow Weapon Training": "You have proficiency with rapiers, shortswords, and hand crossbows.",
     "Breath Weapon (Acid)": "As an action, you can exhale acid in a 5-foot by 30-foot line. Creatures must make DEX save or take 2d6 acid damage (half on success).",
     "Breath Weapon (Lightning)": "As an action, you can exhale lightning in a 5-foot by 30-foot line. Creatures must make DEX save or take 2d6 lightning damage (half on success).",
     "Breath Weapon (Poison)": "As an action, you can exhale poisonous gas in a 15-foot cone. Creatures must make CON save or take 2d6 poison damage (half on success).",
@@ -391,12 +400,41 @@ const featPrerequisites = {
 const raceAbilitySkillMap = {
     "Keen Senses": "Perception",
     "Menacing": "Intimidation",
-    "Stonecunning": "History",
     "Naturally Stealthy": "Stealth"
 };
 
+const raceAbilityArmorProficiencies = {
+    "Dwarven Armor Training": ["light armor", "medium armor", "shields"]
+};
+
+const raceAbilityWeaponProficiencies = {
+    "Elf Weapon Training": ["longsword", "shortsword", "shortbow", "longbow"],
+    "Drow Weapon Training": ["rapier", "shortsword", "hand crossbow"]
+};
+
+const raceAbilityToolProficiencies = {
+    "Dwarven Tool Proficiency": {
+        options: ["smith's tools", "brewer's supplies", "mason's tools"],
+        count: 1
+    }
+};
+
+const raceAbilityCantrips = {
+    "High Elf Cantrip": { class: "wizard", spellList: "all" },
+    "Drow Magic": { cantrips: ["dancing-lights"] }
+};
+
+const raceAbilityInnateSpells = {
+    "Drow Magic": {
+        "3": ["faerie-fire"],
+        "5": ["darkness"]
+    }
+};
+
 const raceAbilityStatEffects = {
-    "Dwarven Toughness": { type: "hpPerLevel", value: 1 }
+    "Dwarven Toughness": { type: "hpPerLevel", value: 1 },
+    "Fleet Footed": { type: "speed", value: 5 },
+    "Superior Darkvision": { type: "darkvision", value: 120 }
 };
 
 const proficiencyDescriptions = {
