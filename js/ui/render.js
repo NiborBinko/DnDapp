@@ -46,8 +46,15 @@ function renderSubraces(raceId) {
     const grid = document.getElementById('subrace-grid');
     const gameData = DnDState.gameData;
     const subs = gameData.subraces[raceId] || [];
-    grid.innerHTML = subs.length === 0 ? '<p>No subraces available</p>' : 
-        subs.map(s => {
+    
+    console.log('renderSubraces for', raceId, 'found:', subs); // Debug
+    
+    if (subs.length === 0) {
+        grid.innerHTML = '<p style="color: var(--text-muted);">No subraces available for this race</p>';
+        return;
+    }
+    
+    grid.innerHTML = subs.map(s => {
             const bonusParts = [];
             if (s.bonuses) {
                 for (const [stat, val] of Object.entries(s.bonuses)) {
@@ -108,7 +115,7 @@ function renderStats() {
         const costDiff = nextCost - currentCost;
         
         return `
-            <div class="stat-row ${isPrimary ? 'primary-stat-row' : ''}" data-tooltip="${statDescriptions[stat]}${isPrimary ? '\n\n⭐ This is your ' + selectedClass.name + '\'s primary stat!' : ''}">
+            <div class="stat-row ${isPrimary ? 'primary-stat-row' : ''}" data-tooltip="${getStatDescriptions()[stat]}${isPrimary ? '\n\n⭐ This is your ' + selectedClass.name + '\'s primary stat!' : ''}">
                 <div class="stat-name">${gameData.statLabels[stat]}${isPrimary ? ' ⭐' : ''}</div>
                 <div class="stat-controls">
                     <button class="stat-btn" onclick="adjustStat('${stat}', -1)" id="btn-${stat}-minus">-</button>
@@ -182,22 +189,25 @@ function renderProficiencies() {
         }
     });
     
+    const skillDesc = getSkillDescriptions();
     let html = '';
     
-    html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
+html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
     html += `<div class="checkbox-grid">`;
     html += classSkillOptions.map(skill => {
-        const desc = skillDescriptions[skill.name] || skill.description || '';
+        const desc = skillDesc[skill.name] || skill.description || '';
         const isFromRace = raceSkills.includes(skill.name);
         const isSelected = (state.proficiencyIds || []).includes(skill.name) || isFromRace;
         
+        const origin = isFromRace ? getProficiencyOrigin(skill.name, 'skill', state) : '';
+        
         return `
-        <label class="checkbox-item ${isFromRace ? 'race-ability' : ''}" data-tooltip="${desc}">
-            <input type="checkbox" value="${skill.name}" data-attribute="${skill.attribute}" 
+        <label class="checkbox-item ${isFromRace ? 'race-ability' : ''}" data-tooltip="${desc}${origin}">
+            <input type="checkbox" value="${skill.name}" data-attribute="${skillDesc[skill.name]?.match(/\([A-Z]+\)/)?.[1] || ''}" 
                 ${isSelected ? 'checked' : ''} 
                 ${isFromRace ? 'disabled' : ''} 
                 onchange="toggleProficiency('${skill.name}')">
-            ${skill.name} <span style="color: var(--text-muted); font-size: 0.85rem;">(${skill.attribute.substring(0, 3).toUpperCase()})</span>
+            ${skill.name} <span style="color: var(--text-muted); font-size: 0.85rem;">(${skillDesc[skill.name]?.match(/\([A-Z]+\)/)?.[1] || ''})</span>
             ${isFromRace ? ' 🔒' : ''}
         </label>
     `}).join('');
@@ -234,9 +244,11 @@ function renderProficiencies() {
         html += `<h4 class="section-header">Armor Proficiencies</h4>`;
         html += `<div class="checkbox-grid">`;
         html += processedArmor.map(arm => {
-            const desc = proficiencyDescriptions.armor[arm.name] || '';
+            const desc = getProficiencyDescriptions().armor[arm.name] || '';
+            const sourceText = arm.source && arm.source.trim() ? arm.source : '';
+            const tooltip = sourceText ? `${desc}\n\n📍 ${sourceText}` : desc;
             return `
-            <label class="checkbox-item race-ability" data-tooltip="${desc}\n\n📍 ${arm.source}">
+            <label class="checkbox-item race-ability" data-tooltip="${tooltip}">
                 <input type="checkbox" checked disabled>
                 ${arm.name.charAt(0).toUpperCase() + arm.name.slice(1)} 🔒
             </label>
@@ -247,17 +259,32 @@ function renderProficiencies() {
     // Process and combine class + race WEAPON proficiencies
     const processedWeapons = [];
     const weaponTypes = ['simple weapons', 'martial weapons'];
+    // Add weapon categories
     weaponTypes.forEach(weapon => {
         const hasClassProf = classWeapons.includes(weapon) || classWeapons.includes(weapon.replace(' weapons', ''));
         if (hasClassProf) {
             processedWeapons.push({ name: weapon, source: 'Class: ' + charClass.name });
         }
     });
-    // Add race weapon proficiencies
+    // Add individual weapons from class (not categories)
+    classWeapons.forEach(weapon => {
+        if (!weapon.includes(' ') && !processedWeapons.find(w => w.name === weapon)) {
+            processedWeapons.push({ name: weapon, source: 'Class: ' + charClass.name });
+        }
+    });
+    // Add race weapon proficiencies (skip duplicates, merge sources if different)
     if (raceProfs.weapons) {
         raceProfs.weapons.forEach(weapon => {
-            if (!processedWeapons.find(w => w.name === weapon)) {
-                processedWeapons.push({ name: weapon, source: 'Race: ' + state.raceId });
+            const existing = processedWeapons.find(w => w.name === weapon);
+            const origin = getProficiencyOrigin(weapon, 'weapon', state);
+            if (existing) {
+                // Merge sources if different and origin exists
+                if (origin && existing.source !== origin && !existing.source.includes(origin.split(' (')[0])) {
+                    existing.source = origin;
+                    existing.isFromRace = true;
+                }
+            } else {
+                processedWeapons.push({ name: weapon, source: origin || 'Race: ' + state.raceId, isFromRace: true });
             }
         });
     }
@@ -267,9 +294,12 @@ function renderProficiencies() {
         html += `<h4 class="section-header">Weapon Proficiencies</h4>`;
         html += `<div class="checkbox-grid">`;
         html += processedWeapons.map(wp => {
-            const desc = proficiencyDescriptions.weapons[wp.name] || '';
+            const desc = getProficiencyDescriptions().weapons[wp.name] || '';
+            // Only show source prefix if it has meaningful content
+            const sourceText = wp.source && wp.source.trim() && wp.source !== 'Race: ' ? wp.source : '';
+            const tooltip = sourceText ? `${desc}\n\n📍 ${sourceText}` : desc;
             return `
-            <label class="checkbox-item race-ability" data-tooltip="${desc}\n\n📍 ${wp.source}">
+            <label class="checkbox-item race-ability" data-tooltip="${tooltip}">
                 <input type="checkbox" checked disabled>
                 ${wp.name.charAt(0).toUpperCase() + wp.name.slice(1)} 🔒
             </label>
@@ -284,7 +314,7 @@ function renderProficiencies() {
             html += `<div class="checkbox-grid">`;
             html += toolOption.options.map(tool => {
                 const selected = (state.toolSelectionIds || []).includes(tool);
-                const desc = proficiencyDescriptions.tools[tool] || '';
+                const desc = getProficiencyDescriptions().tools[tool] || '';
                 
                 return `
                 <label class="checkbox-item" data-tooltip="${desc}">
@@ -313,9 +343,11 @@ function renderProficiencies() {
         html += `<h4 class="section-header">Tool Proficiencies</h4>`;
         html += `<div class="checkbox-grid">`;
         html += processedTools.map(tl => {
-            const desc = proficiencyDescriptions.tools[tl.name] || '';
+            const desc = getProficiencyDescriptions().tools[tl.name] || '';
+            const sourceText = tl.source && tl.source.trim() ? tl.source : '';
+            const tooltip = sourceText ? `${desc}\n\n📍 ${sourceText}` : desc;
             return `
-            <label class="checkbox-item race-ability" data-tooltip="${desc}\n\n📍 ${tl.source}">
+            <label class="checkbox-item race-ability" data-tooltip="${tooltip}">
                 <input type="checkbox" checked disabled>
                 ${tl.name} 🔒
             </label>
@@ -329,7 +361,7 @@ function renderProficiencies() {
         html += `<div class="checkbox-grid">`;
         html += classSaves.map(save => {
             const stat = save === 'strength' ? 'STR' : save === 'dexterity' ? 'DEX' : save === 'constitution' ? 'CON' : save === 'intelligence' ? 'INT' : save === 'wisdom' ? 'WIS' : 'CHA';
-            const desc = proficiencyDescriptions.savingThrows[save] || '';
+            const desc = getProficiencyDescriptions().savingThrows[save] || '';
             const source = 'Class: ' + charClass.name;
             
             return `
@@ -346,7 +378,7 @@ function renderProficiencies() {
     html += `<div class="checkbox-grid">`;
     const masteryTypes = ['strength', 'dexterity', 'versatile'];
     html += masteryTypes.map(type => {
-        const desc = proficiencyDescriptions.mastery[type] || '';
+        const desc = getProficiencyDescriptions().mastery[type] || '';
         
         return `
         <label class="checkbox-item coming-soon" data-tooltip="${desc}">
@@ -377,9 +409,11 @@ function renderAbilities() {
         html += `<h4 class="section-header">Race Abilities</h4>`;
         html += `<div class="checkbox-grid">`;
         raceAbilities.forEach(a => {
-            const desc = raceAbilityDescriptions[a] || '';
+            const desc = getRaceAbilityDescriptions()[a] || '';
+            const subraceName = state.subraceName;
+            const origin = subraceName ? `\n\n📍 From: ${subraceName} subrace` : `\n\n📍 Race: ${raceName}`;
             html += `
-                <label class="checkbox-item race-ability" data-tooltip="${desc}">
+                <label class="checkbox-item race-ability" data-tooltip="${desc}${origin}">
                     <input type="checkbox" checked disabled>
                     ${a} 🔒
                 </label>
@@ -396,7 +430,7 @@ function renderAbilities() {
         html += `<div class="checkbox-grid">`;
         currentClassFeatures.forEach(f => {
             const isSelected = (state.abilityIds || []).includes(f.name);
-            const desc = classFeatureDescriptions[f.name] || `Level ${f.level} ${classId} feature`;
+            const desc = getClassFeatureDescriptions()[f.name] || `Level ${f.level} ${classId} feature`;
             html += `
                 <label class="checkbox-item ${isSelected ? 'race-ability' : ''}" data-tooltip="${desc}">
                     <input type="checkbox" ${isSelected ? 'checked' : ''} ${isSelected ? 'disabled' : ''}>
@@ -412,7 +446,7 @@ function renderAbilities() {
         html += `<h4 class="section-header" style="color: var(--text-muted);">Future Class Features</h4>`;
         html += `<div class="checkbox-grid">`;
         futureClassFeatures.forEach(f => {
-            const desc = classFeatureDescriptions[f.name] || `Available at ${classId} Level ${f.level}`;
+            const desc = getClassFeatureDescriptions()[f.name] || `Available at ${classId} Level ${f.level}`;
             html += `
                 <label class="checkbox-item future-item" data-tooltip="${desc}">
                     <input type="checkbox" disabled>
@@ -440,7 +474,7 @@ function renderAbilities() {
             groupOptions.forEach(o => {
                 const isSelected = (state.abilityIds || []).includes(o.name);
                 const isDisabled = !isSelected && groupOptions.some(go => go.name !== o.name && (state.abilityIds || []).includes(go.name));
-                const desc = classFeatureDescriptions[o.name] || `Level ${o.level} ${classId} option`;
+                const desc = getClassOptionDescriptions()[o.name] || getClassFeatureDescriptions()[o.name] || `Level ${o.level} ${classId} option`;
                 html += `
                     <label class="checkbox-item ${isSelected ? 'race-ability' : ''} ${isDisabled && !isSelected ? 'option-disabled' : ''}" data-tooltip="${desc}">
                         <input type="checkbox" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} onchange="toggleAbility('${o.name}')">
@@ -480,7 +514,7 @@ function renderFeats() {
         const prereqReason = prereqCheck.reason;
         const isDisabled = !isSelected && (currentFeatCount >= totalMaxFeats || !canSelect);
         
-        const baseDesc = featDescriptions[f] || '';
+        const baseDesc = getFeatDescriptions()[f] || '';
         const fullDesc = prereqReason 
             ? baseDesc + '\n\n⚠️ PREREQUISITE: ' + prereqReason 
             : baseDesc;

@@ -1,0 +1,19 @@
+{
+ "id": "halforc",
+ "name": "Half-Orc",
+ "desc": "Strong and fierce",
+ "size": "Medium",
+ "speed": 30,
+ "languages": [
+  "Common",
+  "Orcish"
+ ],
+ "bonuses": {
+  "strength": 2,
+  "constitution": 1
+ },
+ "raceAbilities": [
+  "Menacing",
+  "Relentless Endurance"
+ ]
+}

@@ -1,0 +1,81 @@
+{
+ "id": "cleric",
+ "name": "Cleric",
+ "primaryStat": "wisdom",
+ "desc": "Divine spellcasters",
+ "hitDie": 8,
+ "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},
+ "multiclassRequirement": { "stat": "wisdom", "min": 13 },
+ "proficiencies": {
+  "armor": ["light", "medium", "shields"],
+  "weapons": ["simple weapons"],
+  "tools": [],
+  "savingThrows": ["wisdom", "charisma"],
+  "skills": {
+   "count": 2,
+   "options": [
+    {"name": "History"},
+    {"name": "Insight"},
+    {"name": "Medicine"},
+    {"name": "Persuasion"},
+    {"name": "Religion"}]
+  }
+ },
+ "features": {
+  "1": { "features": ["Spellcasting"], 
+        "options": [
+        {"id": "knowledge", "name": "Knowledge Domain", "exclusiveGroup": "Divine Domain"},
+        {"id": "life", "name": "Life Domain", "exclusiveGroup": "Divine Domain"},
+        {"id": "light", "name": "Light Domain", "exclusiveGroup": "Divine Domain"},
+        {"id": "nature", "name": "Nature Domain", "exclusiveGroup": "Divine Domain"},
+        {"id": "tempest", "name": "Tempest Domain", "exclusiveGroup": "Divine Domain"},
+        {"id": "trickery", "name": "Trickery Domain", "exclusiveGroup": "Divine Domain"},
+        {"id": "war", "name": "War Domain", "exclusiveGroup": "Divine Domain"}] 
+    },
+  "2": { "features": ["Channel Divinity (1/rest)", "Divine Domain Feature"], "options": [] },
+  "3": { "features": [], "options": [] },
+  "4": { "features": ["Ability Score Improvement"], "options": [] },
+  "5": { "features": ["Destroy Undead (CR 1/2)"], "options": [] },
+  "6": { "features": ["Channel Divinity (2/rest)", "Divine Domain Feature"], "options": [] },
+  "7": { "features": [], "options": [] },
+  "8": { "features": ["Ability Score Improvement", "Destroy Undead (CR 1)", "Divine Domain Feature"], "options": [] },
+  "9": { "features": [], "options": [] },
+  "10": { "features": ["Divine Intervention"], "options": [] },
+  "11": { "features": ["Destroy Undead (CR 2)"], "options": [] },
+  "12": { "features": ["Ability Score Improvement"], "options": [] },
+  "13": { "features": [], "options": [] },
+  "14": { "features": ["Destroy Undead (CR 3)"], "options": [] },
+  "15": { "features": [], "options": [] },
+  "16": { "features": ["Ability Score Improvement"], "options": [] },
+  "17": { "features": ["Destroy Undead (CR 4)", "Divine Domain Feature"], "options": [] },
+  "18": { "features": ["Channel Divinity (3/rest)"], "options": [] },
+  "19": { "features": ["Ability Score Improvement"], "options": [] },
+  "20": { "features": ["Divine Intervention Improvement"], "options": [] }
+ },
+ "spellSlotTable": {
+  "1": {"1": 2},
+  "2": {"1": 3},
+  "3": {"1": 4, "2": 2},
+  "4": {"1": 4, "2": 3},
+  "5": {"1": 4, "2": 3, "3": 2},
+  "6": {"1": 4, "2": 3, "3": 3},
+  "7": {"1": 4, "2": 3, "3": 3, "4": 1 },
+  "8": {"1": 4, "2": 3, "3": 3, "4": 2},
+  "9": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 1},
+  "10": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2},
+  "11": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1},
+  "12": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1},
+  "13": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1},
+  "14": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1},
+  "15": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1, "8": 1},
+  "16": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1, "8": 1},
+  "17": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1, "8": 1, "9": 1},
+  "18": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 3, "6": 1, "7": 1, "8": 1, "9": 1},
+  "19": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 3, "6": 2, "7": 1, "8": 1, "9": 1},
+  "20": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 3, "6": 2, "7": 2, "8": 1, "9": 1}
+ },
+ "cantrips known":{
+  "1": 3, "2": 3, "3": 3, "4": 4, "5": 4, "6": 4, "7": 4, "8": 4, "9": 4, "10": 5, "11": 5, "12": 5, "13": 5, "14": 5, "15": 5, "16": 5, "17": 5, "18": 5, "19": 5, "20": 5 
+ },
+ "spells prepared": "WIS + cleric level"
+}

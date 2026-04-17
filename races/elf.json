@@ -1,0 +1,36 @@
+{
+ "id": "elf",
+ "name": "Elf",
+ "desc": "Graceful and long-lived",
+ "size": "Medium",
+ "speed": 30,
+ "languages": [
+  "Common",
+  "Elvish"
+ ],
+ "bonuses": {
+  "dexterity": 2
+ },
+"raceAbilities": [
+   "Darkvision",
+   "Fey Ancestry",
+   "Keen Senses",
+   "Trance"
+  ],
+ "subraces": {
+  "High Elf": {
+   "bonuses": {"intelligence": 1},
+   "raceAbilities": ["Elf Weapon Training", "High Elf Cantrip"],
+   "languages": ["One extra language of your choice"]
+  },
+  "Wood Elf": {
+   "speed": 35,
+   "bonuses": {"wisdom": 1},
+   "raceAbilities": ["Mask of the Wild", "Fleet Footed", "Elf Weapon Training"]
+  },
+  "Drow": {
+   "bonuses": {"charisma": 1},
+   "raceAbilities": ["Superior Darkvision", "Drow Magic", "Sunlight Sensitivity", "Drow Weapon Training"]
+  }
+ }
+}

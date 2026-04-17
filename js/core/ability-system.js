@@ -72,24 +72,36 @@ const AbilitySystem = {
             
             // Skill proficiency
             if (effects.skillMappings?.[ability]) {
-                result.proficiencyIds.push(effects.skillMappings[ability]);
+                const skillData = effects.skillMappings[ability];
+                // Handle both old string format and new object format
+                const skill = typeof skillData === 'string' ? skillData : (skillData.skill || skillData);
+                result.proficiencyIds.push(skill);
             }
             
             // Armor proficiency
             if (effects.armorProficiencies?.[ability]) {
-                result.armorProficiencies.push(...effects.armorProficiencies[ability]);
+                const armorData = effects.armorProficiencies[ability];
+                // Handle both old array format and new object format
+                const armor = Array.isArray(armorData) ? armorData : (armorData.armor || []);
+                result.armorProficiencies.push(...armor);
             }
             
             // Weapon proficiency
             if (effects.weaponProficiencies?.[ability]) {
-                result.weaponProficiencies.push(...effects.weaponProficiencies[ability]);
+                const weaponData = effects.weaponProficiencies[ability];
+                // Handle both old array format and new object format
+                const weapons = Array.isArray(weaponData) ? weaponData : (weaponData.weapons || []);
+                result.weaponProficiencies.push(...weapons);
             }
             
             // Tool options (requires selection)
             if (effects.toolProficiencies?.[ability]) {
+                const toolData = effects.toolProficiencies[ability];
+                // Handle new object format { options: [...], count: n }
                 result.toolOptions.push({
                     ability: ability,
-                    ...effects.toolProficiencies[ability]
+                    options: toolData.options || [],
+                    count: toolData.count || 1
                 });
             }
             
@@ -168,10 +180,8 @@ const AbilitySystem = {
                 }
                 if (profs.weapons) {
                     profs.weapons.forEach(w => {
-                        // Don't add suffix if already has "weapons" in name
-                        const weaponType = w.includes(' weapons') ? w : w + ' weapons';
-                        if (!result.weapons.includes(weaponType)) {
-                            result.weapons.push(weaponType);
+                        if (!result.weapons.includes(w)) {
+                            result.weapons.push(w);
                         }
                     });
                 }

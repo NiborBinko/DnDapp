@@ -213,9 +213,22 @@ function toggleToolSelection(toolId) {
     
     const idx = state.toolSelectionIds.indexOf(toolId);
     if (idx > -1) {
+        // Unchecking - always allow
         state.toolSelectionIds.splice(idx, 1);
     } else {
-        state.toolSelectionIds.push(toolId);
+        // Find the toolOption to get count limit
+        const gameData = DnDState.gameData;
+        const raceProfs = window.AbilitySystem?.getProficiencies?.(state, gameData, state.classId) || { toolOptions: [] };
+        const toolOption = raceProfs.toolOptions?.find(to => to.options?.includes(toolId));
+        const maxSelect = toolOption?.count || 99;
+        
+        if (state.toolSelectionIds.length < maxSelect) {
+            state.toolSelectionIds.push(toolId);
+        } else {
+            // Already at max - prevent check and alert user
+            checkbox.checked = false;
+            alert(`You can only select ${maxSelect} tool(s). Please uncheck another first.`);
+        }
     }
 }
 

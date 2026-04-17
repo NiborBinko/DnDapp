@@ -1,14 +1,14 @@
 const DataUtils = {
     getFeatureDescription: function(classId, featureName) {
-        return classFeatureDescriptions[featureName] || null;
+        return getClassFeatureDescriptions()[featureName] || null;
     },
 
     getOptionDescription: function(optionName) {
-        return classFeatureDescriptions[optionName] || null;
+        return getClassFeatureDescriptions()[optionName] || null;
     },
 
     getFeatDescription: function(featName) {
-        return featDescriptions[featName] || null;
+        return getFeatDescriptions()[featName] || null;
     },
 
     getFeatPrerequisites: function(featName) {
@@ -166,14 +166,14 @@ const DataUtils = {
     },
 
     getSkillDescription: function(skillName) {
-        return skillDescriptions[skillName] || null;
+        return getSkillDescriptions()[skillName] || null;
     },
 
     getRaceAbilityDescription: function(abilityName) {
-        return raceAbilityDescriptions[abilityName] || null;
+        return getRaceAbilityDescriptions()[abilityName] || null;
     },
 
     getStatDescription: function(statName) {
-        return statDescriptions[statName] || null;
+        return getStatDescriptions()[statName] || null;
     }
 };

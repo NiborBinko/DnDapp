@@ -18,24 +18,50 @@ A 7-step character creation wizard for Dungeons & Dragons 5th Edition with suppo
 ```
 /home/binko/DND/
 ├── index.html                    # Main HTML - 7 step containers + 4 modals
-├── dnd-classes.json             # Class data per level (features, options, spell slots, proficiencies)
-├── dnd-races.json               # Race data (size, speed, languages, bonuses, racial abilities)
-├── dnd-feats.json               # Feat data
-├── dnd-spell-lists.json          # Spell lists per class, cantrips, invocations
+├── statLabels.json              # Stat abbreviations (STR, DEX, etc.)
+├── dnd-spell-lists.json         # Spell lists per class, cantrips, invocations
 ├── ARCHITECTURE.md              # This file
+├── classes/                     # Individual class files (one per class)
+│   ├── fighter.json
+│   ├── wizard.json
+│   ├── rogue.json
+│   ├── cleric.json
+│   ├── ranger.json
+│   ├── barbarian.json
+│   ├── paladin.json
+│   ├── bard.json
+│   ├── druid.json
+│   ├── monk.json
+│   ├── sorcerer.json
+│   └── warlock.json
+├── races/                       # Individual race files (subraces nested in each file)
+│   ├── human.json
+│   ├── elf.json
+│   ├── dwarf.json
+│   ├── halfling.json
+│   ├── dragonborn.json
+│   ├── gnome.json
+│   ├── halfelf.json
+│   ├── halforc.json
+│   └── tiefling.json
 ├── descriptions/                # Read-only description data (JSON)
-│   ├── race-abilities.json             # Race/racial ability descriptions
-│   ├── race-ability-effects.json       # Race ability effects (skill/armor/weapon/tool mappings, stat effects)
-│   └── proficiencies.json              # Armor, weapons, tools, saving throws descriptions
+│   ├── race-abilities.json        # Race/racial ability descriptions
+│   ├── class-abilities.json    # Class feature descriptions
+│   ├── class-options.json     # Subclass/archetype option descriptions
+│   ├── exclusive-groups.json   # Mutually exclusive feature groups
+│   ├── feats.json           # Feat descriptions
+│   └── proficiencies.json   # Armor, weapons, tools, skills, saving throws descriptions
+├── effects/                    # Ability effect mappings (JSON)
+│   └── race-effects.json      # Race ability effects (skill/armor/weapon/tool mappings, stat effects)
 ├── css/
 │   └── theme.css                 # All styling including tooltip system
 ├── js/
 │   ├── core/                    # Core utilities and state management
-│   │   ├── config.js            # Constants, stat labels, flags (descriptions moved to JSON)
+│   │   ├── config.js            # Constants, stat labels, flags, getter functions
 │   │   ├── state.js             # DnDState object - centralized state management
 │   │   ├── data-utils.js        # Data validation and lookup helpers
 │   │   ├── global-compat.js     # Shared functions (getRaceAbilities, getClassFeaturesForLevel, etc.)
-│   │   └── ability-system.js    # NEW: Dynamic ability effect processor
+│   │   └── ability-system.js    # Dynamic ability effect processor
 │   ├── domain/                  # Business logic entities
 │   │   ├── character.js         # CharacterEntity - character data model
 │   │   ├── character-create.js # Character creation handlers
@@ -46,12 +72,12 @@ A 7-step character creation wizard for Dungeons & Dragons 5th Edition with suppo
 │   │   └── combat.js            # CombatManager - combat calculations
 │   ├── ui/                     # UI rendering and navigation
 │   │   ├── render.js           # All render* functions
-│   │   ├── navigation.js      # Step navigation
-│   │   └── modals.js         # Modal handlers (character sheet, delete, etc.)
+│   │   ├── navigation.js       # Step navigation
+│   │   └── modals.js           # Modal handlers (character sheet, delete, etc.)
 │   ├── features/              # Feature-specific logic
-│   │   ├── levelup.js        # Level up modal logic
-│   │   └── multiclass.js     # Multiclass modal logic
-│   └── app.js                # Initialization - loads data, inits app
+│   │   ├── levelup.js         # Level up modal logic
+│   │   └── multiclass.js      # Multiclass modal logic
+│   └── app.js                 # Initialization - loads data, inits app
 ```
 
 ---
@@ -60,12 +86,14 @@ A 7-step character creation wizard for Dungeons & Dragons 5th Edition with suppo
 
 ### 1. Load Phase (`app.js`)
 Loads all JSON files in parallel:
-- `dnd-classes.json` → class data with features per level, spell slot tables
-- `dnd-races.json` → race and subrace data
-- `dnd-feats.json` → feat data
+- `classes/*.json` (12 class files) → individual class data
+- `races/*.json` (9 race files) → individual race data (includes subraces)
+- `statLabels.json` → stat abbreviations
+- `descriptions/feats.json` → feat descriptions
 - `descriptions/race-abilities.json` → race ability text descriptions
-- `descriptions/race-ability-effects.json` → ability effect mappings (proficiencies, stat bonuses)
-- `descriptions/proficiencies.json` → armor/weapon/tool descriptions
+- `descriptions/class-abilities.json` → class feature descriptions
+- `effects/race-effects.json` → race ability effect mappings
+- `descriptions/proficiencies.json` → armor/weapon/tool/skill/saving throw descriptions
 - `dnd-spell-lists.json` → spell lists per class
 - `js/domain/spells.json` → pure spell data
 
@@ -174,7 +202,34 @@ Key-value pairs of race ability names to description text:
 }
 ```
 
-### race-ability-effects.json
+### class-abilities.json
+Key-value pairs of class feature names to description text.
+
+### class-options.json
+Key-value pairs of subclass/archetype option names to description text.
+
+### exclusive-groups.json
+Mutually exclusive feature groups (e.g., Fighting Style, Domain, College).
+
+### feats.json
+Key-value pairs of feat names to full description text.
+
+### proficiencies.json
+All proficiency descriptions:
+```json
+{
+    "armor": { "light armor": "Padded, Leather...", "medium armor": "Hide, Chain shirt..." },
+    "weapons": { "simple weapons": "...", "martial weapons": "..." },
+    "tools": { "thieves' tools": "...", "smith's tools": "..." },
+    "skills": { "Athletics": "Climbing, swimming...", "Perception": "Noticing danger..." },
+    "savingThrows": { "strength": "...", "dexterity": "..." },
+    "mastery": { "strength": "...", "dexterity": "..." }
+}
+```
+
+## Effects Data (effects/)
+
+### race-effects.json
 Complex mappings for what abilities do:
 ```json
 {
@@ -183,16 +238,6 @@ Complex mappings for what abilities do:
     "weaponProficiencies": { "Elf Weapon Training": ["longsword", "shortsword", "shortbow", "longbow"] },
     "toolProficiencies": { "Dwarven Tool Proficiency": { "options": ["smith's tools", ...], "count": 1 } },
     "statEffects": { "Dwarven Toughness": { "type": "hpPerLevel", "value": 1 } }
-}
-```
-
-### proficiencies.json
-Armor, weapons, tools descriptions:
-```json
-{
-    "armor": { "light armor": "Padded, Leather...", "medium armor": "Hide, Chain shirt..." },
-    "weapons": { "simple weapons": "...", "martial weapons": "..." },
-    "tools": { "thieves' tools": "...", "smith's tools": "..." }
 }
 ```
 
@@ -219,3 +264,19 @@ Armor, weapons, tools descriptions:
 3. **Separated Data**: Class data, race data, and descriptions in separate JSON files
 4. **Scalable**: Easy to add new races/classes without modifying code
 5. **Persistent**: Character saved to localStorage with all computed values
+
+---
+
+## Class Files (classes/)
+
+The JSON files in `classes/` directory are the authoritative source for class data and should NOT be modified without explicit permission. They follow a specific structure and formatting:
+
+- Each file contains one class with fields: `id`, `name`, `primaryStat`, `desc`, `hitDie`, `hitPoints`, `multiclassRequirement`, `proficiencies`, `features`, and optionally `spellSlotTable`
+- Features include level 1-20 with `features` array and `options` array
+- Options arrays are formatted multi-line for readability
+- Skill options are formatted multi-line for readability
+- spellSlotTable entries are one per line
+- Some spellcasting classes include optional fields:
+  - `cantrips`: number of cantrips known (e.g., number or per level array)
+  - `knownSpells`: { lvl: count } - number of spells known per level
+  - `preparedSpells`: { lvl: count } - number of spells prepared per level

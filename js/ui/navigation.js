@@ -1,5 +1,6 @@
 function showStep(n) {
-    const stepNames = ['class', 'race', 'stats', 'proficiencies', 'abilities', 'spells', 'summary', 'saved'];
+    // Order: class, race, stats, abilities (NEW 4), proficiencies (NEW 5), spells, summary, saved
+    const stepNames = ['class', 'race', 'stats', 'abilities', 'proficiencies', 'spells', 'summary', 'saved'];
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     const stepId = stepNames[n];
     const targetStep = document.getElementById('step-' + stepId);
@@ -11,11 +12,7 @@ function showStep(n) {
     if (n === 2) {
         renderStats();
     }
-    if (n === 3) {
-        DnDState.character.proficiencyIds = [];
-        renderProficiencies();
-    }
-    if (n === 4) {
+    if (n === 3) {  // NOW: Abilities & Feats (Step 4)
         if (!DnDState.character.featIds) DnDState.character.featIds = [];
         if (DnDState.character.classId && (!DnDState.character.abilityIds || DnDState.character.abilityIds.length === 0)) {
             const startingLevel = DnDState.character.level || 1;
@@ -24,6 +21,10 @@ function showStep(n) {
         }
         renderAbilities();
         renderFeats();
+    }
+    if (n === 4) {  // NOW: Proficiencies (Step 5)
+        DnDState.character.proficiencyIds = [];
+        renderProficiencies();
     }
     if (n === 5) {
         renderSpells();

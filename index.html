@@ -55,24 +55,12 @@
             <div class="nav">
                 <button class="btn-secondary" onclick="prevStep()">Back</button>
                 <button class="btn-primary" onclick="nextStep()" id="stats-next" disabled>Next</button>
-            </div>
+</div>
         </div>
          
-        <!-- Step 4: Proficiencies -->
-        <div class="step" id="step-proficiencies">
-            <h2 class="step-title">Step 4: Choose Proficiencies</h2>
-            <p id="proficiency-instruction" style="display: none;"></p>
-            <div id="proficiencies-grid"></div>
-            <p id="prof-count" style="color: var(--text-muted); margin-top: 10px;">0 selected</p>
-            <div class="nav">
-                <button class="btn-secondary" onclick="prevStep()">Back</button>
-                <button class="btn-primary" onclick="nextStep()">Next</button>
-            </div>
-        </div>
-         
-        <!-- Step 5: Abilities & Feats -->
+        <!-- Step 4: Abilities & Feats (NOW FIRST) -->
         <div class="step" id="step-abilities">
-            <h2 class="step-title">Step 5: Abilities & Feats</h2>
+            <h2 class="step-title">Step 4: Abilities & Feats</h2>
             
             <div id="abilities-grid"></div>
             
@@ -80,6 +68,18 @@
             <p id="feats-note" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;"></p>
             <div class="checkbox-grid" id="feats-grid"></div>
             
+            <div class="nav">
+                <button class="btn-secondary" onclick="prevStep()">Back</button>
+                <button class="btn-primary" onclick="nextStep()" id="abilities-next">Next</button>
+            </div>
+        </div>
+        
+        <!-- Step 5: Proficiencies (NOW SECOND) -->
+        <div class="step" id="step-proficiencies">
+            <h2 class="step-title">Step 5: Choose Proficiencies</h2>
+            <p id="proficiency-instruction" style="display: none;"></p>
+            <div id="proficiencies-grid"></div>
+            <p id="prof-count" style="color: var(--text-muted); margin-top: 10px;">0 selected</p>
             <div class="nav">
                 <button class="btn-secondary" onclick="prevStep()">Back</button>
                 <button class="btn-primary" onclick="nextStep()">Next</button>

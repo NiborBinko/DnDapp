@@ -1,0 +1,51 @@
+{
+ "id": "monk",
+ "name": "Monk",
+ "primaryStat": "dexterity",
+ "desc": "Martial artists",
+ "hitDie": 8,
+ "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},
+ "multiclassRequirement": { "stat": "wisdom", "min": 13 },
+ "proficiencies": {
+  "armor": [],
+  "weapons": ["simple weapons", "shortswords"],
+  "tools": ["one musical instrument or one type of artisan tool"],
+  "savingThrows": ["strength", "dexterity"],
+  "skills": { 
+    "count": 2,
+    "options": [
+        {"name": "Acrobatics"},
+        {"name": "Athletics"},
+        {"name": "History"},
+        {"name": "Insight"},
+        {"name": "Religion"},
+        {"name": "Stealth"}] }
+ },
+ "features": {
+  "1": { "features": ["Unarmored Defense", "Martial Arts"], "options": [] },
+  "2": { "features": ["Ki", "Unarmored Movement"], "options": [] },
+  "3": { "features": ["Deflect Missiles"],
+         "options": [
+        {"id": "openHand", "name": "Way of the Open Hand", "exclusiveGroup": "Monastic Tradition"},
+        {"id": "shadow", "name": "Way of Shadow", "exclusiveGroup": "Monastic Tradition"},
+        {"id": "fourElements", "name": "Way of the Four Elements", "exclusiveGroup": "Monastic Tradition"}]
+    },
+  "4": { "features": ["Ability Score Improvement", "Slow Fall"], "options": [] },
+  "5": { "features": ["Extra Attack", "Stunning Strike"], "options": [] },
+  "6": { "features": ["Ki-Empowered Strikes", "Monastic Tradition Feature"], "options": [] },
+  "7": { "features": ["Evasion", "Stillness of Mind"], "options": [] },
+  "8": { "features": ["Ability Score Improvement"], "options": [] },
+  "9": { "features": ["Unarmored Movement improvement"], "options": [] },
+  "10": { "features": ["Purity of Body"], "options": [] },
+  "11": { "features": ["Monastic Tradition Feature"], "options": [] },
+  "12": { "features": ["Ability Score Improvement"], "options": [] },
+  "13": { "features": ["Tongue of the Sun and Moon"], "options": [] },
+  "14": { "features": ["Diamond Soul"], "options": [] },
+  "15": { "features": ["Timeless Body"], "options": [] },
+  "16": { "features": ["Ability Score Improvement"], "options": [] },
+  "17": { "features": ["Monastic Tradition Feature"], "options": [] },
+  "18": { "features": ["Empty Body"], "options": [] },
+  "19": { "features": ["Ability Score Improvement"], "options": [] },
+  "20": { "features": ["Perfect Self"], "options": [] }
+ }
+}
