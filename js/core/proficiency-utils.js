@@ -51,7 +51,7 @@ const ProficiencyUtils = {
 
     formatOrigin(origin) {
         if (!origin) return '';
-        if (origin.type === 'race') {
+        if (origin.type === 'race' || origin.type === 'subrace') {
             return `\n\n📍 From: ${origin.ability} (${origin.source})`;
         } else if (origin.type === 'class') {
             return `\n\n📍 ${origin.source}`;

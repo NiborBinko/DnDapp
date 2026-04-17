@@ -24,16 +24,19 @@ const AbilitySystem = {
         if (!character?.raceId) return [];
         
         const race = gameData.races.find(r => r.id === character.raceId);
-        let abilities = [...(race?.raceAbilities || [])];
+        const raceId = character.raceId;
+        const subraceName = character.subraceName;
         
-        if (character.subraceName && gameData.subraces[character.raceId]) {
-            const sub = gameData.subraces[character.raceId].find(s => s.name === character.subraceName);
+        const raceAbilities = (race?.raceAbilities || []).map(a => ({ name: a, source: 'race', sourceName: raceId }));
+        
+        if (subraceName && gameData.subraces[raceId]) {
+            const sub = gameData.subraces[raceId].find(s => s.name === subraceName);
             if (sub?.raceAbilities) {
-                abilities = abilities.concat(sub.raceAbilities);
+                return [...raceAbilities, ...sub.raceAbilities.map(a => ({ name: a, source: 'subrace', sourceName: subraceName }))];
             }
         }
         
-        return abilities;
+        return raceAbilities;
     },
     
 // Main function: calculate all derived values for a character
@@ -49,7 +52,6 @@ const AbilitySystem = {
         
         const raceId = character.raceId;
         const subraceName = character.subraceName;
-        const originRace = subraceName ? `Subrace: ${subraceName}` : `Race: ${raceId}`;
         
         const result = {
             raceAbilityIds: [],
@@ -67,11 +69,15 @@ const AbilitySystem = {
         };
         
         const raceAbilities = this.getRaceAbilities(character, gameData);
-        result.raceAbilityIds = raceAbilities;
+        result.raceAbilityIds = raceAbilities.map(a => a.name);
         
-        raceAbilities.forEach(ability => {
+        raceAbilities.forEach(abilityObj => {
             const effects = this.descriptions.raceEffects;
-            const createOrigin = (source = ability) => ({ type: 'race', source: originRace, ability: source });
+            const createOrigin = (srcAbility) => ({ 
+                type: abilityObj.source, 
+                source: `${abilityObj.source === 'subrace' ? 'Subrace' : 'Race'}: ${abilityObj.sourceName}`, 
+                ability: srcAbility 
+            });
             
             if (effects.skillMappings?.[ability]) {
                 const skillData = effects.skillMappings[ability];
