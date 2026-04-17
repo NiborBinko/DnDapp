@@ -71,7 +71,7 @@ function viewCharacter(index) {
             <h3>Class & Level</h3>
             <p>Level ${totalLevel}</p>
             ${classesHtml}
-            <button class="btn-secondary" onclick="openMulticlass(${index})" style="margin-top: 10px;">Add Multiclass</button>
+            <button class="btn-secondary" style="margin-top: 10px;" disabled>Add Multiclass (Coming Soon)</button>
         </div>
         <div class="sheet-section">
             <h3>Race</h3>

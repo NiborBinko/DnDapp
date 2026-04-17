@@ -346,6 +346,111 @@ const SpellManager = {
         const charClasses = CharacterEntity.getClasses(character);
         const preparedClasses = ['cleric', 'druid', 'paladin'];
         return charClasses.some(c => preparedClasses.includes(c.classId));
+    },
+
+    toggleCantrip(character, spellId) {
+        const classLevel = character.level || 1;
+        const cantripsKnown = this.getCantripsKnownForClass(character.classId, classLevel);
+        const currentCantrips = (character.cantripsKnown || []).length;
+        
+        if (!character.cantripsKnown) character.cantripsKnown = [];
+        
+        const idx = character.cantripsKnown.indexOf(spellId);
+        if (idx > -1) {
+            character.cantripsKnown.splice(idx, 1);
+        } else {
+            if (currentCantrips < cantripsKnown) {
+                character.cantripsKnown.push(spellId);
+                return true;
+            }
+        }
+        return false;
+    },
+
+    toggleKnownSpell(character, spellId) {
+        const spellSlots = this.calculateSpellSlots(character);
+        const spell = this.getSpell(spellId);
+        if (!spell) return false;
+        
+        const spellsAtThisLevel = (character.knownSpells || []).filter(id => {
+            const s = this.getSpell(id);
+            return s && s.level === spell.level;
+        }).length;
+        
+        if (!character.knownSpells) character.knownSpells = [];
+        
+        const idx = character.knownSpells.indexOf(spellId);
+        if (idx > -1) {
+            character.knownSpells.splice(idx, 1);
+        } else {
+            if (spellsAtThisLevel < (spellSlots[spell.level] || 0)) {
+                character.knownSpells.push(spellId);
+                return true;
+            }
+        }
+        return false;
+    },
+
+    toggleSpellbookSpell(character, spellId) {
+        if (!character.spellbook) character.spellbook = [];
+        
+        const idx = character.spellbook.indexOf(spellId);
+        if (idx > -1) {
+            character.spellbook.splice(idx, 1);
+        } else {
+            character.spellbook.push(spellId);
+        }
+    },
+
+    toggleInvocation(character, invId) {
+        const classLevel = character.level || 1;
+        const invocationsAtLevel = this.getInvocationsAtLevel(classLevel);
+        const currentInvocations = (character.invocations || []).length;
+        
+        if (!character.invocations) character.invocations = [];
+        
+        const idx = character.invocations.indexOf(invId);
+        if (idx > -1) {
+            character.invocations.splice(idx, 1);
+        } else {
+            if (currentInvocations < invocationsAtLevel) {
+                character.invocations.push(invId);
+                return true;
+            }
+        }
+        return false;
+    },
+
+    getSpellState(character, spellId) {
+        const spell = this.getSpell(spellId);
+        if (!spell) return { isSelected: false, isDisabled: false };
+        
+        const isWizard = this.isWizard(character);
+        const isSelected = isWizard 
+            ? (character.spellbook || []).includes(spellId)
+            : (character.knownSpells || []).includes(spellId);
+        
+        let isDisabled = false;
+        if (!isWizard && spell.level > 0) {
+            const spellSlots = this.calculateSpellSlots(character);
+            const spellsAtThisLevel = (character.knownSpells || []).filter(id => {
+                const s = this.getSpell(id);
+                return s && s.level === spell.level;
+            }).length;
+            isDisabled = !isSelected && spellsAtThisLevel >= (spellSlots[spell.level] || 0);
+        }
+        
+        return { isSelected, isDisabled };
+    },
+
+    getCantripState(character, spellId) {
+        const classLevel = character.level || 1;
+        const cantripsKnown = this.getCantripsKnownForClass(character.classId, classLevel);
+        const currentCantrips = (character.cantripsKnown || []).length;
+        const isSelected = (character.cantripsKnown || []).includes(spellId);
+        const isDisabled = !isSelected && currentCantrips >= cantripsKnown;
+        
+        return { isSelected, isDisabled };
     }
 };
 

@@ -151,86 +151,25 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Level Up Modal -->
-        <div class="modal" id="level-up-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="level-up-title">Level Up</h2>
-                    <button class="modal-close" onclick="closeLevelUpModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div id="level-up-class-select" style="display: none;">
-                        <h3 style="margin-bottom: 15px;">Select Class to Level Up</h3>
-                        <div class="grid" id="level-up-class-grid"></div>
-                    </div>
-                    <div id="level-up-current">
-                        <p style="margin-bottom: 15px;">Current Level: <strong id="current-level-display">1</strong></p>
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 10px;">Target Level:</label>
-                            <input type="number" id="target-level-input" min="2" max="20" value="2">
-                        </div>
-                        <button class="btn-primary" onclick="showLevelUpFeaturesFromButton()" style="margin-bottom: 20px;">Show Available Features</button>
-                        <div id="level-up-features"></div>
-                        <div id="level-up-hp" style="display: none; margin-top: 20px; padding: 15px; background: var(--card-bg); border-radius: 8px;">
-                            <p style="margin-bottom: 10px;">Roll Hit Points:</p>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Base: <span id="hp-die"></span> + Con modifier</p>
-                            <button class="btn-secondary" onclick="rollHitPoints()">Roll d<span id="hp-die-size"></span></button>
-                            <span id="hp-roll-result" style="margin-left: 10px; font-size: 1.2rem;"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-secondary" onclick="closeLevelUpModal()">Cancel</button>
-                    <button class="btn-primary" id="confirm-level-up-btn" onclick="confirmLevelUp()">Confirm Level Up</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Multiclass Modal -->
-        <div class="modal" id="multiclass-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Add Multiclass</h2>
-                    <button class="modal-close" onclick="closeMulticlassModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div id="multiclass-requirements">
-                        <h3 style="margin-bottom: 15px;">Select Class</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 15px;">Select a class to add. You must meet the stat requirements.</p>
-                        <div class="grid" id="multiclass-class-grid"></div>
-                        <div id="multiclass-check" style="margin-top: 15px;"></div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-secondary" onclick="closeMulticlassModal()">Cancel</button>
-                    <button class="btn-primary" id="confirm-multiclass-btn" onclick="confirmMulticlass()" disabled>Add Class</button>
-                </div>
-            </div>
-        </div>
     
     <!-- Core Modules -->
     <script src="js/core/config.js"></script>
     <script src="js/core/state.js"></script>
     <script src="js/core/data-utils.js"></script>
     <script src="js/core/global-compat.js"></script>
+    <script src="js/core/stats-utils.js"></script>
+    <script src="js/core/proficiency-utils.js"></script>
+    <script src="js/core/feats-utils.js"></script>
     
     <!-- Domain Entities -->
     <script src="js/domain/character.js"></script>
     <script src="js/domain/spells.js"></script>
-    <script src="js/domain/inventory.js"></script>
-    <script src="js/domain/monsters.js"></script>
-    <script src="js/domain/combat.js"></script>
     <script src="js/domain/character-create.js"></script>
     
     <!-- UI Modules -->
     <script src="js/ui/render.js"></script>
     <script src="js/ui/navigation.js"></script>
     <script src="js/ui/modals.js"></script>
-    
-    <!-- Feature Modules -->
-    <script src="js/features/levelup.js"></script>
-    <script src="js/features/multiclass.js"></script>
     
     <!-- Ability System -->
     <script src="js/core/ability-system.js"></script>

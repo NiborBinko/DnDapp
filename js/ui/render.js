@@ -77,20 +77,13 @@ function renderStats() {
     const gameData = DnDState.gameData;
     const ui = DnDState.ui;
     const bonuses = getRaceBonuses();
-    const isHuman = state.raceId === 'human';
-    const humanBonusStats = state.humanBonusStats || [];
-    
     const selectedClass = gameData.classes.find(c => c.id === state.classId);
     const primaryStat = selectedClass?.primaryStat || null;
     
-    let usedPoints = 0;
-    stats.forEach(stat => {
-        const base = state.stats[stat] ?? 8;
-        usedPoints += getStatCost(base);
-    });
-    ui.pointsRemaining = 27 - usedPoints;
+    ui.pointsRemaining = StatsUtils.getPointsRemaining(state);
     document.getElementById('points-remaining').textContent = ui.pointsRemaining;
     
+    const isHuman = state.raceId === 'human';
     let humanHint = '';
     let maxHumanBonus = 0;
     if (isHuman && bonuses.chosen) {
@@ -101,30 +94,19 @@ function renderStats() {
     const primaryStatHint = primaryStat ? `<p style="color: var(--accent); margin-bottom: 10px;">⭐ Your ${selectedClass.name}'s primary stat is ${gameData.statLabels[primaryStat]} - consider prioritizing this!</p>` : '';
     
     container.innerHTML = humanHint + primaryStatHint + stats.map(stat => {
-        const base = state.stats[stat] ?? 8;
-        const humanBonus = isHuman && humanBonusStats.includes(stat) ? 1 : 0;
-        const raceBonus = bonuses[stat] || 0;
-        const total = base + humanBonus + raceBonus;
-        const modifier = Math.floor((total - 10) / 2);
-        const isHumanBonusSelected = isHuman && humanBonusStats.includes(stat);
-        const maxBase = (humanBonus + raceBonus) > 0 ? 16 : 15;
-        const isPrimary = stat === primaryStat;
-        
-        const currentCost = getStatCost(base);
-        const nextCost = getStatCost(base + 1);
-        const costDiff = nextCost - currentCost;
+        const statData = StatsUtils.formatStatRow(state, stat, bonuses, gameData, selectedClass);
         
         return `
-            <div class="stat-row ${isPrimary ? 'primary-stat-row' : ''}" data-tooltip="${getStatDescriptions()[stat]}${isPrimary ? '\n\n⭐ This is your ' + selectedClass.name + '\'s primary stat!' : ''}">
-                <div class="stat-name">${gameData.statLabels[stat]}${isPrimary ? ' ⭐' : ''}</div>
+            <div class="stat-row ${statData.isPrimary ? 'primary-stat-row' : ''}" data-tooltip="${statData.statDesc}${statData.classPrimaryHint}">
+                <div class="stat-name">${statData.statLabel}${statData.isPrimary ? ' ⭐' : ''}</div>
                 <div class="stat-controls">
                     <button class="stat-btn" onclick="adjustStat('${stat}', -1)" id="btn-${stat}-minus">-</button>
-                    <div class="stat-value">${base}</div>
-                    <button class="stat-btn ${costDiff > 1 ? 'cost-2' : ''}" onclick="adjustStat('${stat}', 1)" id="btn-${stat}-plus" ${base >= maxBase ? 'disabled' : ''}>+${costDiff > 1 ? ` (${costDiff})` : ''}</button>
-                    <div class="stat-bonus" data-tooltip="Race bonus - added after point buy, doesn't cost points">${(humanBonus + raceBonus) > 0 ? '+' + (humanBonus + raceBonus) : ''}</div>
-                    <div class="stat-total">${total}</div>
-                    <div class="stat-modifier" data-tooltip="Modifier = (Stat - 10) ÷ 2&#10;Added to dice rolls using this stat">${modifier >= 0 ? '+' : ''}${modifier}</div>
-                    ${isHuman ? `<button class="stat-btn human-bonus-btn ${isHumanBonusSelected ? 'selected' : ''}" data-tooltip="Click to toggle +1 bonus (Human trait)" onclick="toggleHumanBonusStat('${stat}')">${isHumanBonusSelected ? '⭐' : '☆'}</button>` : ''}
+                    <div class="stat-value">${statData.base}</div>
+                    <button class="stat-btn ${statData.costDiff > 1 ? 'cost-2' : ''}" onclick="adjustStat('${stat}', 1)" id="btn-${stat}-plus">+${statData.costDiff > 1 ? ` (${statData.costDiff})` : ''}</button>
+                    <div class="stat-bonus" data-tooltip="Race bonus - added after point buy, doesn't cost points">${(statData.humanBonus + statData.raceBonus) > 0 ? '+' + (statData.humanBonus + statData.raceBonus) : ''}</div>
+                    <div class="stat-total">${statData.total}</div>
+                    <div class="stat-modifier" data-tooltip="Modifier = (Stat - 10) ÷ 2&#10;Added to dice rolls using this stat">${statData.modifier >= 0 ? '+' : ''}${statData.modifier}</div>
+                    ${isHuman ? `<button class="stat-btn human-bonus-btn ${statData.isHumanBonusSelected ? 'selected' : ''}" data-tooltip="Click to toggle +1 bonus (Human trait)" onclick="toggleHumanBonusStat('${stat}')">${statData.isHumanBonusSelected ? '⭐' : '☆'}</button>` : ''}
                 </div>
             </div>
         `;
@@ -133,30 +115,24 @@ function renderStats() {
     container.innerHTML += `<p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 10px;">💡 Hover over a stat to see what it does. The cost to increase a stat increases as it gets higher.</p>`;
     
     if (isHuman) {
-        container.innerHTML += `<p style="color: var(--text-muted); margin-top: 10px;">${humanBonusStats.length}/${maxHumanBonus} bonus stats selected</p>`;
+        container.innerHTML += `<p style="color: var(--text-muted); margin-top: 10px;">${(state.humanBonusStats || []).length}/${maxHumanBonus} bonus stats selected</p>`;
     }
     
     stats.forEach(stat => {
-        const base = state.stats[stat] ?? 8;
-        const humanBonus = isHuman && humanBonusStats.includes(stat) ? 1 : 0;
-        const raceBonus = bonuses[stat] || 0;
-        const total = base + humanBonus + raceBonus;
-        
-        const maxBase = (humanBonus + raceBonus) > 0 ? 16 : 15;
-        const currentCost = getStatCost(base);
-        const nextCost = getStatCost(base + 1);
-        const costDiff = nextCost - currentCost;
+        const canIncrease = StatsUtils.canIncreaseStat(state, stat, bonuses);
         
         const minusBtn = document.getElementById('btn-' + stat + '-minus');
         const plusBtn = document.getElementById('btn-' + stat + '-plus');
+        const base = state.stats[stat] ?? 8;
         
         if (minusBtn) minusBtn.disabled = base <= 8;
         if (plusBtn) {
-            plusBtn.disabled = ui.pointsRemaining < costDiff || (base >= maxBase) || (total >= 16);
+            const costDiff = StatsUtils.getCostToIncrease(base);
+            plusBtn.disabled = ui.pointsRemaining < costDiff || !canIncrease.canIncrease;
         }
     });
     
-    const canProceed = ui.pointsRemaining > 0 ? false : (!isHuman || humanBonusStats.length === maxHumanBonus);
+    const canProceed = StatsUtils.canProceedFromStats(state, bonuses);
     document.getElementById('stats-next').disabled = !canProceed;
 }
 
@@ -177,24 +153,12 @@ function renderProficiencies() {
     }
     
     const classSkillOptions = charClass?.proficiencies?.skills?.options || [];
-    const extraSkills = getExtraSkillCount();
-    const maxSkills = (charClass?.proficiencies?.skills?.count || 2) + extraSkills;
-    
-    const raceAbilities = getRaceAbilities();
-    const raceEffects = window.gameDescriptions?.raceEffects || {};
-    const raceSkills = [];
-    raceAbilities.forEach(ability => {
-        const skillData = raceEffects.skillMappings?.[ability];
-        if (skillData) {
-            const skill = typeof skillData === 'string' ? skillData : (skillData.skill || skillData);
-            raceSkills.push(skill);
-        }
-    });
-    
+    const maxSkills = ProficiencyUtils.getMaxSkills(state, gameData);
+    const raceSkills = ProficiencyUtils.getRaceSkillProficiencies(state, gameData);
     const skillDesc = getSkillDescriptions();
     let html = '';
     
-html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
+    html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
     html += `<div class="checkbox-grid">`;
     html += classSkillOptions.map(skill => {
         const desc = skillDesc[skill.name] || skill.description || '';
@@ -215,33 +179,7 @@ html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
     `}).join('');
     html += `</div>`;
     
-    const classArmor = charClass?.proficiencies?.armor || [];
-    const classWeapons = charClass?.proficiencies?.weapons || [];
-    const classTools = charClass?.proficiencies?.tools || [];
-    const classSaves = charClass?.proficiencies?.savingThrows || [];
-    
-// Get race proficiencies first
-    const raceProfs = AbilitySystem.getProficiencies(state, gameData, state.classId) || { toolOptions: [], armor: [], weapons: [], tools: [], cantrips: [], innateSpells: [] };
-    
-    // Process and combine class + race ARMOR proficiencies
-    const processedArmor = [];
-    const armorTypes = ['light armor', 'medium armor', 'heavy armor', 'shields'];
-    armorTypes.forEach(armor => {
-        const hasClassProf = classArmor.includes(armor) || classArmor.includes(armor.replace(' armor', ''));
-        if (hasClassProf) {
-            processedArmor.push({ name: armor, source: 'Class: ' + charClass.name });
-        }
-    });
-    // Add race armor proficiencies
-    if (raceProfs.armor) {
-        raceProfs.armor.forEach(armor => {
-            if (!processedArmor.find(a => a.name === armor)) {
-                processedArmor.push({ name: armor, source: 'Race: ' + state.raceId });
-            }
-        });
-    }
-    
-    // Render merged ARMOR section
+    const processedArmor = ProficiencyUtils.getCombinedArmorProficiencies(state, gameData);
     if (processedArmor.length > 0) {
         html += `<h4 class="section-header">Armor Proficiencies</h4>`;
         html += `<div class="checkbox-grid">`;
@@ -258,46 +196,12 @@ html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
         html += `</div>`;
     }
     
-    // Process and combine class + race WEAPON proficiencies
-    const processedWeapons = [];
-    const weaponTypes = ['simple weapons', 'martial weapons'];
-    // Add weapon categories
-    weaponTypes.forEach(weapon => {
-        const hasClassProf = classWeapons.includes(weapon) || classWeapons.includes(weapon.replace(' weapons', ''));
-        if (hasClassProf) {
-            processedWeapons.push({ name: weapon, source: 'Class: ' + charClass.name });
-        }
-    });
-    // Add individual weapons from class (not categories)
-    classWeapons.forEach(weapon => {
-        if (!weapon.includes(' ') && !processedWeapons.find(w => w.name === weapon)) {
-            processedWeapons.push({ name: weapon, source: 'Class: ' + charClass.name });
-        }
-    });
-    // Add race weapon proficiencies (skip duplicates, merge sources if different)
-    if (raceProfs.weapons) {
-        raceProfs.weapons.forEach(weapon => {
-            const existing = processedWeapons.find(w => w.name === weapon);
-            const origin = getProficiencyOrigin(weapon, 'weapon', state);
-            if (existing) {
-                // Merge sources if different and origin exists
-                if (origin && existing.source !== origin && !existing.source.includes(origin.split(' (')[0])) {
-                    existing.source = origin;
-                    existing.isFromRace = true;
-                }
-            } else {
-                processedWeapons.push({ name: weapon, source: origin || 'Race: ' + state.raceId, isFromRace: true });
-            }
-        });
-    }
-    
-    // Render merged WEAPON section
+    const processedWeapons = ProficiencyUtils.getCombinedWeaponProficiencies(state, gameData);
     if (processedWeapons.length > 0) {
         html += `<h4 class="section-header">Weapon Proficiencies</h4>`;
         html += `<div class="checkbox-grid">`;
         html += processedWeapons.map(wp => {
             const desc = getProficiencyDescriptions().weapons[wp.name] || '';
-            // Only show source prefix if it has meaningful content
             const sourceText = wp.source && wp.source.trim() && wp.source !== 'Race: ' ? wp.source : '';
             const tooltip = sourceText ? `${desc}\n\n📍 ${sourceText}` : desc;
             return `
@@ -309,9 +213,9 @@ html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
         html += `</div>`;
     }
     
-    // Race tool selection (separate since it requires user choice)
-    if (raceProfs.toolOptions && raceProfs.toolOptions.length > 0) {
-        raceProfs.toolOptions.forEach(toolOption => {
+    const raceToolOptions = ProficiencyUtils.getToolOptions(state, gameData);
+    if (raceToolOptions && raceToolOptions.length > 0) {
+        raceToolOptions.forEach(toolOption => {
             html += `<h4 class="section-header">${toolOption.ability} (Select ${toolOption.count})</h4>`;
             html += `<div class="checkbox-grid">`;
             html += toolOption.options.map(tool => {
@@ -328,19 +232,9 @@ html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
             `}).join('');
             html += `</div>`;
         });
-}
+    }
     
-    // Process and combine class + race TOOLS
-    const processedTools = [];
-    // Add class tools
-    classTools.forEach(tool => {
-        processedTools.push({ name: tool, source: 'Class: ' + charClass.name });
-    });
-    // Note: Race tools currently require selection (toolOptions), handled separately above
-    // Add race required selection tools to a separate list
-    const raceRequiredTools = raceProfs.toolOptions || [];
-    
-    // Render TOOLS (from class only for now - race tools require user selection)
+    const processedTools = ProficiencyUtils.getClassTools(state, gameData);
     if (processedTools.length > 0) {
         html += `<h4 class="section-header">Tool Proficiencies</h4>`;
         html += `<div class="checkbox-grid">`;
@@ -357,7 +251,7 @@ html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
         html += `</div>`;
     }
     
-    // Render SAVING THROWS
+    const classSaves = ProficiencyUtils.getSavingThrows(state, gameData);
     if (classSaves.length > 0) {
         html += `<h4 class="section-header">Saving Throws</h4>`;
         html += `<div class="checkbox-grid">`;
@@ -495,10 +389,8 @@ function renderFeats() {
     const grid = document.getElementById('feats-grid');
     const state = DnDState.character;
     const gameData = DnDState.gameData;
-    const charLevel = state.level || 1;
-    const extraFeats = getExtraFeatCount();
-    const maxFeatsFromLevel = Math.floor(charLevel / 4);
-    const totalMaxFeats = maxFeatsFromLevel + extraFeats;
+    
+    const totalMaxFeats = FeatsUtils.getMaxFeats(state);
     const currentFeatCount = (state.featIds || []).length;
     
     const featsNote = document.getElementById('feats-note');
@@ -509,25 +401,14 @@ function renderFeats() {
         featsNote.textContent = `Feats available at level 4 (${currentFeatCount}/0 selected)`;
     }
     
-    grid.innerHTML = gameData.feats.map(f => {
-        const isSelected = (state.featIds || []).includes(f);
-        const prereqCheck = DataUtils.canSelectFeat(f, state);
-        const canSelect = prereqCheck.canSelect;
-        const prereqReason = prereqCheck.reason;
-        const isDisabled = !isSelected && (currentFeatCount >= totalMaxFeats || !canSelect);
-        
-        const baseDesc = getFeatDescriptions()[f] || '';
-        const fullDesc = prereqReason 
-            ? baseDesc + '\n\n⚠️ PREREQUISITE: ' + prereqReason 
-            : baseDesc;
-        
-        return `
-            <label class="checkbox-item ${isDisabled ? 'feat-disabled' : ''}" data-tooltip="${fullDesc}">
-                <input type="checkbox" value="${f}" ${isSelected ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} onchange="toggleFeat('${f}')">
-                ${f} ${!canSelect ? '⚠️' : ''}
-            </label>
-        `;
-    }).join('');
+    const featsData = FeatsUtils.getFeatsForLevel(state, gameData);
+    
+    grid.innerHTML = featsData.map(f => `
+        <label class="checkbox-item ${f.isDisabled ? 'feat-disabled' : ''}" data-tooltip="${f.description}">
+            <input type="checkbox" value="${f.name}" ${f.isSelected ? 'checked' : ''} ${f.isDisabled ? 'disabled' : ''} onchange="toggleFeat('${f.name}')">
+            ${f.name} ${f.hasWarning ? '⚠️' : ''}
+        </label>
+    `).join('');
     
     const featsHeading = document.querySelector('#step-abilities h3:last-of-type');
     if (featsHeading) {
@@ -561,7 +442,7 @@ function renderSavedCharacters() {
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <button class="view-btn" onclick="viewCharacter(${i})">View</button>
-                    <button class="level-btn" onclick="openLevelUp(${i})">Level Up</button>
+                    <button class="level-btn" onclick="return false">Level Up</button>
                     <button class="delete-btn" onclick="confirmDeleteCharacter(${i})">Delete</button>
                 </div>
             </div>
