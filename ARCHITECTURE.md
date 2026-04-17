@@ -100,6 +100,12 @@ Loads all JSON files in parallel:
 - `dnd-spell-lists.json` → spell lists per class
 - `js/domain/spells.json` → pure spell data
 
+**IMPORTANT**: When adding new classes or races, you must update the arrays in `js/app.js`:
+- `classIds` array (line 3)
+- `raceIds` array (line 7)
+
+Then create the corresponding JSON file in `classes/[id].json` or `races/[id].json`.
+
 Initializes:
 - `DnDState` with game data
 - `SpellManager` with spell data

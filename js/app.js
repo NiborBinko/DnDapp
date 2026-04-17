@@ -1,15 +1,30 @@
 function init() {
-    // Load all class files
+    // NOTE: When adding new classes, add the ID here AND create classes/[id].json
     const classIds = ['fighter', 'wizard', 'rogue', 'cleric', 'ranger', 'barbarian', 'paladin', 'bard', 'druid', 'monk', 'sorcerer', 'warlock'];
     const classFiles = classIds.map(id => fetch(`classes/${id}.json`));
     
-    // Load all race files
+    // NOTE: When adding new races, add the ID here AND create races/[id].json
     const raceIds = ['human', 'elf', 'dwarf', 'halfling', 'dragonborn', 'gnome', 'halfelf', 'halforc', 'tiefling'];
     const raceFiles = raceIds.map(id => fetch(`races/${id}.json`));
     
     const classCount = classIds.length;
     const raceCount = raceIds.length;
     
+    // Load description and effect files
+    // Each file serves a specific purpose:
+    // - statLabels.json: Abbreviations (STR, DEX, etc.)
+    // - descriptions/stats.json: What each stat does
+    // - descriptions/feats.json: Descriptions of all feats
+    // - descriptions/race-abilities.json: Descriptions of racial traits
+    // - descriptions/class-abilities.json: Descriptions of class features
+    // - descriptions/class-options.json: Descriptions of archetypes, fighting styles, etc.
+    // - effects/race-effects.json: What each race ability affects (proficiencies, stat bonuses, etc.)
+    // - effects/class-effects.json: What each class feature affects (resources, dice pools, etc.)
+    // - effects/class-option-effects.json: What each archetype/style affects
+    // - effects/feat-effects.json: Prerequisites for feats
+    // - descriptions/proficiencies.json: Descriptions of armor, weapons, tools
+    // - dnd-spell-lists.json: Spell lists by class
+    // - js/domain/spells.json: Spell data
     const otherFiles = [
         fetch('statLabels.json'),
         fetch('descriptions/stats.json'),
@@ -100,19 +115,8 @@ function init() {
                 weapons: profDesc.weapons || {},
                 tools: profDesc.tools || {},
                 savingThrows: profDesc.savingThrows || {},
-                mastery: profDesc.mastery || {}
-            };
-            
-            // Update legacy config variables for backward compatibility
-            _skillDescriptions = window.gameDescriptions.skills;
-            _raceAbilityDescriptions = window.gameDescriptions.raceAbilities;
-            _featDescriptions = window.gameDescriptions.feats;
-            _proficiencyDescriptions = {
-                armor: window.gameDescriptions.armor,
-                weapons: window.gameDescriptions.weapons,
-                tools: window.gameDescriptions.tools,
-                savingThrows: window.gameDescriptions.savingThrows,
-                mastery: window.gameDescriptions.mastery
+                mastery: profDesc.mastery || {},
+                statLabels: statLabels
             };
             
             DnDState.init(gameData);
