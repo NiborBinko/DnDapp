@@ -62,11 +62,11 @@ A 7-step character creation wizard for Dungeons & Dragons 5th Edition with suppo
 │   ├── core/                    # Core utilities and state management
 │   │   ├── config.js            # Constants, stat labels, flags, getter functions
 │   │   ├── state.js             # DnDState object - centralized state management
-│   │   ├── data-utils.js        # Data validation and lookup helpers
-│   │   ├── global-compat.js     # Shared functions (getRaceAbilities, getClassFeaturesForLevel, etc.)
+│   │   ├── data-utils.js        # Data validation (canSelectFeat only)
+│   │   ├── global-compat.js     # Shared global functions (getRaceAbilities, getClassFeaturesForLevel, etc.)
 │   │   └── ability-system.js    # Dynamic ability effect processor
 │   ├── domain/                  # Business logic entities
-│   │   ├── character.js         # CharacterEntity - character data model
+│   │   ├── character.js         # CharacterEntity - character data model + calculations
 │   │   ├── character-create.js # Character creation handlers
 │   │   ├── spells.js            # SpellManager - spell slot management
 │   │   ├── spells.json          # Pure spell data (damage, description, school)
@@ -267,6 +267,29 @@ Complex mappings for what abilities do:
 3. **Separated Data**: Class data, race data, and descriptions in separate JSON files
 4. **Scalable**: Easy to add new races/classes without modifying code
 5. **Persistent**: Character saved to localStorage with all computed values
+
+---
+
+## Code Cleanup (v1.1.0)
+
+The following unused code was removed to reduce redundancy:
+
+### Removed Unused Functions:
+- `DnDState.setCharacter()`, `getCharacter()`, `updateCharacter()`, `getCharacterClasses()` (duplicates CharacterEntity methods)
+- `DnDState.getStatModifier()`, `calculateArmorClass()`, `calculateInitiative()`, `calculateSpeed()`, `getTotalLevel()` (duplicates CharacterEntity methods)
+- `DataUtils.getFeatureDescription()`, `getOptionDescription()`, `getFeatDescription()`, `getFeatPrerequisites()`, `getRaceAbilitySkill()`, `getRaceAbilityStatEffect()`, `getAutoGrantedProficiencies()`, `getRaceStatEffects()`, `getSkillDescription()`, `getRaceAbilityDescription()`, `getStatDescription()` (never called)
+- `AbilitySystem.getRaceAbilities()`, `getSpellcastingAbility()` (never called)
+- `SpellManager.getAllSpells()`, `getSpellDescription()`, `hasFeature()`, `getInnateSpellsForClass()`, etc. (never called)
+- `CharacterEntity.addSpell()`, `removeSpell()`, `addItem()`, `removeItem()`, `equipItem()`, `unequipItem()`, `addAttack()`, `updateCurrency()`, `addCondition()`, `removeCondition()` (never called - inventory/combat features not connected to UI)
+
+### Fixed Bugs:
+- `js/domain/character.js:111,132`: Malformed default object `{ races, subraces }` → `{ races: [], subraces: {} }`
+- `js/core/data-utils.js:99,147`: Undefined function `getRaceAbilities()` → uses `_getRaceAbilitiesFromState()`
+- `js/domain/character-create.js:349`: Operator precedence in constitution modifier calculation
+- `js/domain/character-create.js:138`: Duplicate assignment removed
+- `js/ui/render.js:222`: Added fallback for `AbilitySystem.getProficiencies()`
+- `js/features/levelup.js:188`: Added null check for `char.abilityIds`
+- `js/features/multiclass.js:59`: Added null check for class lookup
 
 ---
 

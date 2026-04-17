@@ -108,7 +108,7 @@ const CharacterEntity = {
     },
 
     calculateSpeed(character) {
-        const gameData = DnDState ? DnDState.gameData : { races, subraces };
+        const gameData = DnDState ? DnDState.gameData : { races: [], subraces: {} };
         const race = gameData.races.find(r => r.id === character.raceId);
         let speed = race?.speed || 30;
 
@@ -129,7 +129,7 @@ const CharacterEntity = {
     },
 
     _getRaceAbilities(character) {
-        const gameData = DnDState ? DnDState.gameData : { races, subraces };
+        const gameData = DnDState ? DnDState.gameData : { races: [], subraces: {} };
         const race = gameData.races.find(r => r.id === character.raceId);
         let abilities = [...(race?.raceAbilities || [])];
 

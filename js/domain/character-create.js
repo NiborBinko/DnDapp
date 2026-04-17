@@ -137,8 +137,6 @@ function selectSubrace(name) {
     
     state.subraceName = name;
     
-    state.subraceName = name;
-    
     // Use AbilitySystem to recalculate with subrace
     const raceEffects = AbilitySystem.recalculate(state, gameData);
     state.raceAbilityIds = raceEffects.raceAbilityIds;
@@ -306,9 +304,9 @@ function saveCharacter() {
     const allAbilityIds = [...new Set([...raceAbilities.filter(a => !a.startsWith('+1 ')), ...actualAbilities])];
     
     const classId = state.classId;
-    const featuresData = getClassFeaturesForLevel(classId, startingLevel);
-    const classAbilities = featuresData.features.map(f => f.name);
-    const classSelectedOptions = featuresData.options.map(o => ({ optionId: o.id, feature: o.name, level: o.level, classId: classId }));
+    const featuresData = getClassFeaturesForLevel(classId, startingLevel) || { features: [], options: [] };
+    const classAbilities = (featuresData.features || []).map(f => f.name);
+    const classSelectedOptions = (featuresData.options || []).map(o => ({ optionId: o.id, feature: o.name, level: o.level, classId: classId }));
     
     const allAbilityIdsWithClass = [...new Set([...allAbilityIds, ...classAbilities])];
     
@@ -346,7 +344,7 @@ function saveCharacter() {
     };
     
     const raceBonuses = getRaceBonuses();
-    const conMod = Math.floor((state.stats.constitution || 10 - 10) / 2);
+    const conMod = Math.floor(((state.stats.constitution || 10) - 10) / 2);
     const hitDie = cls?.hitDie || 8;
     newChar.hitPoints.max = hitDie + conMod;
     newChar.hitPoints.current = newChar.hitPoints.max;

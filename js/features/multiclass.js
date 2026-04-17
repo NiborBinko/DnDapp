@@ -55,8 +55,9 @@ function selectMulticlassClass(classId) {
     document.getElementById('multi-class-' + classId).classList.add('selected');
     
     const gameData = DnDState.gameData;
+    const cls = gameData.classes.find(c => c.id === classId);
     document.getElementById('confirm-multiclass-btn').disabled = false;
-    document.getElementById('confirm-multiclass-btn').textContent = 'Add ' + gameData.classes.find(c => c.id === classId).name;
+    document.getElementById('confirm-multiclass-btn').textContent = 'Add ' + (cls?.name || 'Class');
 }
 
 function confirmMulticlass() {

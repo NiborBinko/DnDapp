@@ -1,15 +1,3 @@
-function getCharacterLevel(char) {
-    return CharacterEntity.getTotalLevel(char);
-}
-
-function getTotalLevel(chars) {
-    return CharacterEntity.getTotalLevel(chars);
-}
-
-function getCharacterClasses(char) {
-    return CharacterEntity.getClasses(char);
-}
-
 function getRaceAbilities() {
     const state = DnDState.character;
     const gameData = DnDState.gameData;
@@ -46,21 +34,6 @@ function getRaceBonuses() {
     }
     
     return bonuses;
-}
-
-function hasRaceAbility(abilityName) {
-    const raceAbs = getRaceAbilities();
-    return raceAbs.includes(abilityName);
-}
-
-function getExtraSkillCount() {
-    const raceAbs = getRaceAbilities();
-    return raceAbs.filter(a => a === '+1 Proficiency').length;
-}
-
-function getExtraFeatCount() {
-    const raceAbs = getRaceAbilities();
-    return raceAbs.filter(a => a === '+1 Feat').length;
 }
 
 function getStatCost(value) {
@@ -126,4 +99,14 @@ function getClassFeaturesForLevel(classId, level) {
     }
     
     return { features: allFeatures, options: allOptions };
+}
+
+function getExtraSkillCount() {
+    const raceAbs = getRaceAbilities();
+    return raceAbs.filter(a => a === '+1 Proficiency').length;
+}
+
+function getExtraFeatCount() {
+    const raceAbs = getRaceAbilities();
+    return raceAbs.filter(a => a === '+1 Feat').length;
 }

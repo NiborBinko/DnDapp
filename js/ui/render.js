@@ -219,7 +219,7 @@ html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
     const classSaves = charClass?.proficiencies?.savingThrows || [];
     
 // Get race proficiencies first
-    const raceProfs = AbilitySystem.getProficiencies(state, gameData, state.classId);
+    const raceProfs = AbilitySystem.getProficiencies(state, gameData, state.classId) || { toolOptions: [], armor: [], weapons: [], tools: [], cantrips: [], innateSpells: [] };
     
     // Process and combine class + race ARMOR proficiencies
     const processedArmor = [];

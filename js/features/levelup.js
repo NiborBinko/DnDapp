@@ -185,6 +185,7 @@ function confirmLevelUp() {
         if (f.isOption) {
             const checkbox = document.querySelector(`input[data-feature="${f.feature}"]:checked`);
             if (checkbox) {
+                char.abilityIds = char.abilityIds || [];
                 if (!char.abilityIds.includes(f.feature)) {
                     char.abilityIds.push(f.feature);
                 }
@@ -199,6 +200,7 @@ function confirmLevelUp() {
                 }
             }
         } else {
+            char.abilityIds = char.abilityIds || [];
             if (!char.abilityIds.includes(f.feature)) {
                 char.abilityIds.push(f.feature);
             }
