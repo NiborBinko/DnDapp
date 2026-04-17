@@ -152,23 +152,26 @@ function renderProficiencies() {
         return;
     }
     
+    const profs = AbilitySystem.getProficiencies(state, gameData, state.classId);
     const classSkillOptions = charClass?.proficiencies?.skills?.options || [];
     const maxSkills = ProficiencyUtils.getMaxSkills(state, gameData);
-    const raceSkills = ProficiencyUtils.getRaceSkillProficiencies(state, gameData);
     const skillDesc = getSkillDescriptions();
     let html = '';
     
     html += `<h4 class="section-header">Skills (${maxSkills} to select)</h4>`;
     html += `<div class="checkbox-grid">`;
+    
+    const skillProfs = (profs.skills || []).reduce((acc, s) => { acc[s.name] = s; return acc; }, {});
     html += classSkillOptions.map(skill => {
         const desc = skillDesc[skill.name] || skill.description || '';
-        const isFromRace = raceSkills.includes(skill.name);
+        const raceProf = skillProfs[skill.name];
+        const isFromRace = !!raceProf;
         const isSelected = (state.proficiencyIds || []).includes(skill.name) || isFromRace;
         
-        const origin = isFromRace ? getProficiencyOrigin(skill.name, 'skill', state) : '';
+        const originText = ProficiencyUtils.formatOrigin(raceProf?.origin);
         
         return `
-        <label class="checkbox-item ${isFromRace ? 'race-ability' : ''}" data-tooltip="${desc}${origin}">
+        <label class="checkbox-item ${isFromRace ? 'race-ability' : ''}" data-tooltip="${desc}${originText}">
             <input type="checkbox" value="${skill.name}" data-attribute="${skillDesc[skill.name]?.match(/\([A-Z]+\)/)?.[1] || ''}" 
                 ${isSelected ? 'checked' : ''} 
                 ${isFromRace ? 'disabled' : ''} 
@@ -185,8 +188,8 @@ function renderProficiencies() {
         html += `<div class="checkbox-grid">`;
         html += processedArmor.map(arm => {
             const desc = getProficiencyDescriptions().armor[arm.name] || '';
-            const sourceText = arm.source && arm.source.trim() ? arm.source : '';
-            const tooltip = sourceText ? `${desc}\n\n📍 ${sourceText}` : desc;
+            const originText = ProficiencyUtils.formatOrigin(arm.origin);
+            const tooltip = originText ? `${desc}${originText}` : desc;
             return `
             <label class="checkbox-item race-ability" data-tooltip="${tooltip}">
                 <input type="checkbox" checked disabled>
@@ -202,8 +205,8 @@ function renderProficiencies() {
         html += `<div class="checkbox-grid">`;
         html += processedWeapons.map(wp => {
             const desc = getProficiencyDescriptions().weapons[wp.name] || '';
-            const sourceText = wp.source && wp.source.trim() && wp.source !== 'Race: ' ? wp.source : '';
-            const tooltip = sourceText ? `${desc}\n\n📍 ${sourceText}` : desc;
+            const originText = ProficiencyUtils.formatOrigin(wp.origin);
+            const tooltip = originText ? `${desc}${originText}` : desc;
             return `
             <label class="checkbox-item race-ability" data-tooltip="${tooltip}">
                 <input type="checkbox" checked disabled>
@@ -217,13 +220,14 @@ function renderProficiencies() {
     if (raceToolOptions && raceToolOptions.length > 0) {
         raceToolOptions.forEach(toolOption => {
             html += `<h4 class="section-header">${toolOption.ability} (Select ${toolOption.count})</h4>`;
+            const originText = ProficiencyUtils.formatOrigin(toolOption.origin);
             html += `<div class="checkbox-grid">`;
             html += toolOption.options.map(tool => {
                 const selected = (state.toolSelectionIds || []).includes(tool);
                 const desc = getProficiencyDescriptions().tools[tool] || '';
                 
                 return `
-                <label class="checkbox-item" data-tooltip="${desc}">
+                <label class="checkbox-item" data-tooltip="${desc}${originText}">
                     <input type="checkbox" value="${tool}" 
                         ${selected ? 'checked' : ''} 
                         onchange="toggleToolSelection('${tool}')">
@@ -240,8 +244,8 @@ function renderProficiencies() {
         html += `<div class="checkbox-grid">`;
         html += processedTools.map(tl => {
             const desc = getProficiencyDescriptions().tools[tl.name] || '';
-            const sourceText = tl.source && tl.source.trim() ? tl.source : '';
-            const tooltip = sourceText ? `${desc}\n\n📍 ${sourceText}` : desc;
+            const originText = ProficiencyUtils.formatOrigin(tl.origin);
+            const tooltip = originText ? `${desc}${originText}` : desc;
             return `
             <label class="checkbox-item race-ability" data-tooltip="${tooltip}">
                 <input type="checkbox" checked disabled>
