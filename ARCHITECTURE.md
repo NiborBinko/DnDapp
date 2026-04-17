@@ -46,13 +46,16 @@ A 7-step character creation wizard for Dungeons & Dragons 5th Edition with suppo
 │   └── tiefling.json
 ├── descriptions/                # Read-only description data (JSON)
 │   ├── race-abilities.json        # Race/racial ability descriptions
-│   ├── class-abilities.json    # Class feature descriptions
-│   ├── class-options.json     # Subclass/archetype option descriptions
-│   ├── exclusive-groups.json   # Mutually exclusive feature groups
-│   ├── feats.json           # Feat descriptions
-│   └── proficiencies.json   # Armor, weapons, tools, skills, saving throws descriptions
+│   ├── class-abilities.json       # Class feature descriptions
+│   ├── class-options.json         # Subclass/archetype option descriptions
+│   ├── exclusive-groups.json      # Mutually exclusive feature groups
+│   ├── feats.json                 # Feat descriptions
+│   ├── proficiencies.json         # Armor, weapons, tools, skills, saving throws descriptions
+│   └── stats.json                 # Stat descriptions and tooltips
 ├── effects/                    # Ability effect mappings (JSON)
-│   └── race-effects.json      # Race ability effects (skill/armor/weapon/tool mappings, stat effects)
+│   ├── race-effects.json          # Race ability effects (skill/armor/weapon/tool mappings, stat effects)
+│   ├── class-effects.json         # Class feature effects (proficiencies, abilities, spellcasting)
+│   └── class-option-effects.json  # Subclass/archetype option effects
 ├── css/
 │   └── theme.css                 # All styling including tooltip system
 ├── js/
