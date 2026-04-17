@@ -65,8 +65,9 @@ const CharacterEntity = {
         });
 
         const raceAbilities = this._getRaceAbilities(character);
+        const raceEffects = window.gameDescriptions?.raceEffects?.statEffects || {};
         raceAbilities.forEach(ability => {
-            const effect = raceAbilityStatEffects[ability];
+            const effect = raceEffects[ability];
             if (effect && effect.type === 'hpPerLevel') {
                 maxHP += effect.value * this.getTotalLevel(character);
             }
@@ -113,8 +114,9 @@ const CharacterEntity = {
         let speed = race?.speed || 30;
 
         const raceAbilities = this._getRaceAbilities(character);
+        const raceEffects = window.gameDescriptions?.raceEffects?.statEffects || {};
         raceAbilities.forEach(ability => {
-            const effect = raceAbilityStatEffects[ability];
+            const effect = raceEffects[ability];
             if (effect && effect.type === 'speed') {
                 speed += effect.value;
             }

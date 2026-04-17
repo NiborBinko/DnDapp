@@ -1,6 +1,6 @@
 const DataUtils = {
     canSelectFeat: function(featName, character) {
-        const prereqs = featPrerequisites[featName];
+        const prereqs = getFeatEffects()[featName];
         if (!prereqs) return { canSelect: true, reason: null };
 
         if (prereqs.canCastSpells) {

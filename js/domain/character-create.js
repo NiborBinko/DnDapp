@@ -172,10 +172,12 @@ function toggleProficiency(id) {
     const gameData = DnDState.gameData;
     const checkbox = event.target;
     const raceAbilities = getRaceAbilities();
+    const raceEffects = window.gameDescriptions?.raceEffects || {};
     const raceSkills = [];
     raceAbilities.forEach(ability => {
-        const skill = raceAbilitySkillMap[ability];
-        if (skill) {
+        const skillData = raceEffects.skillMappings?.[ability];
+        if (skillData) {
+            const skill = typeof skillData === 'string' ? skillData : (skillData.skill || skillData);
             raceSkills.push(skill);
         }
     });

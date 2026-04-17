@@ -1,0 +1,21 @@
+{
+  "Heavy Armor Master": { "armorProficiency": "heavy" },
+  "Medium Armor Master": { "armorProficiency": "medium" },
+  "Lightly Armored": { "armorProficiency": "none" },
+  "Heavily Armored": { "armorProficiency": "medium" },
+  "Defensive Duelist": { "abilityScore": { "stat": "dexterity", "min": 13 } },
+  "Grappler": { "abilityScore": { "stat": "strength", "min": 13 } },
+  "Great Weapon Master": { "abilityScore": { "stat": "strength", "min": 13 } },
+  "Charger": { "abilityScore": { "stat": "strength", "min": 13 } },
+  "War Caster": { "canCastSpells": true },
+  "Ritual Caster": { "canCastSpells": true },
+  "Spell Sniper": { "canCastSpells": true },
+  "Magic Initiate": { "canCastSpells": true },
+  "Skulker": { "abilityScore": { "stat": "dexterity", "min": 13 } },
+  "Observant": { "abilityScore": { "stat": "intelligence", "min": 13 } },
+  "Durable": { "abilityScore": { "stat": "constitution", "min": 13 } },
+  "Inspiring Leader": { "abilityScore": { "stat": "charisma", "min": 13 } },
+  "Resilient": { "hasAbilityScoreIncrease": true },
+  "Dual Wielder": { "fightingStyle": "twoWeapon" },
+  "Crossbow Expert": { "weaponProficiency": "crossbow" }
+}

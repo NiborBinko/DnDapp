@@ -20,6 +20,7 @@ function init() {
         fetch('effects/race-effects.json'),
         fetch('effects/class-effects.json'),
         fetch('effects/class-option-effects.json'),
+        fetch('effects/feat-effects.json'),
         fetch('descriptions/proficiencies.json'),
         fetch('dnd-spell-lists.json'),
         fetch('js/domain/spells.json')
@@ -60,9 +61,10 @@ function init() {
             const raceEffects = results[classCount + raceCount + 6];
             const classEffects = results[classCount + raceCount + 7];
             const classOptionEffects = results[classCount + raceCount + 8];
-            const profDesc = results[classCount + raceCount + 9];
-            const spellLists = results[classCount + raceCount + 10];
-            const spellData = results[classCount + raceCount + 11];
+            const featEffects = results[classCount + raceCount + 9];
+            const profDesc = results[classCount + raceCount + 10];
+            const spellLists = results[classCount + raceCount + 11];
+            const spellData = results[classCount + raceCount + 12];
             
             // Extract subraces from race files for backward compatibility
             const subraces = {};
@@ -91,6 +93,7 @@ function init() {
                 raceEffects: raceEffects,
                 classEffects: classEffects,
                 classOptionEffects: classOptionEffects,
+                featEffects: featEffects,
                 proficiencies: profDesc,
                 skills: profDesc.skills || {},
                 armor: profDesc.armor || {},

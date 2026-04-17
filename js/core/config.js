@@ -48,6 +48,10 @@ function getClassOptionEffects() {
     return (window.gameDescriptions?.classOptionEffects) || {};
 }
 
+function getFeatEffects() {
+    return (window.gameDescriptions?.featEffects) || {};
+}
+
 // Find which race ability provides a specific proficiency
 function getProficiencySource(profName, profType, character) {
     const effects = getRaceEffects();
@@ -150,65 +154,3 @@ var _proficiencyDescriptions = { armor: {}, weapons: {}, tools: {}, savingThrows
 // Feat descriptions are loaded from JSON via getFeatDescriptions()
 
 // Class feature descriptions are loaded from JSON via getClassFeatureDescriptions()
-
-const featPrerequisites = {
-    "Heavy Armor Master": { armorProficiency: "heavy" },
-    "Medium Armor Master": { armorProficiency: "medium" },
-    "Lightly Armored": { armorProficiency: "none" },
-    "Heavily Armored": { armorProficiency: "medium" },
-    "Defensive Duelist": { abilityScore: { stat: "dexterity", min: 13 } },
-    "Grappler": { abilityScore: { stat: "strength", min: 13 } },
-    "Great Weapon Master": { abilityScore: { stat: "strength", min: 13 } },
-    "Charger": { abilityScore: { stat: "strength", min: 13 } },
-    "War Caster": { canCastSpells: true },
-    "Ritual Caster": { canCastSpells: true },
-    "Spell Sniper": { canCastSpells: true },
-    "Magic Initiate": { canCastSpells: true },
-    "Skulker": { abilityScore: { stat: "dexterity", min: 13 } },
-    "Observant": { abilityScore: { stat: "intelligence", min: 13 } },
-    "Durable": { abilityScore: { stat: "constitution", min: 13 } },
-    "Inspiring Leader": { abilityScore: { stat: "charisma", min: 13 } },
-    "Resilient": { hasAbilityScoreIncrease: true },
-    "Dual Wielder": { fightingStyle: "twoWeapon" },
-    "Crossbow Expert": { weaponProficiency: "crossbow" }
-};
-
-const raceAbilitySkillMap = {
-    "Keen Senses": "Perception",
-    "Menacing": "Intimidation",
-    "Naturally Stealthy": "Stealth"
-};
-
-const raceAbilityArmorProficiencies = {
-    "Dwarven Armor Training": ["light armor", "medium armor", "shields"]
-};
-
-const raceAbilityWeaponProficiencies = {
-    "Elf Weapon Training": ["longsword", "shortsword", "shortbow", "longbow"],
-    "Drow Weapon Training": ["rapier", "shortsword", "hand crossbow"]
-};
-
-const raceAbilityToolProficiencies = {
-    "Dwarven Tool Proficiency": {
-        options: ["smith's tools", "brewer's supplies", "mason's tools"],
-        count: 1
-    }
-};
-
-const raceAbilityCantrips = {
-    "High Elf Cantrip": { class: "wizard", spellList: "all" },
-    "Drow Magic": { cantrips: ["dancing-lights"] }
-};
-
-const raceAbilityInnateSpells = {
-    "Drow Magic": {
-        "3": ["faerie-fire"],
-        "5": ["darkness"]
-    }
-};
-
-const raceAbilityStatEffects = {
-    "Dwarven Toughness": { type: "hpPerLevel", value: 1 },
-    "Fleet Footed": { type: "speed", value: 5 },
-    "Superior Darkvision": { type: "darkvision", value: 120 }
-};

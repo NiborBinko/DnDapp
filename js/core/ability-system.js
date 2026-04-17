@@ -40,12 +40,8 @@ const AbilitySystem = {
     recalculate(character, gameData) {
         // Safety check
         if (!gameData || !character || !character.raceId) {
-            console.log('AbilitySystem.recalculate - early return, no race selected');
             return { raceAbilityIds: [], proficiencyIds: [], abilityIds: [], statBonuses: {}, speedBonus: 0, hpPerLevel: 0, darkvision: 60, toolOptions: [], cantrips: [], innateSpells: {}, weaponProficiencies: [], armorProficiencies: [] };
         }
-        
-        console.log('AbilitySystem.recalculate - raceId:', character.raceId);
-        console.log('AbilitySystem.recalculate - descriptions:', this.descriptions);
         
         const result = {
             raceAbilityIds: [],
