@@ -1,0 +1,91 @@
+{
+ "id": "druid",
+ "name": "Druid",
+ "primaryStat": "wisdom",
+ "desc": "Nature magic users",
+ "hitDie": 8,
+ "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},
+ "multiclassRequirement": { "stat": "wisdom", "min": 13 },
+ "proficiencies": {
+  "armor": ["light", "medium", "shields"],
+  "weapons": ["clubs", "daggers", "darts", "javelins", "maces", "quarterstaffs", "scimitars", "sickles", "slings", "spears"],
+  "tools": ["herbalism kit"],
+  "savingThrows": ["intelligence", "wisdom"],
+  "skills": {
+   "count": 2,
+   "options": [
+    {"name": "Arcana"},
+    {"name": "Animal Handling"},
+    {"name": "Insight"},
+    {"name": "Medicine"},
+    {"name": "Nature"},
+    {"name": "Perception"},
+    {"name": "Religion"},
+    {"name": "Survival"}]
+  }
+ },
+ "features": {
+  "1": { "features": ["Druidic", "Spellcasting"], "options": [] },
+  "2": { "features": ["Wild Shape"], 
+        "options": [
+        {"id": "land", "name": "Circle of the Land", "exclusiveGroup": "Druid Circle"},
+        {"id": "moon", "name": "Circle of the Moon", "exclusiveGroup": "Druid Circle"}] 
+    },
+  "3": { "features": [], "options": [] },
+  "4": { "features": ["Wild Shape Improvement", "Ability Score Improvement"], "options": [] },
+  "5": { "features": [], "options": [] },
+  "6": { "features": ["Druid Circle Feature"], "options": [] },
+  "7": { "features": [], "options": [] },
+  "8": { "features": ["Wild Shape Improvement", "Ability Score Improvement"], "options": [] },
+  "9": { "features": [], "options": [] },
+  "10": { "features": ["Druid Circle Feature"], "options": [] },
+  "11": { "features": [], "options": [] },
+  "12": { "features": ["Ability Score Improvement"], "options": [] },
+  "13": { "features": [], "options": [] },
+  "14": { "features": ["Druid Circle Feature"], "options": [] },
+  "15": { "features": [], "options": [] },
+  "16": { "features": ["Ability Score Improvement"], "options": [] },
+  "17": { "features": [], "options": [] },
+  "18": { "features": ["Timeless Body", "Beast Spells"], "options": [] },
+  "19": { "features": ["Ability Score Improvement"], "options": [] },
+  "20": { "features": ["Archdruid"], "options": [] }
+ },
+ "spellSlotTable": {
+  "1": {"1": 2},
+  "2": {"1": 3},
+  "3": {"1": 4, "2": 2},
+  "4": {"1": 4, "2": 3},
+  "5": {"1": 4, "2": 3, "3": 2},
+  "6": {"1": 4, "2": 3, "3": 3},
+  "7": {"1": 4, "2": 3, "3": 3, "4": 1},
+  "8": {"1": 4, "2": 3, "3": 3, "4": 2},
+  "9": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 1},
+  "10": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2},
+  "11": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1},
+  "12": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1},
+  "13": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1},
+  "14": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1},
+  "15": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1, "8": 1},
+  "16": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1, "8": 1},
+  "17": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 2, "6": 1, "7": 1, "8": 1, "9": 1},
+  "18": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 3, "6": 1, "7": 1, "8": 1, "9": 1},
+  "19": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 3, "6": 2, "7": 1, "8": 1, "9": 1},
+  "20": {"1": 4, "2": 3, "3": 3, "4": 3, "5": 3, "6": 2, "7": 2, "8": 1, "9": 1}
+ },
+ "cantrips known":{
+  "1": 2, "2": 2, "3": 2, "4": 3, "5": 3, "6": 3, "7": 3, "8": 3, "9": 3, "10": 4, "11": 4, "12": 4, "13": 4, "14": 4, "15": 4, "16": 4, "17": 4, "18": 4, "19": 4, "20": 4 
+ },
+ "spellList": {
+    "0": ["Druidcraft", "Guidance", "Mending", "Poison Spray", "Produce Flame", "Resistance", "Shillelagh", "Thorn Whip"],
+    "1": ["Animal Friendship", "Charm Person", "Create or Destroy Water", "Cure Wounds", "Detect Magic", "Detect Poison and Disease", "Entangle", "Faerie Fire", "Fog Cloud", "Goodberry", "Healing Word", "Jump", "Longstrider", "Purify Food and Drink", "Speak with Animals", "Thunderwave"],
+    "2": ["Animal Messenger", "Barkskin", "Beast Sense", "Darkvision", "Enhance Ability", "Find Traps", "Flame Blade", "Flaming Sphere", "Gust of Wind", "Heat Metal", "Hold Person", "Lesser Restoration", "Locate Animals or Plants", "Locate Object", "Moonbeam", "Pass without Trace", "Protection from Poison", "Spike Growth"],
+    "3": ["Call Lightning", "Conjure Animals", "Daylight", "Dispel Magic", "Feign Death", "Meld into Stone", "Plant Growth", "Protection from Energy", "Sleet Storm", "Speak with Plants", "Water Breathing", "Water Walk", "Wind Wall"],
+    "4": ["Blight", "Confusion", "Conjure Minor Elementals", "Conjure Woodland Beings", "Control Water", "Dominate Beast", "Freedom of Movement", "Giant Insect", "Grasping Vine", "Hallucinatory Terrain", "Ice Storm", "Locate Creature", "Polymorph", "Stone Shape", "Stoneskin", "Wall of Fire"],
+    "5": ["Antilife Shell", "Awaken", "Commune with Nature", "Conjure Elemental", "Contagion", "Geas", "Greater Restoration", "Insect Plague", "Mass Cure Wounds", "Planar Binding", "Reincarnate", "Scrying", "Tree Stride", "Wall of Stone"],
+    "6": ["Conjure Fey", "Find the Path", "Heal", "Heroes' Feast", "Move Earth", "Sunbeam", "Transport via Plants", "Wall of Thorns", "Wind Walk"],
+    "7": ["Fire Storm", "Mirage Arcane", "Plane Shift", "Regenerate", "Reverse Gravity"],
+    "8": ["Animal Shapes", "Antipathy/Sympathy", "Control Weather", "Earthquake", "Feeblemind", "Sunburst", "Tsunami"],
+    "9": ["Foresight", "Shapechange", "Storm of Vengeance", "True Resurrection"]
+  },
+ "spells prepared": "WIS + druid level"
+}

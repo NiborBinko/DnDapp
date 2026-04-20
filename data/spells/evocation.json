@@ -1,0 +1,499 @@
+{
+  "evocation": [
+    {
+      "name": "Acid Splash",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You create an acidic bubble at a point within range, where it explodes in a 5-foot-radius Sphere. Each creature in that Sphere must succeed on a Dexterity saving throw or take 1d6 Acid damage."
+    },
+    {
+      "name": "Eldritch Blast",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You hurl a beam of crackling energy. Make a ranged spell attack against one creature or object in range. On a hit, the target takes 1d10 Force damage."
+    },
+    {
+      "name": "Fire Bolt",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You hurl a mote of fire at a creature or an object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 Fire damage. A flammable object hit by this spell starts burning if it isn't being worn or carried."
+    },
+    {
+      "name": "Light",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, M",
+      "duration": "1 hour",
+      "description": "You touch one Large or smaller object that isn't being worn or carried by someone else. Until the spell ends, the object sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. The light can be colored as you like. \n\nCovering the object with something opaque blocks the light. The spell ends if you cast it again."
+    },
+    {
+      "name": "Ray of Frost",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "A frigid beam of blue-white light streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 1d8 Cold damage, and its Speed is reduced by 10 feet until the start of your next turn."
+    },
+    {
+      "name": "Sacred Flame",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "Flame-like radiance descends on a creature that you can see within range. The target must succeed on a Dexterity saving throw or take 1d8 Radiant damage. The target gains no benefit from Half Cover or Three-Quarters Cover for this save."
+    },
+    {
+      "name": "Shocking Grasp",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "Lightning springs from you to a creature that you try to touch. Make a melee spell attack against the target. On a hit, the target takes 1d8 Lightning damage, and it can't make Opportunity Attacks until the start of its next turn."
+    },
+    {
+      "name": "Sorcerous Burst",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You cast sorcerous energy at one creature or object within range. Make a ranged attack roll against the target. On a hit, the target takes 1d8 damage of a type you choose: Acid, Cold, Fire, Lightning, Poison, Psychic, or Thunder. \n\nIf you roll an 8 on a d8 for this spell, you can roll another d8, and add it to the damage. When you cast this spell, the maximum number of these d8s you can add to the spell's damage equals your spellcasting ability modifier."
+    },
+    {
+      "name": "Starry Wisp",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You launch a mote of light at one creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 Radiant damage, and until the end of your next turn, it emits Dim Light in a 10-foot radius and can't benefit from the Invisible condition."
+    },
+    {
+      "name": "Burning Hands",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "A thin sheet of flames shoots forth from you. Each creature in a 15- foot Cone makes a Dexterity saving throw, taking 3d6 Fire damage on a failed save or half as much damage on a successful one. Flammable objects in the Cone that aren't being worn or carried start burning."
+    },
+    {
+      "name": "Chromatic Orb",
+      "ritual": false,
+      "casttime": "action",
+      "range": "90 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You hurl an orb of energy at a target within range. Choose Acid, Cold, Fire, Lightning, Poison, or Thunder for the type of orb you create, and then make a ranged spell attack against the target. On a hit, the target takes 3d8 damage of the chosen type. If you roll the same number on two or more of the d8s, the orb leaps to a different target of your choice within 30 feet of the target. Make an attack roll against the new target, and make a new damage roll. The orb can't leap again unless you cast the spell with a level 2+ spell slot."
+    },
+    {
+      "name": "Divine Smite",
+      "ritual": false,
+      "casttime": "bonusAction",
+      "range": "Self",
+      "components": "V",
+      "duration": "Instantaneous",
+      "description": "The target takes an extra 2d8 Radiant damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead."
+    },
+    {
+      "name": "Faerie Fire",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V",
+      "duration": "up to 1 minute",
+      "description": "Objects in a 20-foot Cube within range are outlined in blue, green, or violet light (your choice). Each creature in the Cube is also outlined if it fails a Dexterity saving throw. For the duration, objects and affected creatures shed Dim Light in a 10-foot radius and can't benefit from the Invisible condition. \n\nAttack rolls against an affected creature or object have Advantage if the attacker can see it."
+    },
+    {
+      "name": "Guiding Bolt",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S",
+      "duration": "1 round",
+      "description": "You hurl a bolt of light toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 4d6 Radiant damage, and the next attack roll made against it before the end of your next turn has Advantage."
+    },
+    {
+      "name": "Hellish Rebuke",
+      "ritual": false,
+      "casttime": "reaction",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "The creature that damaged you is momentarily surrounded by green flames. It makes a Dexterity saving throw, taking 2d10 Fire damage on a failed save or half as much damage on a successful one."
+    },
+    {
+      "name": "Magic Missile",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You create three glowing darts of magical force. Each dart strikes a creature of your choice that you can see within range. A dart deals 1d4 + 1 Force damage to its target. The darts all strike simultaneously, and you can direct them to hit one creature or several."
+    },
+    {
+      "name": "Searing Smite",
+      "ritual": false,
+      "casttime": "bonusAction",
+      "range": "Self",
+      "components": "V",
+      "duration": "1 minute",
+      "description": "As you hit the target, it takes an extra 1d6 Fire damage from the attack. At the start of each of its turns until the spell ends, the target takes 1d6 Fire damage and then makes a Constitution saving throw. On a failed save, the spell continues. On a successful save, the spell ends."
+    },
+    {
+      "name": "Thunderwave",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You unleash a wave of thunderous energy. Each creature in a 15- foot Cube originating from you makes a Constitution saving throw. On a failed save, a creature takes 2d8 Thunder damage and is pushed 10 feet away from you. On a successful save, a creature takes half as much damage only. \n\nIn addition, unsecured objects that are entirely within the Cube are pushed 10 feet away from you, and a thunderous boom is audible within 300 feet."
+    },
+    {
+      "name": "Acid Arrow",
+      "ritual": false,
+      "casttime": "action",
+      "range": "90 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "A shimmering green arrow streaks toward a target within range and bursts in a spray of acid. Make a ranged spell attack against the target. On a hit, the target takes 4d4 Acid damage and 2d4 Acid damage at the end of its next turn. On a miss, the arrow splashes the target with acid for half as much of the initial damage only."
+    },
+    {
+      "name": "Continual Flame",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, S, M",
+      "duration": "Until dispelled",
+      "description": "A flame springs from an object that you touch. The effect casts Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. It looks like a regular flame, but it creates no heat and consumes no fuel. The flame can be covered or hidden but not smothered or quenched."
+    },
+    {
+      "name": "Darkness",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, M",
+      "duration": "up to 10 minutes",
+      "description": "For the duration, magical Darkness spreads from a point within range and fills a 15-foot-radius Sphere. Darkvision can't see through it, and nonmagical light can't illuminate it. \n\nAlternatively, you cast the spell on an object that isn't being worn or carried, causing the Darkness to fill a 15-foot Emanation originating from that object. Covering that object with something opaque, such as a bowl or helm, blocks the Darkness.\n\nIf any of this spell's area overlaps with an area of Bright Light or Dim Light created by a spell of level 2 or lower, that other spell is dispelled."
+    },
+    {
+      "name": "Flame Blade",
+      "ritual": false,
+      "casttime": "bonusAction",
+      "range": "Self",
+      "components": "V, S, M",
+      "duration": "up to 10 minutes",
+      "description": "You evoke a fiery blade in your free hand. The blade is similar in size and shape to a scimitar, and it lasts for the duration. If you let go of the blade, it disappears, but you can evoke it again as a Bonus Action. \n\nAs a Magic action, you can make a melee spell attack with the fiery blade. On a hit, the target takes Fire damage equal to 3d6 plus your spellcasting ability modifier. \n\nThe flaming blade sheds Bright Light in a 10-foot radius and Dim Light for an additional 10 feet."
+    },
+    {
+      "name": "Gust of Wind",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "A Line of strong wind 60 feet long and 10 feet wide blasts from you in a direction you choose for the duration. Each creature in the Line must succeed on a Strength saving throw or be pushed 15 feet away from you in a direction following the Line. A creature that ends its turn in the Line must make the same save. \n\nAny creature in the Line must spend 2 feet of movement for every 1 foot it moves when moving closer to you.\n\nThe gust disperses gas or vapor, and it extinguishes candles and similar unprotected flames in the area. It causes protected flames, such as those of lanterns, to dance wildly and has a 50 percent chance to extinguish them. \n\nAs a Bonus Action on your later turns, you can change the direction in which the Line blasts from you."
+    },
+    {
+      "name": "Moonbeam",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "A silvery beam of pale light shines down in a 5-foot-radius, 40- foot-high Cylinder centered on a point within range. Until the spell ends, Dim Light fills the Cylinder, and you can take a Magic action on later turns to move the Cylinder up to 60 feet. When the Cylinder appears, each creature in it makes a Constitution saving throw. On a failed save, a creature takes 2d10 Radiant damage, and if the creature is shape-shifted (as a result of the Polymorph spell, for example), it reverts to its true form and can't shape-shift until it leaves the Cylinder. On a successful save, a creature takes half as much damage only. A creature also makes this save when the spell's area moves into its space and when it enters the spell's area or ends its turn there. A creature makes this save only once per turn."
+    },
+    {
+      "name": "Scorching Ray",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You hurl three fiery rays. You can hurl them at one target within range or at several. Make a ranged spell attack for each ray. On a hit, the target takes 2d6 Fire damage."
+    },
+    {
+      "name": "Shatter",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "A loud noise erupts from a point of your choice within range. Each creature in a 10-foot-radius Sphere centered there makes a Constitution saving throw, taking 3d8 Thunder damage on a failed save or half as much damage on a successful one. A Construct has Disadvantage on the save.\n\nA nonmagical object that isn't being worn or carried also takes the damage if it's in the spell's area."
+    },
+    {
+      "name": "Spiritual Weapon",
+      "ritual": false,
+      "casttime": "bonusAction",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "You create a floating, spectral force that resembles a weapon of your choice and lasts for the duration. \n\nThe force appears within range in a space of your choice, and you can immediately make one melee spell attack against one creature within 5 feet of the force. On a hit, the target takes Force damage equal to 1d8 plus your spellcasting ability modifier. \n\nAs a Bonus Action on your later turns, you can move the force up to 20 feet and repeat the attack against a creature within 5 feet of it."
+    },
+    {
+      "name": "Daylight",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "1 hour",
+      "description": "For the duration, sunlight spreads from a point within range and fills a 60-foot-radius Sphere. The sunlight's area is Bright Light and sheds Dim Light for an additional 60 feet. \n\nAlternatively, you cast the spell on an object that isn't being worn or carried, causing the sunlight to fill a 60-foot Emanation originating from that object. Covering that object with something opaque, such as a bowl or helm, blocks the sunlight. \n\nIf any of this spell's area overlaps with an area of Darkness created by a spell of level 3 or lower, that other spell is dispelled."
+    },
+    {
+      "name": "Fireball",
+      "ritual": false,
+      "casttime": "action",
+      "range": "150 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into a fiery explosion. Each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw, taking 8d6 Fire damage on a failed save or half as much damage on a successful one. Flammable objects in the area that aren't being worn or carried start burning."
+    },
+    {
+      "name": "Lightning Bolt",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "A stroke of lightning forming a 100-foot-long, 5-foot-wide Line blasts out from you in a direction you choose. Each creature in the Line makes a Dexterity saving throw, taking 8d6 Lightning damage on a failed save or half as much damage on a successful one."
+    },
+    {
+      "name": "Tiny Hut",
+      "ritual": true,
+      "casttime": "1 minute",
+      "range": "Self",
+      "components": "V, S, M",
+      "duration": "8 hours",
+      "description": "A 10-foot Emanation springs into existence around you and remains stationary for the duration. The spell fails when you cast it if the Emanation isn't big enough to fully encapsulate all creatures in its area. \n\nCreatures and objects within the Emanation when you cast the spell can move through it freely. All other creatures and objects are barred from passing through it. Spells of level 3 or lower can't be cast through it, and the effects of such spells can't extend into it. The atmosphere inside the Emanation is comfortable and dry, regardless of the weather outside. Until the spell ends, you can command the interior to have Dim Light or Darkness (no action required). The Emanation is opaque from the outside and of any color you choose, but it's transparent from the inside. \n\nThe spell ends early if you leave the Emanation or if you cast it again."
+    },
+    {
+      "name": "Wind Wall",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "A wall of strong wind rises from the ground at a point you choose within range. You can make the wall up to 50 feet long, 15 feet high, and 1 foot thick. You can shape the wall in any way you choose so long as it makes one continuous path along the ground. The wall lasts for the duration. \n\nWhen the wall appears, each creature in its area makes a Strength saving throw, taking 4d8 Bludgeoning damage on a failed save or half as much damage on a successful one. \n\nThe strong wind keeps fog, smoke, and other gases at bay. Small or smaller flying creatures or objects can't pass through the wall. Loose, lightweight materials brought into the wall fly upward. Arrows, bolts, and other ordinary projectiles launched at targets behind the wall are deflected upward and miss automatically. Boulders hurled by Giants or siege engines, and similar projectiles, are unaffected. Creatures in gaseous form can't pass through it."
+    },
+    {
+      "name": "Fire Shield",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S, M",
+      "duration": "10 minutes",
+      "description": "Wispy flames wreathe your body for the duration, shedding Bright Light in a 10-foot radius and Dim Light for an additional 10 feet. The flames provide you with a warm shield or a chill shield, as you choose. The warm shield grants you Resistance to Cold damage, and the chill shield grants you Resistance to Fire damage. \n\nIn addition, whenever a creature within 5 feet of you hits you with a melee attack roll, the shield erupts with flame. The attacker takes 2d8 Fire damage from a warm shield or 2d8 Cold damage from a chill shield."
+    },
+    {
+      "name": "Ice Storm",
+      "ritual": false,
+      "casttime": "action",
+      "range": "300 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "Hail falls in a 20-foot-radius, 40-foot-high Cylinder centered on a point within range. Each creature in the Cylinder makes a Dexterity saving throw. A creature takes 2d10 Bludgeoning damage and 4d6 Cold damage on a failed save or half as much damage on a successful one. \n\nHailstones turn ground in the Cylinder into Difficult Terrain until the end of your next turn."
+    },
+    {
+      "name": "Resilient Sphere",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "A shimmering sphere encloses a Large or smaller creature or object within range. An unwilling creature must succeed on a Dexterity saving throw or be enclosed for the duration. Nothing-not physical objects, energy, or other spell effects can pass through the barrier, in or out, though a creature in the sphere can breathe there. The sphere is immune to all damage, and a creature or object inside can't be damaged by attacks or effects originating from outside, nor can a creature inside the sphere damage anything outside it. The sphere is weightless and just large enough to contain the creature or object inside. An enclosed creature can take an action to push against the sphere's walls and thus roll the sphere at up to half the creature's Speed. Similarly, the globe can be picked up and moved by other creatures. A Disintegrate spell targeting the globe destroys it without harming anything inside."
+    },
+    {
+      "name": "Vitriolic Sphere",
+      "ritual": false,
+      "casttime": "action",
+      "range": "150 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You point at a location within range, and a glowing, 1-foot- diameter ball of acid streaks there and explodes in a 20-foot-radius Sphere. Each creature in that area makes a Dexterity saving throw. On a failed save, a creature takes 10d4 Acid damage and another Sd4 Acid damage at the end of its next turn. On a successful save, a creature takes half the initial damage only."
+    },
+    {
+      "name": "Wall of Fire",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "You create a wall of fire on a solid surface within range. You can make the wall up to 60 feet long, 20 feet high, and 1 foot thick, or a ringed wall up to 20 feet in diameter, 20 feet high, and 1 foot thick. The wall is opaque and lasts for the duration. \n\nWhen the wall appears, each creature in its area makes a Dexterity saving throw, taking 5d8 Fire damage on a failed save or half as much damage on a successful one. \n\nOne side of the wall, selected by you when you cast this spell, deals 5d8 Fire damage to each creature that ends its turn within 10 feet of that side or inside the wall. A creature takes the same damage when it enters the wall for the first time on a turn or ends its turn there. The other side of the wall deals no damage."
+    },
+    {
+      "name": "Arcane Hand",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "You create a Large hand of shimmering magical energy in an unoccupied space that you can see within range. The hand lasts for the duration, and it moves at your command, mimicking the movements of your own hand. The hand is an object that has AC 20 and Hit Points equal to your Hit Point maximum. If it drops to 0 Hit Points, the spell ends. The hand doesn't occupy its space. When you cast the spell and as a Bonus Action on your later turns, you can move the hand up to 60 feet and then cause one of the following effects: \n\n**Clenched Fist.** The hand strikes a target within 5 feet of it. Make a melee spell attack. On a hit, the target takes 5d8 Force damage. Forceful Hand. The hand attempts to push a Huge or smaller creature within 5 feet of it. The target must succeed on a Strength saving throw, or the hand pushes the target up to 5 feet plus a number of feet equal to five times your spellcasting ability modifier. The hand moves with the target, remaining within 5 feet of it. \n\n**Grasping Hand.** The hand attempts to grapple a Huge or smaller creature within 5 feet of it. The target must succeed on a Dexterity saving throw, or the target has the Grappled condition, with an escape DC equal to your spell save DC. While the hand grapples the target, you can take a Bonus Action to cause the hand to crush it, dealing Bludgeoning damage to the target equal to 4d6 plus your spellcasting ability modifier. \n\n**Interposing Hand.** The hand grants you Half Cover against attacks and other effects that originate from its space or that pass through it. In addition, its space counts as Difficult Terrain for your enemies."
+    },
+    {
+      "name": "Cone of Cold",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You unleash a blast of cold air. Each creature in a 60-foot Cone originating from you makes a Constitution saving throw, taking 8d8 Cold damage on a failed save or half as much damage on a successful one. A creature killed by this spell becomes a frozen statue until it thaws."
+    },
+    {
+      "name": "Flame Strike",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "A vertical column of brilliant fire roars down from above. Each creature in a 10-foot-radius, 40-foot-high Cylinder centered on a point within range makes a Dexterity saving throw, taking 5d6 Fire damage and 5d6 Radiant damage on a failed save or half as much damage on a successful one."
+    },
+    {
+      "name": "Wall of Force",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S, M",
+      "duration": "up to 10 minutes",
+      "description": "An Invisible wall of force springs into existence at a point you choose within range. The wall appears in any orientation you choose, as a horizontal or vertical barrier or at an angle. It can be free floating or resting on a solid surface. You can form it into a hemispherical dome or a globe with a radius of up to 10 feet, or you can shape a flat surface made up of ten 10-foot-by-10-foot panels. Each panel must be contiguous with another panel. In any form, the wall is 1/4 inch thick and lasts for the duration. If the wall cuts through a creature's space when it appears, the creature is pushed to one side of the wall (you choose which side). \n\nNothing can physically pass through the wall. It is immune to all damage and can't be dispelled by Dispel Magic. A Disintegrate spell destroys the wall instantly, however. The wall also extends into the Ethereal Plane and blocks ethereal travel through the wall."
+    },
+    {
+      "name": "Wall of Stone",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S, M",
+      "duration": "up to 10 minutes",
+      "description": "A nonmagical wall of solid stone springs into existence at a point you choose within range. The wall is 6 inches thick and is composed of ten 10-foot-by-10-foot panels. Each panel must be contiguous with another panel. Alternatively, you can create 10- foot-by-20-foot panels that are only 3 inches thick. \n\nIf the wall cuts through a creature's space when it appears, the creature is pushed to one side of the wall (you choose which side). If a creature would be surrounded on all sides by the wall (or the wall and another solid surface), that creature can make a Dexterity saving throw. On a success, it can use its Reaction to move up to its Speed so that it is no longer enclosed by the wall.\n\nThe wall can have any shape you desire, though it can't occupy the same space as a creature or object. The wall doesn't need to be vertical or rest on a firm foundation. It must, however, merge with and be solidly supported by existing stone. Thus, you can use this spell to bridge a chasm or create a ramp. \n\nIf you create a span greater than 20 feet in length, you must halve the size of each panel to create supports. You can crudely shape the wall to create battlements and the like. \n\nThe wall is an object made of stone that can be damaged and thus breached. Each panel has AC 15 and 30 Hit Points per inch of thickness, and it has Immunity to Poison and Psychic damage. Reducing a panel to 0 Hit Points destroys it and might cause connected panels to collapse at the DM's discretion. \n\nIf you maintain your Concentration on this spell for its full duration, the wall becomes permanent and can't be dispelled. Otherwise, the wall disappears when the spell ends."
+    },
+    {
+      "name": "Blade Barrier",
+      "ritual": false,
+      "casttime": "action",
+      "range": "90 feet",
+      "components": "V, S",
+      "duration": "up to 10 minutes",
+      "description": "You create a wall of whirling blades made of magical energy. The wall appears within range and lasts for the duration. You make a straight wall up to 100 feet long, 20 feet high, and 5 feet thick, or a ringed wall up to 60 feet in diameter, 20 feet high, and 5 feet thick. The wall provides Three-Quarters Cover, and its space is Difficult Terrain. Any creature in the wall's space makes a Dexterity saving throw, taking 6d10 Force damage on a failed save or half as much damage on a successful one. A creature also makes that save if it enters the wall's space or ends it turn there. A creature makes that save only once per turn."
+    },
+    {
+      "name": "Chain Lightning",
+      "ritual": false,
+      "casttime": "action",
+      "range": "150 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You launch a lightning bolt toward a target you can see within range. Three bolts then leap from that target to as many as three other targets of your choice, each of which must be within 30 feet of the first target. A target can be a creature or an object and can be targeted by only one of the bolts. Each target makes a Dexterity saving throw, taking 10d8 Lightning damage on a failed save or half as much damage on a successful one."
+    },
+    {
+      "name": "Freezing Sphere",
+      "ritual": false,
+      "casttime": "action",
+      "range": "300 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "A frigid globe streaks from you to a point of your choice within range, where it explodes in a 60-foot-radius Sphere. Each creature in that area makes a Constitution saving throw, taking 10d6 Cold damage on failed save or half as much damage on a successful one.\n\nIf the globe strikes a body of water, it freezes the water to a depth of 6 inches over an area 30 feet square. This ice lasts for 1 minute. Creatures that were swimming on the surface of frozen water are trapped in the ice and have the Restrained condition. A trapped creature can take an action to make a Strength (Athletics) check against your spell save DC to break free.\n\nYou can refrain from firing the globe after completing the spell\u2019s casting. If you do so, a globe about the size of a sling bullet, cool to the touch, appears in your hand. At any time, you or a creature you give the globe to can throw the globe (to a range of 40 feet) or hurl it with a sling (to the sling\u2019s normal range). It shatters on impact, with the same effect as a normal casting of the spell. You can also set the globe down without shattering it. After 1 minute, if the globe hasn\u2019t already shattered, it explodes."
+    },
+    {
+      "name": "Sunbeam",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "You launch a sunbeam in a 5-foot-wide, 60-foot-long Line. Each creature in the Line makes a Constitution saving throw. On a failed save, a creature takes 6d8 Radiant damage and has the Blinded condition until the start of your next turn. On a successful save, it takes half as much damage only. \n\nUntil the spell ends, you can take a Magic action to create a new Line of radiance. \n\nFor the duration, a mote of brilliant radiance shines above you. It sheds Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. This light is sunlight."
+    },
+    {
+      "name": "Wall of Ice",
+      "ritual": false,
+      "casttime": "action",
+      "range": "120 feet",
+      "components": "V, S, M",
+      "duration": "up to 10 minutes",
+      "description": "You create a wall of ice on a solid surface within range. You can form it into a hemispherical dome or a globe with a radius of up to 10 feet, or you can shape a flat surface made up of ten 10-foot- square panels. Each panel must be contiguous with another panel. In any form, the wall is 1 foot thick and lasts for the duration. \n\nIf the wall cuts through a creature's space when it appears, the creature is pushed to one side of the wall (you choose which side) and makes a Dexterity saving throw, taking 10d6 Cold damage on a failed save or half as much damage on a successful one. \n\nThe wall is an object that can be damaged and thus breached. It has AC 12 and 30 Hit Points per 10-foot section, and it has Immunity to Cold, Poison, and Psychic damage and Vulnerability to Fire damage. Reducing a 10-foot section of wall to 0 Hit Points destroys it and leaves behind a sheet of frigid air in the space the wall occupied. \n\nA creature moving through the sheet of frigid air for the first time on a turn makes a Constitution saving throw, taking 5d6 Cold damage on a failed save or half as much damage on a successful one."
+    },
+    {
+      "name": "Arcane Sword",
+      "ritual": false,
+      "casttime": "action",
+      "range": "90 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "You create a spectral sword that hovers within range. It lasts for the duration. \n\nWhen the sword appears, you make a melee spell attack against a target within 5 feet of the sword. On a hit, the target takes Force damage equal to 4d12 plus your spellcasting ability modifier.\n\nOn your later turns, you can take a Bonus Action to move the sword up to 30 feet to a spot you can see and repeat the attack against the same target or a different one."
+    },
+    {
+      "name": "Delayed Blast Fireball",
+      "ritual": false,
+      "casttime": "action",
+      "range": "150 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "A beam of yellow light flashes from you, then condenses at a chosen point within range as a glowing bead for the duration. When the spell ends, the bead explodes, and each creature in a 20- foot-radius Sphere centered on that point makes a Dexterity saving throw. A creature takes Fire damage equal to the total accumulated damage on a failed save or half as much damage on a successful one. \n\nThe spell's base damage is 12d6, and the damage increases by 1d6 whenever your turn ends and the spell hasn't ended. If a creature touches the glowing bead before the spell ends, that creature makes a Dexterity saving throw. On a failed save, the spell ends, causing the bead to explode. \n\nOn a successful save, the creature can throw the bead up to 40 feet. If the thrown bead enters a creature's space or collides with a solid object, the spell ends, and the bead explodes. \n\nWhen the bead explodes, flammable objects in the explosion that aren't being worn or carried start burning."
+    },
+    {
+      "name": "Divine Word",
+      "ritual": false,
+      "casttime": "bonusAction",
+      "range": "30 feet",
+      "components": "V",
+      "duration": "Instantaneous",
+      "description": "You utter a word imbued with power from the Upper Planes. Each creature of your choice in range makes a Charisma saving throw. On a failed save, a target that has 50 Hit Points or fewer suffers an effect based on its current Hit Points, as shown in the Divine Word Effects table. Regardless of its Hit Points, a Celestial, an Elemental, a Fey, or a Fiend target that fails its save is forced back to its plane of origin (if it isn't there already) and can't return to the current plane for 24 hours by any means short of a Wish spell. \n\n| Hit Points | Effect                                                                   |\n| ---------- | ------------------------------------------------------------------------ |\n|            |                                                                          |\n| 0\u201320       | The target dies.                                                         |\n| 21\u201330      | The target has the Blinded, Deafened, and Stunned conditions for 1 hour. |\n| 31\u201340      | The target has the Blinded and Deafened conditions for 10 minutes.       |\n| 41\u201350      | The target has the Deafened condition for 1 minute                       |."
+    },
+    {
+      "name": "Fire Storm",
+      "ritual": false,
+      "casttime": "action",
+      "range": "150 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "A storm of fire appears within range. The area of the storm consists of up to ten 10-foot Cubes, which you arrange as you like. Each Cube must be contiguous with at least one other Cube. Each creature in the area makes a Dexterity saving throw, taking 7d10 Fire damage on a failed save or half as much damage on a successful one. \n\nFlammable objects in the area that aren't being worn or carried start burning."
+    },
+    {
+      "name": "Forcecage",
+      "ritual": false,
+      "casttime": "action",
+      "range": "100 feet",
+      "components": "V, S, M",
+      "duration": "1 hour",
+      "description": "An immobile, Invisible, Cube-shaped prison composed of magical force springs into existence around an area you choose within range. The prison can be a cage or a solid box, as you choose. A prison in the shape of a cage can be up to 20 feet on a side and is made from 1/2-inch diameter bars spaced 1/2 inch apart. A prison in the shape of a box can be up to 10 feet on a side, creating a solid barrier that prevents any matter from passing through it and blocking any spells cast into or out from the area. \n\nWhen you cast the spell, any creature that is completely inside the cage's area is trapped. Creatures only partially within the area, or those too large to fit inside it, are pushed away from the center of the area until they are completely outside it. \n\nA creature inside the cage can't leave it by nonmagical means. If the creature tries to use teleportation or interplanar travel to leave, it must first make a Charisma saving throw. On a successful save, the creature can use that magic to exit the cage. On a failed save, the creature doesn't exit the cage and wastes the spell or effect. The cage also extends into the Ethereal Plane, blocking ethereal travel. This spell can't be dispelled by Dispel Magic."
+    },
+    {
+      "name": "Prismatic Spray",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "Eight rays of light flash from you in a 60-foot Cone. Each creature in the Cone makes a Dexterity saving throw. For each target, roll 1d8 to determine which color ray affects it, consulting the Prismatic Rays table.\n\n1d8 Ray \n\n1     Red. Failed Save: 12d6 Fire damage. Successful Save: Half as much damage. \n\n2     Orange. Failed Save: 12d6 Acid damage. Successful Save: Half as much damage. \n\n3 Yellow. Failed Save: 12d6 Lightning damage. Successful Save: Half as much damage. \n\n4    Green. Failed Save: 12d6 Poison damage. Successful Save: Half as much damage. \n\n5    Blue. Failed Save: 12d6 Cold damage. Successful Save: Half as much damage. \n\n6    Indigo. Failed Save: The target has the Restrained condition and makes a Constitution saving throw at the end of each of its turns. If it successfully saves three times, the condition ends. If it fails three times, it has the Petrified condition until it is freed by an effect like the Greater Restoration spell. The successes and failures needn't be consecutive; keep track of both until the target collects three of a kind. \n\n7    Violet. Failed Save: The target has the Blinded condition and makes a Wisdom saving throw at the start of your next turn. On a Successful Save, the condition ends. On a Failed Save, the condition ends, and the creature teleports to another plane of existence (DM's choice). \n\n8    Special. The target is struck by two rays. Roll twice, rerolling any 8."
+    },
+    {
+      "name": "Sunburst",
+      "ritual": false,
+      "casttime": "action",
+      "range": "150 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "Brilliant sunlight flashes in a 60-foot-radius Sphere centered on a point you choose within range. Each creature in the Sphere makes a Constitution saving throw. On a failed save, a creature takes 12d6 Radiant damage and has the Blinded condition for 1 minute. On a successful save, it takes half as much damage only.\n\nA creature Blinded by this spell makes another Constitution saving throw at the end of each of its turns, ending the effect on itself on a success. \n\nThis spell dispels Darkness in its area that was created by any spell."
+    },
+    {
+      "name": "Meteor Swarm",
+      "ritual": false,
+      "casttime": "action",
+      "range": "1 mile",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "Blazing orbs of fire plummet to the ground at four different points you can see within range. Each creature in a 40-foot-radius Sphere centered on each of those points makes a Dexterity saving throw. A creature takes 20d6 Fire damage and 20d6 Bludgeoning damage on a failed save or half as much damage on a successful one. A creature in the area of more than one fiery Sphere is affected only once. \n\nA nonmagical object that isn't being worn or carried also takes the damage if it's in the spell's area, and the object starts burning if it's flammable."
+    }
+  ]
+}

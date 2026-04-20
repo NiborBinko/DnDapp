@@ -1,0 +1,310 @@
+{
+  "enchantment": [
+    {
+      "name": "Vicious Mockery",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V",
+      "duration": "Instantaneous",
+      "description": "You unleash a string of insults laced with subtle enchantments at one creature you can see or hear within range. The target must succeed on a Wisdom saving throw or take 1d6 Psychic damage and have Disadvantage on the next attack roll it makes before the end of its next turn."
+    },
+    {
+      "name": "Animal Friendship",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S, M",
+      "duration": "24 hours",
+      "description": "Target a Beast that you can see within range. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. If you or one of your allies deals damage to the target, the spells ends."
+    },
+    {
+      "name": "Bane",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "Up to three creatures of your choice that you can see within range must each make a Charisma saving throw. Whenever a target that fails this save makes an attack roll or a saving throw before the spell ends, the target must subtract 1d4 from the attack roll or save."
+    },
+    {
+      "name": "Bless",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save."
+    },
+    {
+      "name": "Charm Person",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S",
+      "duration": "1 hour",
+      "description": "One Humanoid you can see within range makes a Wisdom saving throw. It does so with Advantage if you or your allies are fighting it. On a failed save, the target has the Charmed condition until the spell ends or until you or your allies damage it. The Charmed creature is Friendly to you. When the spell ends, the target knows it was Charmed by you."
+    },
+    {
+      "name": "Command",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V",
+      "duration": "Instantaneous",
+      "description": "You speak a one-word command to a creature you can see within range. The target must succeed on a Wisdom saving throw or follow the command on its next turn. Choose the command from these options: \n\n**Approach.** The target moves toward you by the shortest and most direct route, ending its turn if it moves within 5 feet of you. \n\n**Drop.** The target drops whatever it is holding and then ends its turn. \n\n**Flee.** The target spends its turn moving away from you by the fastest available means. \n\nGrovel. The target has the Prone condition and then ends its turn. \n\n**Halt.** On its turn, the target doesn't move and takes no action or Bonus Action."
+    },
+    {
+      "name": "Dissonant Whispers",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V",
+      "duration": "Instantaneous",
+      "description": "One creature of your choice that you can see within range hears a discordant melody in its mind. The target makes a Wisdom saving throw. On a failed save, it takes 3d6 Psychic damage and must immediately use its Reaction, if available, to move as far away from you as it can, using the safest route. On a successful save, the target takes half as much damage only."
+    },
+    {
+      "name": "Heroism",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "A willing creature you touch is imbued with bravery. Until the spell ends, the creature is immune to the Frightened condition and gains Temporary Hit Points equal to your spellcasting ability modifier at the start of each of its turns."
+    },
+    {
+      "name": "Hex",
+      "ritual": false,
+      "casttime": "bonusAction",
+      "range": "90 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 hour",
+      "description": "You place a curse on a creature that you can see within range. Until the spell ends, you deal an extra 1d6 Necrotic damage to the target whenever you hit it with an attack roll. Also, choose one ability when you cast the spell. The target has Disadvantage on ability checks made with the chosen ability. \n\nIf the target drops to 0 Hit Points before this spell ends, you can use a Bonus Action on a later turn to curse a new creature."
+    },
+    {
+      "name": "Hideous Laughter",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "One creature of your choice that you can see within range makes a Wisdom saving throw. On a failed save, it has the Prone and Incapacitated conditions for the duration. During that time, it laughs uncontrollably if it's capable of laughter, and it can't end the Prone condition on it self. \n\nAt the end of each of its turns and each time it takes damage, it makes another Wisdom saving throw. The target has Advantage on the save if the save is triggered by damage. On a successful save, the spell ends."
+    },
+    {
+      "name": "Sleep",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "Each creature of your choice in a 5-foot-radius Sphere centered on a point within range must succeed on a Wisdom saving throw or have the Incapacitated condition until the end of its next turn, at which point it must repeat the save. If the target fails the second save, the target has the Unconscious condition for the duration. The spell ends on a target if it takes damage or someone within 5 feet of it takes an action to shake it out of the spell's effect.\n\nCreatures that don't sleep, such as elves, or that have Immunity to the Exhaustion condition automatically succeed on saves against this spell."
+    },
+    {
+      "name": "Animal Messenger",
+      "ritual": true,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S, M",
+      "duration": "24 hours",
+      "description": "A Tiny Beast of your choice that you can see within range must succeed on a Charisma saving throw, or it attempts to deliver a message for you (if the target's Challenge Rating isn't 0, it automatically succeeds). You specify a location you have visited and a recipient who matches a general description, such as \"a person dressed in the uniform of the town guard\" or \"a red-haired dwarf wearing a pointed hat.\" You also communicate a message of up to twenty-five words. The Beast travels for the duration toward the specified location, covering about 25 miles per 24 hours or 50 miles if the Beast can fly. When the Beast arrives, it delivers your message to the creature that you described, mimicking your communication. If the Beast doesn't reach its destination before the spell ends, the message is lost, and the Beast returns to where you cast the spell."
+    },
+    {
+      "name": "Calm Emotions",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "Each Humanoid in a 20-foot-radius Sphere centered on a point you choose within range must succeed on a Charisma saving throw or be affected by one of the following effects (choose for each creature): \n\n\u2022 The creature has Immunity to the Charmed and Frightened conditions until the spell ends. If the creature was already Charmed or Frightened, those conditions are suppressed for the duration. \n\n\u2022 The creature becomes Indifferent about creatures of your choice that it's Hostile toward. This indifference ends if the target takes damage or witnesses its allies taking damage. When the spell ends, the creature's attitude returns to normal."
+    },
+    {
+      "name": "Enthrall",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "You weave a distracting string of words, causing creatures of your choice that you can see within range to make a Wisdom saving throw. Any creature you or your companions are fighting automatically succeeds on this save. On a failed save, a target has a \u221210 penalty to Wisdom (Perception) checks and Passive Perception until the spell ends."
+    },
+    {
+      "name": "Hold Person",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "Choose a Humanoid that you can see within range. The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success."
+    },
+    {
+      "name": "Suggestion",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, M",
+      "duration": "up to 8 hours",
+      "description": "You suggest a course of activity\u2014described in no more than 25 words\u2014to one creature you can see within range that can hear and understand you. The suggestion must sound achievable and not involve anything that would obviously deal damage to the target or its allies. For example, you could say, \u201cFetch the key to the cult's treasure vault, and give the key to me.\u201d Or you could say, \u201cStop fighting, leave this library peacefully, and don't return.\u201d \n\nThe target must succeed on a Wisdom saving throw or have the Charmed condition for the duration or until you or your allies deal damage to the target. The Charmed target pursues the suggestion to the best of its ability. The suggested activity can continue for the entire duration, but if the suggested activity can be completed in a shorter time, the spell ends for the target upon completing it."
+    },
+    {
+      "name": "Zone of Truth",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "10 minutes",
+      "description": "You create a magical zone that guards against deception in a 15- foot-radius Sphere centered on a point within range. Until the spell ends, a creature that enters the spell's area for the first time on a turn or starts its turn there makes a Charisma saving throw. On a failed save, a creature can't speak a deliberate lie while in the radius. You know whether a creature succeeds or fails on this save. An affected creature is aware of the spell and can avoid answering questions to which it would normally respond with a lie. Such a creature can be evasive yet must be truthful."
+    },
+    {
+      "name": "Charm Monster",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S",
+      "duration": "1 hour",
+      "description": "One creature you can see within range makes a Wisdom saving throw. It does so with Advantage if you or your allies are fighting it. On a failed save, the target has the Charmed condition until the spell ends or until you or your allies damage it. The Charmed creature is Friendly to you. When the spell ends, the target knows it was Charmed by you."
+    },
+    {
+      "name": "Compulsion",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "Each creature of your choice that you can see within range must succeed on a Wisdom saving throw or have the Charmed condition until the spell ends. \n\nFor the duration, you can take a Bonus Action to designate a direction that is horizontal to you. Each Charmed target must use as much of its movement as possible to move in that direction on its next turn, taking the safest route. After moving in this way, a target repeats the save, ending the spell on itself on a success."
+    },
+    {
+      "name": "Confusion",
+      "ritual": false,
+      "casttime": "action",
+      "range": "90 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "Each creature in a 10-foot-radius Sphere centered on a point you choose within range must succeed on a Wisdom saving throw, or that target can't take Bonus Actions or Reactions and must roll 1d10 at the start of each of its turns to determine its behavior for that turn, consulting the table below. \n\n| **1d10** | **Behavior for the Turn**                                                                                                                                                      |\n| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| 1        | The target doesn't take an action, and it uses all its movement to move. Roll 1d4 for the direction: 1, north; 2, east; 3, south; or 4, west.                                  |\n| 2-6      | The target doesn't move or take actions.                                                                                                                                       |\n| 7-8      | The target doesn't move, and it takes the Attack action to make one melee attack against a random creature within reach. If none are within reach, the target takes no action. |\n| 9-10     | The target chooses its behavior.                                                                                                                                               |\n\nAt the end of each of its turns, an affected target repeats the save, ending the spell on itself on a success."
+    },
+    {
+      "name": "Dominate Beast",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "One Beast you can see within range must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target has Advantage on the save if you or your allies are fighting it. Whenever the target takes damage, it repeats the save, ending the spell on itself on a success. \n\nYou have a telepathic link with the Charmed target while the two of you are on the same plane of existence. On your turn, you can use this link to issue commands to the target (no action required), such as \"Attack that creature,\" \"Move over there,\" or \"Fetch that object.\" The target does its best to obey on its turn. If it completes an order and doesn't receive further direction from you, it acts and moves as it likes, focusing on protecting itself. \n\nYou can command the target to take a Reaction but must take your own Reaction to do so."
+    },
+    {
+      "name": "Dominate Person",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "One Humanoid you can see within range must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target has Advantage on the save if you or your allies are fighting it. Whenever the target takes damage, it repeats the save, ending the spell on itself on a success. \n\nYou have a telepathic link with the Charmed target while the two of you are on the same plane of existence. On your turn, you can use this link to issue commands to the target (no action required), such as \"Attack that creature,\" \"Move over there,\" or \"Fetch that object.\" The target does its best to obey on its turn. If it completes an order and doesn't receive further direction from you, it acts and moves as it likes, focusing on protecting itself. \n\nYou can command the target to take a Reaction but must take your own Reaction to do so."
+    },
+    {
+      "name": "Geas",
+      "ritual": false,
+      "casttime": "1 minute",
+      "range": "60 feet",
+      "components": "V",
+      "duration": "30 days",
+      "description": "You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target automatically succeeds if it can't understand your command. \n\nWhile Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your command. It takes this damage no more than once each day. \n\nYou can issue any command you choose, short of an activity that would result in certain death. Should you issue a suicidal command, the spell ends. \n\nA *Remove Curse, Greater Restoration,* or *Wish* spell ends this spell."
+    },
+    {
+      "name": "Hold Monster",
+      "ritual": false,
+      "casttime": "action",
+      "range": "90 feet",
+      "components": "V, S, M",
+      "duration": "up to 1 minute",
+      "description": "Choose a creature that you can see within range. The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success."
+    },
+    {
+      "name": "Modify Memory",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "You attempt to reshape another creature's memories. One creature that you can see within range makes a Wisdom saving throw. If you are fighting the creature, it has Advantage on the save. On a failed save, the target has the Charmed condition for the duration. While Charmed in this way, the target also has the Incapacitated condition and is unaware of its surroundings, though it can hear you. If it takes any damage or is targeted by another spell, this spell ends, and no memories are modified. \n\nWhile this charm lasts, you can affect the target's memory of an event that it experienced within the last 24 hours and that lasted no more than 10 minutes. You can permanently eliminate all memory of the event, allow the target to recall the event with perfect clarity, change its memory of the event's details, or create a memory of some other event. \n\nYou must speak to the target to describe how its memories are affected, and it must be able to understand your language for the modified memories to take root. Its mind fills in any gaps in the details of your description. If the spell ends before you finish describing the modified memories, the creature's memory isn't altered. Otherwise, the modified memories take hold when the spell ends. \n\nA modified memory doesn't necessarily affect how a creature behaves, particularly if the memory contradicts the creature's natural inclinations, alignment, or beliefs. An illogical modified memory, such as a false memory of how much the creature enjoyed swimming in acid, is dismissed as a bad dream. The DM might deem a modified memory too nonsensical to affect a creature. A Remove Curse or Greater Restoration spell cast on the target restores the creature's true memory."
+    },
+    {
+      "name": "Irresistible Dance",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V",
+      "duration": "up to 1 minute",
+      "description": "One creature that you can see within range must make a Wisdom saving throw. On a successful save, the target dances comically until the end of its next turn, during which it must spend all its movement to dance in place.\n\nOn a failed save, the target has the Charmed condition for the duration. While Charmed, the target dances comically, must use all its movement to dance in place, and has Disadvantage on Dexterity saving throws and attack rolls, and other creatures have Advantage on attack rolls against it. On each of its turns, the target can take an action to collect itself and repeat the save, ending the spell on itself on a success."
+    },
+    {
+      "name": "Mass Suggestion",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, M",
+      "duration": "24 hours",
+      "description": "You suggest a course of activity\u2014described in no more than 25 words\u2014to twelve or fewer creatures you can see within range that can hear and understand you. The suggestion must sound achievable and not involve anything that would obviously deal damage to any of the targets or their allies. For example, you could say, \u201cWalk to the village down that road, and help the villagers there harvest crops until sunset.\u201d Or you could say, \u201cNow is not the time for violence. Drop your weapons, and dance! Stop in an hour.\u201d Each target must succeed on a Wisdom saving throw or have the Charmed condition for the duration or until you or your allies deal damage to the target. Each Charmed target pursues the suggestion to the best of its ability. The suggested activity can continue for the entire duration, but if the suggested activity can be completed in a shorter time, the spell ends for a target upon completing it."
+    },
+    {
+      "name": "Antipathy/Sympathy",
+      "ritual": false,
+      "casttime": "1 hour",
+      "range": "60 feet",
+      "components": "V, S, M",
+      "duration": "10 days",
+      "description": "As you cast the spell, choose whether it creates antipathy or sympathy, and target one creature or object that is Huge or smaller. Then specify a kind of creature, such as red dragons, goblins, or vampires. A creature of the chosen kind makes a Wisdom saving throw when it comes within 120 feet of the target. Your choice of antipathy or sympathy determines what happens to a creature when it fails that save: \n\n**Antipathy.** The creature has the Frightened condition. The Frightened creature must use its movement on its turns to get as far away as possible from the target, moving by the safest route. \n\n**Sympathy.** The creature has the Charmed condition. The Charmed creature must use its movement on its turns to get as close as possible to the target, moving by the safest route. If the creature is within 5 feet of the target, the creature can't willingly move away. If the target damages the Charmed creature, that creature can make a Wisdom saving throw to end the effect, as described below. \n\n**Ending the Effect.** If the Frightened or Charmed creature ends its turn more than 120 feet away from the target, the creature makes a Wisdom saving throw. On a successful save, the creature is no longer affected by the target. A creature that successfully saves against this effect is immune to it for 1 minute, after which it can be affected again."
+    },
+    {
+      "name": "Befuddlement",
+      "ritual": false,
+      "casttime": "action",
+      "range": "150 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You blast the mind of a creature that you can see within range. The target makes an Intelligence saving throw.\n\nOn a failed save, the target takes 10d12 Psychic damage and can\u2019t cast spells or take the Magic action. At the end of every 30 days, the target repeats the save, ending the effect on a success. The effect can also be ended by the Greater Restoration, Heal, or Wish spell. On a successful save, the target takes half as much damage only."
+    },
+    {
+      "name": "Dominate Monster",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "up to 1 hour",
+      "description": "One creature you can see within range must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target has Advantage on the save if you or your allies are fighting it. Whenever the target takes damage, it repeats the save, ending the spell on itself on a success. \n\nYou have a telepathic link with the Charmed target while the two of you are on the same plane of existence. On your turn, you can use this link to issue commands to the target (no action required), such as \"Attack that creature,\" \"Move over there,\" or \"Fetch that object.\" The target does its best to obey on its turn. If it completes an order and doesn't receive further direction from you, it acts and moves as it likes, focusing on protecting itself. \n\nYou can command the target to take a Reaction but must take your own Reaction to do so."
+    },
+    {
+      "name": "Glibness",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V",
+      "duration": "1 hour",
+      "description": "Until the spell ends, when you make a Charisma check, you can replace the number you roll with a 15. Additionally, no matter what you say, magic that would determine if you are telling the truth indicates that you are being truthful."
+    },
+    {
+      "name": "Power Word Stun",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V",
+      "duration": "Instantaneous",
+      "description": "You overwhelm the mind of one creature you can see within range. If the target has 150 Hit Points or fewer, it has the Stunned condition. Otherwise, its Speed is 0 until the start of your next turn. \n\nThe Stunned target makes a Constitution saving throw at the end of each of its turns, ending the condition on itself on a success."
+    },
+    {
+      "name": "Power Word Heal",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V",
+      "duration": "Instantaneous",
+      "description": "A wave of healing energy washes over one creature you can see within range. The target regains all its Hit Points. If the creature has the Charmed, Frightened, Paralyzed, Poisoned, or Stunned condition, the condition ends. If the creature has the Prone condition, it can use its Reaction to stand up."
+    },
+    {
+      "name": "Power Word Kill",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V",
+      "duration": "Instantaneous",
+      "description": "You compel one creature you can see within range to die. If the target has 100 Hit Points or fewer, it dies. Otherwise, it takes 12d12 Psychic damage."
+    }
+  ]
+}

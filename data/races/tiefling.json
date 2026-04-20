@@ -1,0 +1,19 @@
+{
+ "id": "tiefling",
+ "name": "Tiefling",
+ "desc": "Fiendish heritage",
+ "size": "Medium",
+ "speed": 30,
+ "languages": [
+  "Common",
+  "Infernal"
+ ],
+ "bonuses": {
+  "charisma": 2,
+  "intelligence": 1
+ },
+ "raceAbilities": [
+  "Darkvision",
+  "Hellish Resistance"
+ ]
+}

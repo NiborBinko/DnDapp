@@ -1,0 +1,98 @@
+{
+ "id": "warlock",
+ "name": "Warlock",
+ "primaryStat": "charisma",
+ "desc": "Pact-bound casters",
+ "hitDie": 8,
+ "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},
+ "multiclassRequirement": { "stat": "charisma", "min": 13 },
+ "proficiencies": {
+  "armor": ["light"],
+  "weapons": ["simple weapons"],
+  "tools": [],
+  "savingThrows": ["wisdom", "charisma"],
+  "skills": {
+   "count": 2,
+   "options": [
+    {"name": "Arcana"},
+    {"name": "Deception"},
+    {"name": "History"},
+    {"name": "Intimidation"},
+    {"name": "Investigation"},
+    {"name": "Nature"},
+    {"name": "Religion"}]
+  }
+ },
+ "features": {
+  "1": { "features": ["Pact Magic"], 
+        "options": [
+        {"id": "archfey", "name": "The Archfey", "exclusiveGroup": "Otherworldly Patron"},
+        {"id": "fiend", "name": "The Fiend", "exclusiveGroup": "Otherworldly Patron"},
+        {"id": "greatOldOne", "name": "The Great Old One", "exclusiveGroup": "Otherworldly Patron"}] 
+    },
+  "2": { "features": ["Eldritch Invocations"], "options": [] },
+  "3": { "features": [], 
+        "options": [
+        {"id": "chain", "name": "Pact of the Chain", "exclusiveGroup": "Pact Boon"},
+        {"id": "blade", "name": "Pact of the Blade", "exclusiveGroup": "Pact Boon"},
+        {"id": "tome", "name": "Pact of the Tome", "exclusiveGroup": "Pact Boon"}] 
+    },
+  "4": { "features": ["Ability Score Improvement"], "options": [] },
+  "5": { "features": [], "options": [] },
+  "6": { "features": ["Otherworldly Patron Feature"], "options": [] },
+  "7": { "features": [], "options": [] },
+  "8": { "features": ["Ability Score Improvement"], "options": [] },
+  "9": { "features": [], "options": [] },
+  "10": { "features": ["Otherworldly Patron Feature"], "options": [] },
+  "11": { "features": ["Mystic Arcanum (6th level)"], "options": [] },
+  "12": { "features": ["Ability Score Improvement"], "options": [] },
+  "13": { "features": ["Mystic Arcanum (7th level)"], "options": [] },
+  "14": { "features": ["Otherworldly Patron Feature"], "options": [] },
+  "15": { "features": ["Mystic Arcanum (8th level)"], "options": [] },
+  "16": { "features": ["Ability Score Improvement"], "options": [] },
+  "17": { "features": ["Mystic Arcanum (9th level)"], "options": [] },
+  "18": { "features": [], "options": [] },
+  "19": { "features": ["Ability Score Improvement"], "options": [] },
+  "20": { "features": ["Eldritch Master"], "options": [] }
+ },
+ "spellSlotTable": {
+  "1": {"1": 1},
+  "2": {"1": 2},
+  "3": {"3": 2},
+  "4": {"3": 2},
+  "5": {"4": 2},
+  "6": {"4": 2},
+  "7": {"5": 2},
+  "8": {"5": 2},
+  "9": {"5": 2},
+  "10": {"5": 2},
+  "11": {"5": 3},
+  "12": {"5": 3},
+  "13": {"5": 3},
+  "14": {"5": 3},
+  "15": {"5": 3},
+  "16": {"5": 3},
+  "17": {"5": 4},
+  "18": {"5": 4},
+  "19": {"5": 4},
+  "20": {"5": 4}
+ },
+ "cantrips known":{
+  "1": 2, "2": 2, "3": 2, "4": 3, "5": 3, "6": 3, "7": 3, "8": 3, "9": 3, "10": 4, "11": 4, "12": 4, "13": 4, "14": 4, "15": 4, "16": 4, "17": 4, "18": 4, "19": 4, "20": 4 
+ },
+ "spells known":{
+  "1": 2, "2": 3, "3": 4, "4": 5, "5": 6, "6": 7, "7": 8, "8": 9, "9": 10, "10": 10, "11": 11, "12": 11, "13": 12, "14": 12, "15": 13, "16": 13, "17": 14, "18": 14, "19": 15, "20": 15 
+ },
+ "spellList": {
+    "0": ["Blade Ward", "Chill Touch", "Eldritch Blast", "Friends", "Mage Hand", "Minor Illusion", "Poison Spray", "Prestidigitation", "True Strike"],
+    "1": ["Armor of Agathys", "Arms of Hadar", "Charm Person", "Comprehend Languages", "Expeditious Retreat", "Hellish Rebuke", "Hex", "Illusory Script", "Protection from Evil and Good", "Unseen Servant", "Witch Bolt"],
+    "2": ["Cloud of Daggers", "Crown of Madness", "Darkness", "Enthrall", "Hold Person", "Invisibility", "Mirror Image", "Misty Step", "Ray of Enfeeblement", "Shatter", "Spider Climb", "Suggestion"],
+    "3": ["Counterspell", "Dispel Magic", "Fear", "Fly", "Gaseous Form", "Hunger of Hadar", "Hypnotic Pattern", "Magic Circle", "Major Image", "Remove Curse", "Tongues", "Vampiric Touch"],
+    "4": ["Banishment", "Blight", "Dimension Door", "Hallucinatory Terrain"],
+    "5": ["Contact Other Plane", "Dream", "Hold Monster", "Scrying"],
+    "6": ["Arcane Gate", "Circle of Death", "Conjure Fey", "Create Undead", "Eyebite", "Flesh to Stone", "Mass Suggestion", "True Seeing"],
+    "7": ["Etherealness", "Finger of Death", "Forcecage", "Plane Shift"],
+    "8": ["Derniplane", "Dominate Monster", "Feeblemind", "Glibness", "Power Word Stun"],
+    "9": ["Astral Projection", "Foresight", "Imprisonment", "Power Word Kill", "True Polymorph"]
+  }
+}

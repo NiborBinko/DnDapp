@@ -1,158 +1,111 @@
-function init() {
-    // NOTE: When adding new classes, add the ID here AND create classes/[id].json
-    const classIds = ['fighter', 'wizard', 'rogue', 'cleric', 'ranger', 'barbarian', 'paladin', 'bard', 'druid', 'monk', 'sorcerer', 'warlock'];
-    const classFiles = classIds.map(id => fetch(`classes/${id}.json`));
-    
-    // NOTE: When adding new races, add the ID here AND create races/[id].json
-    const raceIds = ['human', 'elf', 'dwarf', 'halfling', 'dragonborn', 'gnome', 'halfelf', 'halforc', 'tiefling'];
-    const raceFiles = raceIds.map(id => fetch(`races/${id}.json`));
-    
-    const classCount = classIds.length;
-    const raceCount = raceIds.length;
-    
-    // Load description and effect files
-    // Each file serves a specific purpose:
-    // - statLabels.json: Abbreviations (STR, DEX, etc.)
-    // - descriptions/stats.json: What each stat does
-    // - descriptions/feats.json: Descriptions of all feats
-    // - descriptions/race-abilities.json: Descriptions of racial traits
-    // - descriptions/class-abilities.json: Descriptions of class features
-    // - descriptions/class-options.json: Descriptions of archetypes, fighting styles, etc.
-    // - effects/race-effects.json: What each race ability affects (proficiencies, stat bonuses, etc.)
-    // - effects/class-effects.json: What each class feature affects (resources, dice pools, etc.)
-    // - effects/class-option-effects.json: What each archetype/style affects
-    // - effects/feat-effects.json: Prerequisites for feats
-    // - descriptions/proficiencies.json: Descriptions of armor, weapons, tools
-    // - dnd-spell-lists.json: Spell lists by class
-    // - js/domain/spells.json: Spell data
-    const otherFiles = [
-        fetch('statLabels.json'),
-        fetch('descriptions/stats.json'),
-        fetch('descriptions/feats.json'),
-        fetch('descriptions/race-abilities.json'),
-        fetch('descriptions/class-abilities.json'),
-        fetch('descriptions/class-options.json'),
-        fetch('effects/race-effects.json'),
-        fetch('effects/class-effects.json'),
-        fetch('effects/class-option-effects.json'),
-        fetch('effects/feat-effects.json'),
-        fetch('descriptions/proficiencies.json'),
-        fetch('dnd-spell-lists.json'),
-        fetch('js/domain/spells.json')
-    ];
-    
-    Promise.all([...classFiles, ...raceFiles, ...otherFiles])
-        .then((responses) => {
-            const classResponses = responses.slice(0, classCount);
-            const raceResponses = responses.slice(classCount, classCount + raceCount);
-            const otherResponses = responses.slice(classCount + raceCount);
-            
-            return Promise.all([
-                ...classResponses.map(r => r.json()),
-                ...raceResponses.map(r => r.json()),
-                otherResponses[0].json(), // statLabels
-                otherResponses[1].json(), // stats
-                otherResponses[2].json(), // feats
-                otherResponses[3].json(), // race abilities
-                otherResponses[4].json(), // class abilities
-                otherResponses[5].json(), // class options
-                otherResponses[6].json(), // race effects
-                otherResponses[7].json(), // class effects
-                otherResponses[8].json(), // class option effects
-                otherResponses[9].json(), // proficiencies
-                otherResponses[10].json(), // spell lists
-                otherResponses[11].json()  // spell data
-            ]);
-        })
-        .then((results) => {
-            const classes = results.slice(0, classCount);
-            const races = results.slice(classCount, classCount + raceCount);
-            const statLabels = results[classCount + raceCount];
-            const stats = results[classCount + raceCount + 1];
-            const feats = results[classCount + raceCount + 2];
-            const raceAbilitiesDesc = results[classCount + raceCount + 3];
-            const classAbilities = results[classCount + raceCount + 4];
-            const classOptions = results[classCount + raceCount + 5];
-            const raceEffects = results[classCount + raceCount + 6];
-            const classEffects = results[classCount + raceCount + 7];
-            const classOptionEffects = results[classCount + raceCount + 8];
-            const featEffects = results[classCount + raceCount + 9];
-            const profDesc = results[classCount + raceCount + 10];
-            const spellLists = results[classCount + raceCount + 11];
-            const spellData = results[classCount + raceCount + 12];
-            
-            // Extract subraces from race files for backward compatibility
-            const subraces = {};
-            races.forEach(race => {
-                if (race.subraces) {
-                    subraces[race.id] = Object.keys(race.subraces).map(name => ({name, ...race.subraces[name]}));
-                }
-            });
-            
-            // Combine data into DnDState format
-            const gameData = {
-                classes: classes,
-                races: races,
-                subraces: subraces,
-                feats: Object.keys(feats),
-                statLabels: statLabels
-            };
-            
-            // Make descriptions available globally
-            window.gameDescriptions = {
-                stats: stats,
-                feats: feats,
-                raceAbilities: raceAbilitiesDesc,
-                classAbilities: classAbilities,
-                classOptions: classOptions,
-                raceEffects: raceEffects,
-                classEffects: classEffects,
-                classOptionEffects: classOptionEffects,
-                featEffects: featEffects,
-                proficiencies: profDesc,
-                skills: profDesc.skills || {},
-                armor: profDesc.armor || {},
-                weapons: profDesc.weapons || {},
-                tools: profDesc.tools || {},
-                savingThrows: profDesc.savingThrows || {},
-                mastery: profDesc.mastery || {},
-                statLabels: statLabels
-            };
-            
-            DnDState.init(gameData);
-            SpellManager.init(spellData, spellLists);
-            
-            // Initialize AbilitySystem with description data
-            AbilitySystem.init(raceAbilitiesDesc, raceEffects, profDesc);
-            
-            initializeApp();
-        })
-        .catch(error => {
-            console.error('Error loading data:', error);
-            alert('Failed to load game data. Please ensure all required files exist.');
-        });
+/**
+ * Main application initialization
+ */
+async function initApp() {
+    try {
+        await loadAllGameData();
+        await loadAllDescriptions();
+        initTooltips();
+        initializeUI();
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
 
-function initializeApp() {
-    renderClasses();
-    renderRaces();
-    renderProficiencies();
-    renderAbilities();
-    renderFeats();
-    renderSavedCharacters();
-    
-    const delModal = document.getElementById('modal-confirm-delete');
-    if (delModal) {
-        delModal.addEventListener('click', () => {
-            const idx = DnDState.ui.deleteCharacterIndex;
-            if (idx !== null) {
-                deleteCharacterAtIndex(idx);
+function initializeUI() {
+    navigateToStage(0);
+    setupEventListeners();
+    renderSavedCharactersList();
+}
+
+function setupEventListeners() {
+    const deleteBtn = document.getElementById('modal-confirm-delete');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function() {
+            if (UIState.deleteCharacterIndex !== null) {
+                deleteCharacter(UIState.deleteCharacterIndex);
+                closeDeleteModal();
+                renderSavedCharactersList();
             }
-            closeDeleteModal();
         });
     }
     
-    showStep(0);
+    const newCharBtn = document.getElementById('btn-new-char');
+    if (newCharBtn) {
+        newCharBtn.addEventListener('click', startNewCharacter);
+    }
 }
 
-init();
+function startNewCharacter() {
+    resetUIState();
+    userSelection = resetUserSelection();
+    characterSheet = getDefaultSheet();
+    navigateToStage(1);  // Go to Choose Race step
+}
+
+function getDefaultSheet() {
+    return {
+        name: '', lvl: 1, race: '', subrace: '', class: '', subclass: '',
+        stats: { strength: 8, dexterity: 8, constitution: 8, intelligence: 8, wisdom: 8, charisma: 8 },
+        statModifiers: { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 },
+        maxHp: 10, currentHp: 10, speed: 30, armorClass: 10, initiative: 0,
+        vision: { nightvision: null, dayvision: null },
+        proficiencies: { skills: [], weapons: [], armor: [], tools: [], savingThrows: [] },
+        expertises: [], languages: [], features: [], feats: [],
+        spellcastingAbility: null, spellSaveDC: 0, spellAttackMod: 0, spellPreparationType: null,
+        spellbookSpells: [], knownCantrips: [], knownSpells: [], preparedSpells: [],
+        spellSlots: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 },
+        maxCantripsKnown: 0, maxSpellsKnown: 0, ritualSpells: []
+    };
+}
+
+// Event handlers
+function handleRaceSelect(raceId) { userSelection.race = raceId; userSelection.subrace = null; triggerRecalc(RECALC_FLAGS.RACE_CHANGED); renderChooseRace(); refreshDebugIfOpen(); }
+function handleSubraceSelect(subraceId) { userSelection.subrace = subraceId; triggerRecalc(RECALC_FLAGS.SUBCLASS_CHANGED); renderChooseRace(); refreshDebugIfOpen(); }
+function handleClassSelect(classId) { userSelection.class = classId; userSelection.subclass = null; triggerRecalc(RECALC_FLAGS.CLASS_CHANGED); renderChooseClass(); refreshDebugIfOpen(); }
+function updateLevel(level) { userSelection.lvl = parseInt(level) || 1; triggerRecalc(RECALC_FLAGS.LEVEL_CHANGED); renderAbilityScores(); refreshDebugIfOpen(); }
+function adjustStat(stat, delta) {
+    const currentValue = userSelection.stats[stat] || 8;
+    const cost = getStatCost(currentValue);
+    if (delta > 0 && UIState.pointsRemaining >= cost) { userSelection.stats[stat] = currentValue + delta; UIState.pointsRemaining -= cost; }
+    else if (delta < 0 && currentValue > 8) { userSelection.stats[stat] = currentValue + delta; UIState.pointsRemaining += getStatCost(currentValue - 1); }
+    triggerRecalc(RECALC_FLAGS.STAT_CHANGED);
+    renderAbilityScores();
+    refreshDebugIfOpen();
+}
+function getStatCost(currentValue) { return currentValue >= 13 ? 2 : 1; }
+function toggleSkill(skillName) {
+    const idx = userSelection.selectedSkills.indexOf(skillName);
+    if (idx > -1) userSelection.selectedSkills.splice(idx, 1);
+    else if (userSelection.selectedSkills.length < getMaxSkillProficiencies()) userSelection.selectedSkills.push(skillName);
+    renderProficienciesStage();
+    refreshDebugIfOpen();
+}
+function selectClassOption(groupName, optionId) { userSelection.selectedFeatureChoices[groupName] = optionId; triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED); renderFeaturesFeats(); refreshDebugIfOpen(); }
+function toggleFeat(featName) {
+    const idx = userSelection.feats.indexOf(featName);
+    if (idx > -1) userSelection.feats.splice(idx, 1);
+    else if (userSelection.feats.length < Math.floor(userSelection.lvl / 4)) userSelection.feats.push(featName);
+    triggerRecalc(RECALC_FLAGS.FEAT_CHANGED);
+    renderFeaturesFeats();
+    refreshDebugIfOpen();
+}
+function viewCharacter(index) { const char = loadCharacter(index); if (char) { navigateToStage(7); renderOverview(); } }
+function confirmDelete(index) { UIState.deleteCharacterIndex = index; document.getElementById('delete-char-name').textContent = (getSavedCharacter(index) || {}).name || ''; document.getElementById('delete-confirm-modal').style.display = 'flex'; }
+function closeDeleteModal() { document.getElementById('delete-confirm-modal').style.display = 'none'; UIState.deleteCharacterIndex = null; }
+
+window.handleRaceSelect = handleRaceSelect;
+window.handleSubraceSelect = handleSubraceSelect;
+window.handleClassSelect = handleClassSelect;
+window.updateLevel = updateLevel;
+window.adjustStat = adjustStat;
+window.toggleSkill = toggleSkill;
+window.selectClassOption = selectClassOption;
+window.toggleFeat = toggleFeat;
+window.viewCharacter = viewCharacter;
+window.confirmDelete = confirmDelete;
+window.closeDeleteModal = closeDeleteModal;
+window.startNewCharacter = startNewCharacter;
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp);
+else initApp();

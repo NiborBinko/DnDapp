@@ -3,134 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DnD Character Creator</title>
+    <title>NewDND Character Creator</title>
     <link rel="stylesheet" href="css/theme.css">
 </head>
 <body>
     <div class="container">
-        <h1>⚔️ DnD Character Creator</h1>
+        <h1>⚔️ NewDND Character Creator</h1>
         
-        <!-- Step 1: Class Selection -->
-        <div class="step active" id="step-class">
-            <h2 class="step-title">Step 1: Choose Your Class</h2>
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 10px;">Starting Level:</label>
-                <input type="number" id="starting-level" min="1" max="20" value="1" style="max-width: 100px;" onchange="updateStartingLevel(this.value)" oninput="updateStartingLevel(this.value)">
-            </div>
-            <div class="grid" id="class-grid"></div>
+        <!-- Debug Dropdown -->
+        <button class="debug-toggle" onclick="toggleDebugDropdown()">🔧 Debug</button>
+        <div id="debug-container" class="debug-container"></div>
+        
+        <!-- Step 0: Welcome / Saved Characters -->
+        <div class="step active" id="step-welcome">
+            <h2 class="step-title">Welcome</h2>
+            <p>Create a new character or continue with an existing one.</p>
+            <div id="character-list"></div>
             <div class="nav">
-                <button class="btn-primary" onclick="nextStep()" id="class-next" disabled>Next</button>
+                <button class="btn-primary" id="btn-new-char" onclick="startNewCharacter()">Create New Character</button>
             </div>
         </div>
         
-        <!-- Step 2: Race Selection -->
-        <div class="step" id="step-race">
-            <h2 class="step-title">Step 2: Choose Your Race</h2>
+        <!-- Step 1: Choose Race -->
+        <div class="step" id="step-choose-race">
+            <h2 class="step-title">Step 1: Choose Your Race</h2>
             <div class="grid" id="race-grid"></div>
-            <div id="race-traits-section" style="display: none; margin-top: 20px;">
-                <h3 style="margin-bottom: 10px;">Race Traits</h3>
-                <div id="race-traits-list" style="background: var(--card-bg); padding: 15px; border-radius: 8px;"></div>
-            </div>
             <div id="subrace-section" style="display:none; margin-top: 20px;">
-                <h3 style="margin-bottom: 15px;">Choose Subrace</h3>
+                <h3>Choose Subrace</h3>
                 <div class="grid" id="subrace-grid"></div>
             </div>
             <div class="nav">
-                <button class="btn-secondary" onclick="prevStep()">Back</button>
-                <button class="btn-primary" onclick="nextStep()" id="race-next" disabled>Next</button>
+                <button class="btn-secondary" onclick="prevStage()">Back</button>
+                <button class="btn-primary" onclick="nextStage()" id="btn-choose-race-next" disabled>Next</button>
             </div>
         </div>
         
-        <!-- Step 3: Point Buy -->
-        <div class="step" id="step-stats">
+        <!-- Step 2: Choose Class -->
+        <div class="step" id="step-choose-class">
+            <h2 class="step-title">Step 2: Choose Your Class</h2>
+            <div style="margin-bottom: 20px;">
+                <label>Starting Level:</label>
+                <input type="number" id="starting-level" min="1" max="20" value="1" 
+                       style="max-width: 100px;" onchange="updateLevel(this.value)">
+            </div>
+            <div class="grid" id="class-grid"></div>
+            <div class="nav">
+                <button class="btn-secondary" onclick="prevStage()">Back</button>
+                <button class="btn-primary" onclick="nextStage()" id="btn-choose-class-next" disabled>Next</button>
+            </div>
+        </div>
+        
+        <!-- Step 3: Ability Scores -->
+        <div class="step" id="step-ability-scores">
             <h2 class="step-title">Step 3: Allocate Stats</h2>
             <p style="color: var(--text-muted); margin-bottom: 15px;">
-                All stats start at 8. You have 27 points to spend. Higher stats cost more points:
-                8→9 (1pt), 9→10 (1pt), 10→11 (1pt), 11→12 (1pt), 12→13 (1pt), 13→14 (2pts), 14→15 (2pts).<br><br>
-                <strong>Race bonuses</strong> (shown in green) are added AFTER point buy and don't cost points. If your race gives a bonus, you can raise that stat to 16 instead of 15.<br><br>
-                The <strong>yellow number</strong> is your modifier - it affects dice rolls. For example, a +3 modifier means you add 3 to any roll using that stat.
+                All stats start at 8. You have 27 points to spend.<br>
+                Higher stats cost more: 8→14 (1pt each), 14→15 (2pts).<br>
+                <strong>Race bonuses</strong> (shown in green) are added AFTER point buy.
             </p>
-            <div class="points-remaining">Points remaining: <span id="points-remaining">27</span></div>
+            <div class="points-remaining">Points: <span id="points-remaining">27</span></div>
             <div id="stats-container"></div>
             <div class="nav">
-                <button class="btn-secondary" onclick="prevStep()">Back</button>
-                <button class="btn-primary" onclick="nextStep()" id="stats-next" disabled>Next</button>
-</div>
+                <button class="btn-secondary" onclick="prevStage()">Back</button>
+                <button class="btn-primary" onclick="nextStage()" id="btn-ability-scores-next" disabled>Next</button>
+            </div>
         </div>
-         
-        <!-- Step 4: Abilities & Feats (NOW FIRST) -->
-        <div class="step" id="step-abilities">
-            <h2 class="step-title">Step 4: Abilities & Feats</h2>
+        
+        <!-- Step 4: Proficiencies -->
+        <div class="step" id="step-proficiencies">
+            <h2 class="step-title">Step 4: Choose Proficiencies</h2>
+            <p style="color: var(--text-muted);">Select your skill proficiencies.</p>
+            <div id="proficiencies-grid"></div>
+            <p id="prof-count" style="color: var(--text-muted);">0 selected</p>
+            <div class="nav">
+                <button class="btn-secondary" onclick="prevStage()">Back</button>
+                <button class="btn-primary" onclick="nextStage()">Next</button>
+            </div>
+        </div>
+        
+        <!-- Step 5: Features & Feats -->
+        <div class="step" id="step-features-feats">
+            <h2 class="step-title">Step 5: Features & Feats</h2>
             
+            <h3 style="margin: 20px 0 10px;">Your Abilities</h3>
             <div id="abilities-grid"></div>
             
             <h3 style="margin: 30px 0 10px;">Feats</h3>
-            <p id="feats-note" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;"></p>
+            <p id="feats-note" style="color: var(--text-muted); font-size: 0.9rem;"></p>
             <div class="checkbox-grid" id="feats-grid"></div>
             
             <div class="nav">
-                <button class="btn-secondary" onclick="prevStep()">Back</button>
-                <button class="btn-primary" onclick="nextStep()" id="abilities-next">Next</button>
+                <button class="btn-secondary" onclick="prevStage()">Back</button>
+                <button class="btn-primary" onclick="nextStage()">Next</button>
             </div>
         </div>
         
-        <!-- Step 5: Proficiencies (NOW SECOND) -->
-        <div class="step" id="step-proficiencies">
-            <h2 class="step-title">Step 5: Choose Proficiencies</h2>
-            <p id="proficiency-instruction" style="display: none;"></p>
-            <div id="proficiencies-grid"></div>
-            <p id="prof-count" style="color: var(--text-muted); margin-top: 10px;">0 selected</p>
-            <div class="nav">
-                <button class="btn-secondary" onclick="prevStep()">Back</button>
-                <button class="btn-primary" onclick="nextStep()">Next</button>
-            </div>
-        </div>
-        
-        <!-- Step 6: Spell Selection -->
+        <!-- Step 6: Spells -->
         <div class="step" id="step-spells">
-            <h2 class="step-title">Step 6: Spell Selection</h2>
+            <h2 class="step-title">Step 6: Choose Spells</h2>
             <p id="spellcaster-message" style="color: var(--text-muted); display: none;"></p>
-            <div id="spells-container">
-                <div id="spell-selection-info" style="margin-bottom: 15px; padding: 10px; background: var(--card-bg); border-radius: 8px;"></div>
-                <div id="spells-grid"></div>
-            </div>
+            <div id="spell-selection-info" style="margin-bottom: 15px; padding: 10px; background: var(--card-bg); border-radius: 8px; display: none;"></div>
+            <div id="spells-grid"></div>
             <div class="nav">
-                <button class="btn-secondary" onclick="prevStep()">Back</button>
-                <button class="btn-primary" onclick="nextStep()" id="spells-next">Next</button>
+                <button class="btn-secondary" onclick="prevStage()">Back</button>
+                <button class="btn-primary" onclick="nextStage()">Next</button>
             </div>
         </div>
         
-        <!-- Step 7: Summary -->
-        <div class="step" id="step-summary">
+        <!-- Step 7: Overview -->
+        <div class="step" id="step-overview">
             <h2 class="step-title">Step 7: Character Summary</h2>
             <input type="text" id="char-name" placeholder="Character Name" style="max-width: 300px;">
             <div class="summary" id="summary-content"></div>
             <div class="nav">
-                <button class="btn-secondary" onclick="prevStep()">Back</button>
+                <button class="btn-secondary" onclick="prevStage()">Back</button>
                 <button class="btn-primary" onclick="saveCharacter()">Save Character</button>
-            </div>
-        </div>
-        
-        <!-- Saved Characters -->
-        <div class="step" id="step-saved">
-            <h2 class="step-title">Saved Characters</h2>
-            <div id="character-list"></div>
-            <div class="nav">
-                <button class="btn-primary" onclick="startNew()">Create New Character</button>
-            </div>
-        </div>
-        
-        <!-- Character Sheet Modal -->
-        <div class="modal" id="character-sheet-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="sheet-name">Character Name</h2>
-                    <button class="modal-close" onclick="closeCharacterSheet()">&times;</button>
-                </div>
-                <div class="modal-body" id="sheet-content"></div>
-                <div class="modal-footer">
-                    <button class="btn-secondary" onclick="closeCharacterSheet()">Close</button>
-                </div>
             </div>
         </div>
         
@@ -142,8 +129,8 @@
                     <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete <strong id="delete-char-name"></strong>?</p>
-                    <p style="color: var(--text-muted); margin-top: 10px;">This action cannot be undone.</p>
+                    <p>Delete <strong id="delete-char-name"></strong>?</p>
+                    <p style="color: var(--text-muted); margin-top: 10px;">Cannot be undone.</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
@@ -152,27 +139,23 @@
             </div>
         </div>
     
-    <!-- Core Modules -->
-    <script src="js/core/config.js"></script>
-    <script src="js/core/state.js"></script>
-    <script src="js/core/data-utils.js"></script>
-    <script src="js/core/global-compat.js"></script>
-    <script src="js/core/stats-utils.js"></script>
-    <script src="js/core/feats-utils.js"></script>
-    <script src="js/core/ability-system.js"></script>
-    <script src="js/core/proficiency-utils.js"></script>
+    <!-- Core State Management (in order per GOAL.md) -->
+    <script src="js/states/UserSelectedState.js"></script>
+    <script src="js/character/CharacterSheet.js"></script>
+    <script src="js/character/CharacterStorage.js"></script>
+    <script src="js/effects/RecalculationFlags.js"></script>
+    <script src="js/states/UIState.js"></script>
+    <script src="js/states/DataLoaders.js"></script>
     
-    <!-- Domain Entities -->
-    <script src="js/domain/character.js"></script>
-    <script src="js/domain/spells.js"></script>
-    <script src="js/domain/character-create.js"></script>
+    <!-- Render System -->
+    <script src="js/render/TooltipSystem.js"></script>
+    <script src="js/render/Render.js"></script>
     
-    <!-- UI Modules -->
-    <script src="js/ui/render.js"></script>
-    <script src="js/ui/navigation.js"></script>
-    <script src="js/ui/modals.js"></script>
+    <!-- Debug -->
+    <script src="js/debug.js"></script>
+    <script src="js/renderdebug.js"></script>
     
-    <!-- App Initialization -->
+    <!-- Main App -->
     <script src="js/app.js"></script>
 </body>
 </html>

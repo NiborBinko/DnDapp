@@ -1,0 +1,247 @@
+{
+  "necromancy": [
+    {
+      "name": "Chill Touch",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "Channeling the chill of the grave, make a melee spell attack against a target within reach. On a hit, the target takes 1d10 Necrotic damage, and it can't regain Hit Points until the end of your next turn."
+    },
+    {
+      "name": "Poison Spray",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You spray toxic mist at a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d12 Poison damage."
+    },
+    {
+      "name": "Spare the Dying",
+      "ritual": false,
+      "casttime": "action",
+      "range": "15 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "Choose a creature within range that has 0 Hit Points and isn't dead. The creature becomes Stable."
+    },
+    {
+      "name": "False Life",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You gain 2d4 + 4 Temporary Hit Points."
+    },
+    {
+      "name": "Inflict Wounds",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "A creature you touch makes a Constitution saving throw, taking 2d10 Necrotic damage on a failed save or half as much damage on a successful one."
+    },
+    {
+      "name": "Ray of Sickness",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You shoot a greenish ray at a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 2d8 Poison damage and has the Poisoned condition until the end of your next turn."
+    },
+    {
+      "name": "Gentle Repose",
+      "ritual": true,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, S, M",
+      "duration": "10 days",
+      "description": "You touch a corpse or other remains. For the duration, the target is protected from decay and can't become Undead. \n\nThe spell also effectively extends the time limit on raising the target from the dead, since days spent under the influence of this spell don't count against the time limit of spells such as Raise Dead."
+    },
+    {
+      "name": "Ray of Enfeeblement",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "A beam of enervating energy shoots from you toward a creature within range. The target must make a Constitution saving throw. On a successful save, the target has Disadvantage on the next attack roll it makes until the start of your next turn. \n\nOn a failed save, the target has Disadvantage on Strength-based D20 Tests for the duration. During that time, it also subtracts 1d8 from all its damage rolls. The target repeats the save at the end of each of its turns, ending the spell on a success."
+    },
+    {
+      "name": "Animate Dead",
+      "ritual": false,
+      "casttime": "1 minute",
+      "range": "10 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "Choose a pile of bones or a corpse of a Medium or Small Humanoid within range. The target becomes an Undead creature: a Skeleton if you chose bones or a Zombie if you chose a corpse. On each of your turns, you can take a Bonus Action to mentally command any creature you made with this spell if the creature is within 60 feet of you (if you control multiple creatures, you can command any of them at the same time, issuing the same command to each one). You decide what action the creature will take and where it will move on its next turn, or you can issue a general command, such as to guard a chamber or corridor. If you issue no commands, the creature takes the Dodge action and moves only to avoid harm. Once given an order, the creature continues to follow it until its task is complete. \n\nThe creature is under your control for 24 hours, after which it stops obeying any command you've given it. To maintain control of the creature for another 24 hours, you must cast this spell on the creature again before the current 24-hour period ends. This use of the spell reasserts your control over up to four creatures you have animated with this spell rather than animating a new creature."
+    },
+    {
+      "name": "Bestow Curse",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "You touch a creature, which must succeed on a Wisdom saving throw or become cursed for the duration. Until the curse ends, the target suffers one of the following effects of your choice: \n\n\u2022 Choose one ability. The target has Disadvantage on ability checks and saving throws made with that ability. \u2022 The target has Disadvantage on attack rolls against you. \n\n\u2022 In combat, the target must succeed on a Wisdom saving throw at the start of each of its turns or be forced to take the Dodge action on that turn. \n\n\u2022 If you deal damage to the target with an attack roll or a spell, the target takes an extra 1d8 Necrotic damage."
+    },
+    {
+      "name": "Revivify",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You touch a creature that has died within the last minute. That creature revives with 1 Hit Point. This spell can't revive a creature that has died of old age, nor does it restore any missing body parts."
+    },
+    {
+      "name": "Speak with Dead",
+      "ritual": false,
+      "casttime": "action",
+      "range": "10 feet",
+      "components": "V, S, M",
+      "duration": "10 minutes",
+      "description": "You grant the semblance of life to a corpse of your choice within range, allowing it to answer questions you pose. The corpse must have a mouth, and this spell fails if the deceased creature was Undead when it died. The spell also fails if the corpse was the target of this spell within the past 10 days. \n\nUntil the spell ends, you can ask the corpse up to five questions. The corpse knows only what it knew in life, including the languages it knew. Answers are usually brief, cryptic, or repetitive, and the corpse is under no compulsion to offer a truthful answer if you are antagonistic toward it or it recognizes you as an enemy. This spell doesn't return the creature's soul to its body, only its animating spirit. Thus, the corpse can't learn new information, doesn't comprehend anything that has happened since it died, and can't speculate about future events."
+    },
+    {
+      "name": "Vampiric Touch",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "The touch of your shadow-wreathed hand can siphon life force from others to heal your wounds. Make a melee spell attack against one creature within reach. On a hit, the target takes 3d6 Necrotic damage, and you regain Hit Points equal to half the amount of Necrotic damage dealt. \n\nUntil the spell ends, you can make the attack again on each of your turns as a Magic action, targeting the same creature or a different one."
+    },
+    {
+      "name": "Blight",
+      "ritual": false,
+      "casttime": "action",
+      "range": "30 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "A creature that you can see within range makes a Constitution saving throw, taking 8d8 Necrotic damage on a failed save or half as much damage on a successful one. A Plant creature automatically fails the save. \n\nAlternatively, target a nonmagical plant that isn't a creature, such as a tree or shrub. It doesn't make a save; it simply withers and dies."
+    },
+    {
+      "name": "Contagion",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Touch",
+      "components": "V, S",
+      "duration": "7 days",
+      "description": "Your touch inflicts a magical contagion. The target must succeed on a Constitution saving throw or take 11d8 Necrotic damage and have the Poisoned condition. Also, choose one ability when you cast the spell. While Poisoned, the target has Disadvantage on saving throws made with the chosen ability. The target must repeat the saving throw at the end of each of its turns until it gets three successes or failures. If the target succeeds on three of these saves, the spell ends on the target. If the target fails three of the saves, the spell lasts for 7 days on it. Whenever the Poisoned target receives an effect that would end the Poisoned condition, the target must succeed on a Constitution saving throw, or the Poisoned condition doesn't end on it."
+    },
+    {
+      "name": "Raise Dead",
+      "ritual": false,
+      "casttime": "1 hour",
+      "range": "Touch",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "With a touch, you revive a dead creature if it has been dead no longer than 10 days and it wasn't Undead when it died. The creature returns to life with 1 Hit Point. This spell also neutralizes any poisons that affected the creature at the time of death. \n\nThis spell closes all mortal wounds, but it doesn't restore missing body parts. If the creature is lacking body parts or organs integral for its survival\u2014its head, for instance\u2014the spell automatically fails. Coming back from the dead is an ordeal. The target takes a \u22124 penalty to D20 Tests. Every time the target finishes a Long Rest, the penalty is reduced by 1 until it becomes 0."
+    },
+    {
+      "name": "Reincarnate",
+      "ritual": false,
+      "casttime": "1 hour",
+      "range": "Touch",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You touch a dead Humanoid or a piece of one. If the creature has been dead no longer than 10 days, the spell forms a new body for it and calls the soul to enter that body. Roll 1d10 and consult the table below to determine the body\u2019s species, or the DM chooses another playable species. \n\n| 1d10 | Species    |\n| ---- | ---------- |\n| 1    | Aasimar    |\n| 2    | Dragonborn |\n| 3    | Dwarf      |\n| 4    | Elf        |\n| 5    | Gnome      |\n| 6    | Goliath    |\n| 7    | Halfling   |\n| 8    | Human      |\n| 9    | Orc        |\n| 10   | Tiefling   |\n\n  The reincarnated creature makes any choices that a species\u2019 description offers, and the creature recalls its former life. It retains the capabilities it had in its original form, except it loses the traits of its previous species and gains the traits of its new one."
+    },
+    {
+      "name": "Circle of Death",
+      "ritual": false,
+      "casttime": "action",
+      "range": "150 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "Negative energy ripples out in a 60-foot-radius Sphere from a point you choose within range. Each creature in that area makes a Constitution saving throw, taking 8d8 Necrotic damage on a failed save or half as much damage on a successful one."
+    },
+    {
+      "name": "Create Undead",
+      "ritual": false,
+      "casttime": "1 minute",
+      "range": "10 feet",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You can cast this spell only at night. Choose up to three corpses of Medium or Small Humanoids within range. Each one becomes a Ghoul under your control. As a Bonus Action on each of your turns, you can mentally command any creature you animated with this spell if the creature is within 120 feet of you (if you control multiple creatures, you can command any of them at the same time, issuing the same command to them). You decide what action the creature will take and where it will move on its next turn, or you can issue a general command, such as to guard a particular place. If you issue no commands, the creature takes the Dodge action and moves only to avoid harm. Once given an order, the creature continues to follow the order until its task is complete. \n\nThe creature is under your control for 24 hours, after which it stops obeying any command you've given it. To maintain control of the creature for another 24 hours, you must cast this spell on the creature before the current 24-hour period ends. This use of the spell reasserts your control over up to three creatures you have animated with this spell rather than animating new ones."
+    },
+    {
+      "name": "Eyebite",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S",
+      "duration": "up to 1 minute",
+      "description": "For the duration, your eyes become an inky void. One creature of your choice within 60 feet of you that you can see must succeed on a Wisdom saving throw or be affected by one of the following effects of your choice for the duration. \n\nOn each of your turns until the spell ends, you can take a Magic action to target another creature but can't target a creature again if it has succeeded on a save against this casting of the spell. \n\n**Asleep.** The target has the Unconscious condition. It wakes up if it takes any damage or if another creature takes an action to shake it awake. \n\n**Panicked.** The target has the Frightened condition. On each of its turns, the Frightened target must take the Dash action and move away from you by the safest and shortest route available. If the target moves to a space at least 60 feet away from you where it can't see you, this effect ends. \n\n**Sickened.** The target has the Poisoned condition."
+    },
+    {
+      "name": "Harm",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You unleash virulent magic on a creature you can see within range. The target makes a Constitution saving throw. On a failed save, it takes 14d6 Necrotic damage, and its Hit Point maximum is reduced by an amount equal to the Necrotic damage it took. On a successful save, it takes half as much damage only. This spell can't reduce a target's Hit Point maximum below 1."
+    },
+    {
+      "name": "Magic Jar",
+      "ritual": false,
+      "casttime": "1 minute",
+      "range": "Self",
+      "components": "V, S, M",
+      "duration": "Until dispelled",
+      "description": "Your body falls into a catatonic state as your soul leaves it and enters the container you used for the spell's Material component. While your soul inhabits the container, you are aware of your surroundings as if you were in the container's space. You can't move or take Reactions. The only action you can take is to project your soul up to 100 feet out of the container, either returning to your living body (and ending the spell) or attempting to possess a Humanoid's body. \n\nYou can attempt to possess any Humanoid within 100 feet of you that you can see (creatures warded by a Protection from Evil and Good or Magic Circle spell can't be possessed). The target makes a Charisma saving throw. On a failed save, your soul enters the target's body, and the target's soul becomes trapped in the container. On a successful save, the target resists your efforts to possess it, and you can't attempt to possess it again for 24 hours. Once you possess a creature's body, you control it. Your Hit Points, Hit Point Dice, Strength, Dexterity, Constitution, Speed, and senses are replaced by the creature's. You otherwise keep your game statistics. \n\nMeanwhile, the possessed creature's soul can perceive from the container using its own senses, but it can't move and it is Incapacitated. \n\nWhile possessing a body, you can take a Magic action to return from the host body to the container if it is within 100 feet of you, returning the host creature's soul to its body. If the host body dies while you're in it, the creature dies, and you make a Charisma saving throw against your own spellcasting DC. On a success, you return to the container if it is within 100 feet of you. Otherwise, you die. \n\nIf the container is destroyed or the spell ends, your soul returns to your body. If your body is more than 100 feet away from you or if your body is dead, you die. If another creature's soul is in the container when it is destroyed, the creature's soul returns to its body if the body is alive and within 100 feet. Otherwise, that creature dies.\n\nWhen the spell ends, the container is destroyed."
+    },
+    {
+      "name": "Finger of Death",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You unleash negative energy toward a creature you can see within range. The target makes a Constitution saving throw, taking 7d8 + 30 Necrotic damage on a failed save or half as much damage on a successful one. \n\nA Humanoid killed by this spell rises at the start of your next turn as a Zombie that follows your verbal orders."
+    },
+    {
+      "name": "Resurrection",
+      "ritual": false,
+      "casttime": "1 hour",
+      "range": "Touch",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "With a touch, you revive a dead creature that has been dead for no more than a century, didn't die of old age, and wasn't Undead when it died. \n\nThe creature returns to life with all its Hit Points. This spell also neutralizes any poisons that affected the creature at the time of death. This spell closes all mortal wounds and restores any missing body parts. \n\nComing back from the dead is an ordeal. The target takes a \u22124 penalty to D20 Tests. Every time the target finishes a Long Rest, the penalty is reduced by 1 until it becomes 0. \n\nCasting this spell to revive a creature that has been dead for 365 days or longer taxes you. Until you finish a Long Rest, you can't cast spells again, and you have Disadvantage on D20 Tests."
+    },
+    {
+      "name": "Clone",
+      "ritual": false,
+      "casttime": "1 hour",
+      "range": "Touch",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You touch a creature or at least 1 cubic inch of its flesh. An inert duplicate of that creature forms inside the vessel used in the spell's casting and finishes growing after 120 days; you choose whether the finished clone is the same age as the creature or younger. The clone remains inert and endures indefinitely while its vessel remains undisturbed. \n\nIf the original creature dies after the clone finishes forming, the creature's soul transfers to the clone if the soul is free and willing to return. The clone is physically identical to the original and has the same personality, memories, and abilities, but none of the original's equipment. The creature's original remains, if any, become inert and can't be revived, since the creature's soul is elsewhere."
+    },
+    {
+      "name": "Astral Projection",
+      "ritual": false,
+      "casttime": "1 hour",
+      "range": "10 feet",
+      "components": "V, S, M",
+      "duration": "Until dispelled",
+      "description": "You and up to eight willing creatures within range project your astral bodies into the Astral Plane (the spell ends instantly if you are already on that plane). Each target's body is left behind in a state of suspended animation; it has the Unconscious condition, doesn't need food or air, and doesn't age. \n\nA target's astral form resembles its body in almost every way, replicating its game statistics and possessions. The principal difference is the addition of a silvery cord that trails from between the shoulder blades of the astral form. The cord fades from view after 1 foot. If the cord is cut\u2014which happens only when an effect states that it does so\u2014the target's body and astral form both die. A target's astral form can travel through the Astral Plane. The moment an astral form leaves that plane, the target's body and possessions travel along the silver cord, causing the target to re- enter its body on the new plane. \n\nAny damage or other effects that apply to an astral form have no effect on the target's body and vice versa. If a target's body or astral form drops to 0 Hit Points, the spell ends for that target. The spell ends for all the targets if you take a Magic action to dismiss it. When the spell ends for a target who isn't dead, the target reappears in its body and exits the state of suspended animation."
+    },
+    {
+      "name": "True Resurrection",
+      "ritual": false,
+      "casttime": "1 hour",
+      "range": "Touch",
+      "components": "V, S, M",
+      "duration": "Instantaneous",
+      "description": "You touch a creature that has been dead for no longer than 200 years and that died for any reason except old age. The creature is revived with all its Hit Points. \n\nThis spell closes all wounds, neutralizes any poison, cures all magical contagions, and lifts any curses affecting the creature when it died. The spell replaces damaged or missing organs and limbs. If the creature was Undead, it is restored to its non-Undead form. \n\nThe spell can provide a new body if the original no longer exists, in which case you must speak the creature's name. The creature then appears in an unoccupied space you choose within 10 feet of you."
+    }
+  ]
+}

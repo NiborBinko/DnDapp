@@ -1,0 +1,23 @@
+{
+ "archetype": "A class archetype represents a subclass or specialization that defines your character's unique abilities and playstyle.",
+ "Arcane Tradition": "Each school of magic represents a different approach to arcane study. Choose one that matches your wizard's specialty.",
+ "Divine Domain": "Your deity grants you powers based on their domain. Each domain represents different aspects of divine power.",
+ "Druid Circle": "Druids belong to circles that represent different relationships with nature. Each circle provides unique benefits.",
+ "Fighting Style": "Your training with weapons defines how you fight. Choose a style that matches your combat approach.",
+ "Martial Archetype": "Fighters develop specific martial archetypes that define their combat philosophy. Each provides unique features.",
+ "Metamagic": "As you advance, you learn metamagic techniques that modify how you cast spells. These choices define your sorcery.",
+ "Monastic Tradition": "Monks follow different traditions that represent their training disciplines. Each provides unique ki abilities.",
+ "Otherworldly Patron": "Your patron defines the nature of your warlock pact. Different patrons grant different powers.",
+
+ "Pact Boon": "Your pact with your patron grants you a specific benefit. Each boons provides unique capabilities.",
+
+ "Primal Path": "Barbarians follow different primal paths that embody their rage. Each path represents a different approach to battle fury.",
+
+ "Ranger Archetype": "Rangers develop specific archetypes that define their approach to hunting. Each provides unique wilderness abilities.",
+
+ "Roguish Archetype": "Rogues specialize in different roguish archetypes that define their style. Each provides unique stealth and trickery.",
+
+ "Sacred Oath": "Paladins swear sacred oaths that define their dedication. Each oath grants unique holy powers.",
+
+ "Sorcerous Origin": "Your sorcerous origin defines where your innate power comes from. Each origin provides unique magical abilities."
+}

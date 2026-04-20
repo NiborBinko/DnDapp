@@ -1,0 +1,18 @@
+{
+ "id": "human",
+ "name": "Human",
+ "desc": "Versatile and ambitious",
+ "size": "Medium",
+ "speed": 30,
+ "languages": [
+  "Common",
+  "One extra language of your choice"
+ ],
+ "bonuses": {
+  "chosen": 2
+ },
+ "raceAbilities": [
+  "+1 Proficiency",
+  "+1 Feat"
+ ]
+}

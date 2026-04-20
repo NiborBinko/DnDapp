@@ -1,0 +1,26 @@
+{
+ "id": "dragonborn",
+ "name": "Dragonborn",
+ "desc": "Dragon-like humanoids",
+ "size": "Medium",
+ "speed": 30,
+ "languages": [
+  "Common",
+  "Draconic"
+ ],
+ "bonuses": {
+  "strength": 2,
+  "charisma": 1
+ },
+ "raceAbilities": [],
+ "subraces": {
+  "Black": {"bonuses": {}, "raceAbilities": ["Breath Weapon (Acid)"]},
+  "Blue": {"bonuses": {}, "raceAbilities": ["Breath Weapon (Lightning)"]},
+  "Green": {"bonuses": {}, "raceAbilities": ["Breath Weapon (Poison)"]},
+  "Red": {"bonuses": {}, "raceAbilities": ["Breath Weapon (Fire)"]},
+  "Silver": {"bonuses": {}, "raceAbilities": ["Breath Weapon (Cold)"]},
+  "Bronze": {"bonuses": {}, "raceAbilities": ["Breath Weapon (Lightning)"]},
+  "Copper": {"bonuses": {}, "raceAbilities": ["Breath Weapon (Acid)"]},
+  "Gold": {"bonuses": {}, "raceAbilities": ["Breath Weapon (Fire)"]}
+ }
+}
