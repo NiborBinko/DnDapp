@@ -1,56 +1,150 @@
 {
-  "skillMappings": {
+  "effects": {
     "Keen Senses": {
+      "type": "skill",
       "skill": "Perception",
       "inheritFromRace": true
     },
     "Menacing": {
+      "type": "skill",
       "skill": "Intimidation",
       "inheritFromRace": true
     },
     "Naturally Stealthy": {
+      "type": "skill",
       "skill": "Stealth",
       "inheritFromRace": true
-    }
-  },
-  "armorProficiencies": {
+    },
     "Dwarven Armor Training": {
-      "armor": ["light armor", "medium armor", "shields"],
+      "type": "proficiency",
+      "proficiencyType": "armor",
+      "options": ["light armor", "medium armor", "shields"],
+      "count": 1,
       "inheritFromRace": true
-    }
-  },
-  "weaponProficiencies": {
+    },
     "Elf Weapon Training": {
-      "weapons": ["longswords", "shortswords", "shortbows", "longbows"],
+      "type": "proficiency",
+      "proficiencyType": "weapon",
+      "options": ["longswords", "shortswords", "shortbows", "longbows"],
+      "count": 1,
       "inheritFromRace": true
     },
     "Drow Weapon Training": {
-      "weapons": ["rapiers", "shortswords", "hand crossbows"],
+      "type": "proficiency",
+      "proficiencyType": "weapon",
+      "options": ["rapiers", "shortswords", "hand crossbows"],
+      "count": 1,
       "inheritFromRace": true
-    }
-  },
-  "toolProficiencies": {
+    },
     "Dwarven Tool Proficiency": {
+      "type": "choice",
       "options": ["smith's tools", "brewer's supplies", "mason's tools"],
       "count": 1,
       "inheritFromRace": true
-    }
-  },
-  "cantrips": {
-    "High Elf Cantrip": { "class": "wizard", "spellList": "all" },
-    "Drow Magic": { "cantrips": ["dancing-lights"] }
-  },
-  "innateSpells": {
+    },
+    "High Elf Cantrip": {
+      "type": "cantrip",
+      "class": "wizard",
+      "spellList": "all"
+    },
     "Drow Magic": {
-      "3": ["faerie-fire"],
-      "5": ["darkness"]
+      "type": "innateSpell",
+      "spellLevels": {
+        "3": ["faerie-fire"],
+        "5": ["darkness"]
+      }
+    },
+    "Dwarven Toughness": {
+      "type": "stat",
+      "stat": "constitution",
+      "value": 1,
+      "effectType": "modifier"
+    },
+    "Fleet Footed": {
+      "type": "speed",
+      "value": 5
+    },
+    "Darkvision": {
+      "type": "vision",
+      "value": 60
+    },
+    "Superior Darkvision": {
+      "type": "vision",
+      "value": 120
+    },
+    "Trance": {
+      "type": "none",
+      "description": "Elves don't need to sleep. They can rest while doing light activity for 4 hours."
+    },
+    "Fey Ancestry": {
+      "type": "none",
+      "description": "Advantage on saving throws against being charmed."
+    },
+    "Keen Smell": {
+      "type": "none",
+      "description": "Advantage on Wisdom (Perception) checks that rely on smell."
+    },
+    "Stonecunning": {
+      "type": "none",
+      "description": "History check related to stonework has advantage."
+    },
+    "Hill Dwarf Resistance": {
+      "type": "stat",
+      "stat": "constitution",
+      "value": 1,
+      "effectType": "modifier"
+    },
+    "Mountain Dwarf Resilience": {
+      "type": "proficiency",
+      "proficiencyType": "armor",
+      "options": ["light armor", "medium armor"],
+      "count": 2,
+      "inheritFromRace": true
+    },
+    "Drow Innate Magic": {
+      "type": "innateSpell",
+      "spellLevels": {
+        "1": ["dancing-lights"],
+        "2": ["darkness"],
+        "3": ["faerie-fire"]
+      }
+    },
+    "Sunlight Sensitivity": {
+      "type": "none",
+      "description": "Disadvantage on Wisdom (Perception) checks in direct sunlight."
+    },
+    "Powerful Build": {
+      "type": "none",
+      "description": "Carrying capacity is doubled."
+    },
+    "Human Versatility": {
+      "type": "choice",
+      "choiceName": "Human Bonus",
+      "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],
+      "count": 2,
+      "effectType": "stat",
+      "value": 1
+    },
+    "Relentless Endurance": {
+      "type": "none",
+      "description": "When reduced to 0 HP, can drop to 1 HP instead once per long rest."
+    },
+    "Menacing": {
+      "type": "skill",
+      "skill": "Intimidation",
+      "inheritFromRace": true
+    },
+    "Hellfire Resistance": {
+      "type": "resistance",
+      "damageType": "fire"
+    },
+    "Infernal Legacy": {
+      "type": "spell",
+      "spellLevels": {
+        "1": ["hellfire"],
+        "3": ["darkness"],
+        "5": ["fireball"]
+      }
     }
-  },
-  "statEffects": {
-    "Dwarven Toughness": { "type": "hpPerLevel", "value": 1 },
-    "Fleet Footed": { "type": "speed", "value": 5 },
-    "Darkvision": { "type": "darkvision", "value": 60 },
-    "Superior Darkvision": { "type": "darkvision", "value": 120 }
-
   }
 }

@@ -44,6 +44,31 @@ function renderAbilityScores() {
     const stats = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
     const raceBonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace);
     const primaryStat = getClassPrimaryStat();
+    
+    // Check for "chosen" bonus - show UI if pending
+    const chosenBonus = raceBonuses.chosen;
+    let chosenUI = '';
+    if (chosenBonus && chosenBonus.isChosen) {
+        const choiceKey = 'human-bonus-stats';
+        const selected = userSelection.featureChoices?.[choiceKey]?.selected || [];
+        const count = chosenBonus.count;
+        
+        chosenUI += `<div class="section-header">Human Bonus: Select ${count} stat${count > 1 ? 's' : ''} (+1 each)</div>`;
+        chosenUI += `<div class="bonus-stats-grid">`;
+        
+        stats.forEach(stat => {
+            const isSelected = selected.includes(stat);
+            const canSelect = selected.length < count;
+            
+            chosenUI += `<button class="bonus-stat-btn ${isSelected ? 'selected' : ''}" 
+                ${!canSelect && !isSelected ? 'disabled' : ''} 
+                onclick="selectHumanBonusStat('${stat}')">
+                ${stat.toUpperCase().slice(0,3)} ${isSelected ? '✓' : ''}
+            </button>`;
+        });
+        chosenUI += `</div>`;
+    }
+    
     // Calculate points spent: cost 1 per point if stat < 13, else cost 2
     let pointsSpent = 0;
     stats.forEach(stat => {
@@ -56,15 +81,18 @@ function renderAbilityScores() {
     UIState.pointsRemaining = 27 - pointsSpent;
     
     let html = `<div class="points-remaining">Points: <span id="points-remaining">${UIState.pointsRemaining}</span></div>`;
+    
+    if (chosenUI) html += chosenUI;
+    
     html += stats.map(stat => {
         const base = userSelection.stats[stat] || 8;
-        const rBonus = raceBonuses[stat] || 0;
-        const total = base + rBonus;
+        const rBonus = raceBonuses[stat] || (raceBonuses.chosen && raceBonuses.chosen.isChosen && userSelection.featureChoices?.['human-bonus-stats']?.selected?.includes(stat) ? 1 : 0);
+        const total = base + (typeof rBonus === 'number' ? rBonus : 0);
         const mod = Math.floor((total - 10) / 2);
         const cost = base >= 13 ? 2 : 1;
         const canDec = base > 8;
         const canInc = UIState.pointsRemaining >= cost && base < (rBonus > 0 ? 15 : 14);
-        return `<div class="stat-row ${primaryStat === stat ? 'primary-stat-row' : ''}"><div class="stat-name">${stat.toUpperCase().slice(0, 3)} ${primaryStat === stat ? '⭐' : ''}</div><div class="stat-controls"><button class="stat-btn" onclick="adjustStat('${stat}', -1)" ${!canDec ? 'disabled' : ''}>-</button><div class="stat-value">${base}</div><button class="stat-btn" onclick="adjustStat('${stat}', 1)" ${!canInc ? 'disabled' : ''}>+${cost > 1 ? cost : ''}</button><div class="stat-bonus">${rBonus > 0 ? '+' + rBonus : ''}</div><div class="stat-total">${total}</div><div class="stat-modifier">${mod >= 0 ? '+' : ''}${mod}</div></div></div>`;
+        return `<div class="stat-row ${primaryStat === stat ? 'primary-stat-row' : ''}"><div class="stat-name">${stat.toUpperCase().slice(0, 3)} ${primaryStat === stat ? '⭐' : ''}</div><div class="stat-controls"><button class="stat-btn" onclick="adjustStat('${stat}', -1)" ${!canDec ? 'disabled' : ''}>-</button><div class="stat-value">${base}</div><button class="stat-btn" onclick="adjustStat('${stat}', 1)" ${!canInc ? 'disabled' : ''}>+${cost > 1 ? cost : ''}</button><div class="stat-bonus">${(rBonus && rBonus > 0) ? '+' + rBonus : ''}</div><div class="stat-total">${total}</div><div class="stat-modifier">${mod >= 0 ? '+' : ''}${mod}</div></div></div>`;
     }).join('');
     container.innerHTML = html;
     updateNextButton();

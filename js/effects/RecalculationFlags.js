@@ -16,19 +16,19 @@ function triggerRecalc(flag) { recalculateAll(flag); }
 function recalculateAll(flag) {
     switch (flag) {
         case RECALC_FLAGS.RACE_CHANGED:
-            recalcRaceEffects(); recalcVision(); recalcSpeed(); recalcFeatures(); recalcProficiencies(); recalcStats();
+            recalcRaceEffects(); recalcFeatures(); recalcVision(); recalcSpeed(); recalcProficiencies(); recalcStats();
             break;
         case RECALC_FLAGS.CLASS_CHANGED:
             recalcClassBase(); recalcFeatures(); recalcProficiencies(); recalcSpellcasting(); recalcMaxHp(); recalcSpellSlots(); recalcCantrips();
             break;
         case RECALC_FLAGS.LEVEL_CHANGED:
-            recalcMaxHp(); recalcSpellSlots(); recalcCantrips(); recalcFeatures();
+            recalcFeatures(); recalcMaxHp(); recalcSpellSlots(); recalcCantrips();
             break;
         case RECALC_FLAGS.STAT_CHANGED:
             recalcStatModifiers(); recalcMaxHp(); recalcSpellStats();
             break;
         case RECALC_FLAGS.FEAT_CHANGED:
-            recalcFeats(); recalcStats(); recalcFeatures(); recalcProficiencies(); recalcSpeed(); recalcVision(); recalcMaxHp();
+            recalcFeats(); recalcFeatures(); recalcStats(); recalcProficiencies(); recalcSpeed(); recalcVision(); recalcMaxHp();
             break;
         case RECALC_FLAGS.ALL_CHANGED:
             recalcAll();
@@ -50,10 +50,31 @@ function recalcRaceEffects() {
     
     if (!userSelection.race) return;
     const bonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace);
-    // Add race bonuses to base 8
+    
+    // Handle normal numeric bonuses (non-chosen)
     Object.keys(bonuses).forEach(stat => {
-        userSelection.stats[stat] = (userSelection.stats[stat] || 8) + bonuses[stat];
+        if (stat !== 'chosen') {
+            userSelection.stats[stat] = (userSelection.stats[stat] || 8) + bonuses[stat];
+        }
     });
+    
+    // Handle "chosen" - create pending choices in featureChoices
+    if (bonuses.chosen && bonuses.chosen.isChosen) {
+        if (!userSelection.featureChoices) {
+            userSelection.featureChoices = {};
+        }
+        
+        // Create pending choice if not exists
+        const choiceKey = 'human-bonus-stats';
+        if (!userSelection.featureChoices[choiceKey]) {
+            userSelection.featureChoices[choiceKey] = {
+                type: 'choice',
+                options: ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'],
+                count: bonuses.chosen.count,
+                selected: []
+            };
+        }
+    }
 }
 
 function recalcClassBase() {
@@ -104,13 +125,18 @@ function recalcProficiencies() {
 
 function recalcFeatures() {
     characterSheet.features = [];
+    
+    // Add race features
     if (userSelection.race) {
         const race = window.racesData[userSelection.race];
-        if (race?.raceAbilities) race.raceAbilities.forEach(a => characterSheet.features.push({ name: a, source: 'race', sourceId: race.id }));
+        if (race?.raceAbilities) {
+            race.raceAbilities.forEach(a => characterSheet.features.push({ name: a, source: 'race', sourceId: race.id }));
+        }
     }
+    
+    // Add class features (all levels up to current)
     if (userSelection.class) {
         const cls = window.classesData[userSelection.class];
-        // Loop through ALL levels 1 through current level
         for (let lvl = 1; lvl <= userSelection.lvl; lvl++) {
             const feats = cls?.features?.[lvl];
             if (feats?.features) {
@@ -121,6 +147,22 @@ function recalcFeatures() {
                     level: lvl 
                 }));
             }
+        }
+    }
+    
+    // Process features using EffectHandler
+    if (typeof EffectHandler !== 'undefined') {
+        EffectHandler.processAllFeatures(characterSheet.features, userSelection);
+    }
+    
+    // Apply pending choices - apply human bonus stats
+    const choiceKey = 'human-bonus-stats';
+    if (userSelection.featureChoices && userSelection.featureChoices[choiceKey]) {
+        const choice = userSelection.featureChoices[choiceKey];
+        if (choice.selected && choice.selected.length > 0) {
+            choice.selected.forEach(stat => {
+                userSelection.stats[stat] = (userSelection.stats[stat] || 8) + 1;
+            });
         }
     }
 }

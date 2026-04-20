@@ -56,8 +56,20 @@ function getRaceStatBonuses(raceId, subraceId) {
     const race = getRaceData(raceId);
     if (!race) return {};
     const bonuses = { ...race.bonuses };
+    
+    // Handle "chosen" - this means user selects stats for +1 bonus each
+    if (bonuses.chosen !== undefined) {
+        bonuses.chosen = { count: bonuses.chosen, isChosen: true };
+    }
+    
     if (subraceId && race.subraces?.[subraceId]) {
-        Object.entries(race.subraces[subraceId].bonuses || {}).forEach(([s, v]) => bonuses[s] = (bonuses[s] || 0) + v);
+        Object.entries(race.subraces[subraceId].bonuses || {}).forEach(([s, v]) => {
+            if (s === 'chosen') {
+                bonuses.chosen = { count: v, isChosen: true };
+            } else {
+                bonuses[s] = (bonuses[s] || 0) + v;
+            }
+        });
     }
     return bonuses;
 }

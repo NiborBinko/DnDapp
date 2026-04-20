@@ -585,3 +585,40 @@ button {
     padding: 8px;
     margin: 0;
 }
+
+/* Human Bonus Stats Selection */
+.bonus-stats-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: var(--card-bg);
+    border-radius: 8px;
+}
+
+.bonus-stat-btn {
+    background: var(--border);
+    color: var(--text);
+    border: 2px solid var(--border);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.bonus-stat-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: var(--accent);
+}
+
+.bonus-stat-btn.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.bonus-stat-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -82,6 +82,20 @@ function toggleSkill(skillName) {
     refreshDebugIfOpen();
 }
 function selectClassOption(groupName, optionId) { userSelection.selectedFeatureChoices[groupName] = optionId; triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED); renderFeaturesFeats(); refreshDebugIfOpen(); }
+function selectHumanBonusStat(stat) {
+    const choiceKey = 'human-bonus-stats';
+    if (!userSelection.featureChoices) userSelection.featureChoices = {};
+    if (!userSelection.featureChoices[choiceKey]) {
+        userSelection.featureChoices[choiceKey] = { type: 'choice', options: ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'], count: 2, selected: [] };
+    }
+    const choice = userSelection.featureChoices[choiceKey];
+    if (choice.selected.length < choice.count && !choice.selected.includes(stat)) {
+        choice.selected.push(stat);
+        triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
+        renderAbilityScores();
+        refreshDebugIfOpen();
+    }
+}
 function toggleFeat(featName) {
     const idx = userSelection.feats.indexOf(featName);
     if (idx > -1) userSelection.feats.splice(idx, 1);
@@ -101,6 +115,7 @@ window.updateLevel = updateLevel;
 window.adjustStat = adjustStat;
 window.toggleSkill = toggleSkill;
 window.selectClassOption = selectClassOption;
+window.selectHumanBonusStat = selectHumanBonusStat;
 window.toggleFeat = toggleFeat;
 window.viewCharacter = viewCharacter;
 window.confirmDelete = confirmDelete;
