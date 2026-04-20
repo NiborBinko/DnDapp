@@ -50,7 +50,7 @@ function renderAbilityScores() {
     let chosenUI = '';
     if (chosenBonus && chosenBonus.isChosen) {
         const choiceKey = 'human-bonus-stats';
-        const selected = userSelection.featureChoices?.[choiceKey]?.selected || [];
+        const selected = userSelection.featureChoices?.[choiceKey]?.selected || [null, null];
         const count = chosenBonus.count;
         
         chosenUI += `<div class="section-header">Human Bonus: Select ${count} stat${count > 1 ? 's' : ''} (+1 each)</div>`;
@@ -58,7 +58,8 @@ function renderAbilityScores() {
         
         stats.forEach(stat => {
             const isSelected = selected.includes(stat);
-            const canSelect = selected.length < count;
+            const selectedCount = selected.filter(s => s !== null).length;
+            const canSelect = selectedCount < count;
             
             chosenUI += `<button class="bonus-stat-btn ${isSelected ? 'selected' : ''}" 
                 ${!canSelect && !isSelected ? 'disabled' : ''} 

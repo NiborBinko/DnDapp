@@ -48,6 +48,11 @@ function recalcRaceEffects() {
     // Reset stats to base 8 first (idempotent)
     STAT_NAMES.forEach(stat => { userSelection.stats[stat] = 8; });
     
+    // Clear previous race choices if race changed
+    if (userSelection.featureChoices && userSelection.featureChoices['human-bonus-stats']) {
+        delete userSelection.featureChoices['human-bonus-stats'];
+    }
+    
     if (!userSelection.race) return;
     const bonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace);
     
@@ -58,20 +63,20 @@ function recalcRaceEffects() {
         }
     });
     
-    // Handle "chosen" - create pending choices in featureChoices
+    // Handle "chosen" - create pending choices in featureChoices with null slots
     if (bonuses.chosen && bonuses.chosen.isChosen) {
         if (!userSelection.featureChoices) {
             userSelection.featureChoices = {};
         }
         
-        // Create pending choice if not exists
+        // Create pending choice with null slots
         const choiceKey = 'human-bonus-stats';
         if (!userSelection.featureChoices[choiceKey]) {
             userSelection.featureChoices[choiceKey] = {
                 type: 'choice',
                 options: ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'],
                 count: bonuses.chosen.count,
-                selected: []
+                selected: Array(bonuses.chosen.count).fill(null)
             };
         }
     }
@@ -161,10 +166,15 @@ function recalcFeatures() {
         const choice = userSelection.featureChoices[choiceKey];
         if (choice.selected && choice.selected.length > 0) {
             choice.selected.forEach(stat => {
-                userSelection.stats[stat] = (userSelection.stats[stat] || 8) + 1;
+                if (stat) {  // Skip null values
+                    userSelection.stats[stat] = (userSelection.stats[stat] || 8) + 1;
+                }
             });
         }
     }
+    
+    // Update characterSheet.stats after applying choices
+    recalcStats();
 }
 
 function recalcSpellcasting() {
