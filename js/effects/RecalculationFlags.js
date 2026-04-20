@@ -160,17 +160,9 @@ function recalcFeatures() {
         EffectHandler.processAllFeatures(characterSheet.features, userSelection);
     }
     
-    // Apply pending choices - apply human bonus stats
-    const choiceKey = 'human-bonus-stats';
-    if (userSelection.featureChoices && userSelection.featureChoices[choiceKey]) {
-        const choice = userSelection.featureChoices[choiceKey];
-        if (choice.selected && choice.selected.length > 0) {
-            choice.selected.forEach(stat => {
-                if (stat) {  // Skip null values
-                    userSelection.stats[stat] = (userSelection.stats[stat] || 8) + 1;
-                }
-            });
-        }
+    // Apply pending choices using EffectHandler - applies stat bonuses from choices
+    if (typeof EffectHandler !== 'undefined') {
+        EffectHandler.applyChoiceBonuses(userSelection);
     }
     
     // Update characterSheet.stats after applying choices

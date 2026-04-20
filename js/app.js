@@ -83,43 +83,13 @@ function toggleSkill(skillName) {
 }
 function selectClassOption(groupName, optionId) { userSelection.selectedFeatureChoices[groupName] = optionId; triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED); renderFeaturesFeats(); refreshDebugIfOpen(); }
 function selectHumanBonusStat(stat) {
-    const choiceKey = 'human-bonus-stats';
-    if (!userSelection.featureChoices) userSelection.featureChoices = {};
-    
-    // Initialize with null slots if not exists
-    if (!userSelection.featureChoices[choiceKey]) {
-        userSelection.featureChoices[choiceKey] = { 
-            type: 'choice', 
-            options: ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'], 
-            count: 2, 
-            selected: [null, null] 
-        };
+    // Use generic EffectHandler toggle for stat-increase choices
+    if (typeof EffectHandler !== 'undefined') {
+        EffectHandler.toggleChoice('human-bonus-stats', stat);
+        triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
+        renderAbilityScores();
+        refreshDebugIfOpen();
     }
-    
-    const choice = userSelection.featureChoices[choiceKey];
-    
-    // If already selected, deselect it (toggle)
-    const existingIndex = choice.selected.indexOf(stat);
-    if (existingIndex !== -1) {
-        choice.selected[existingIndex] = null;
-    } else if (choice.selected.length < choice.count) {
-        // Find first empty slot
-        const emptyIndex = choice.selected.findIndex(s => s === null);
-        if (emptyIndex !== -1) {
-            choice.selected[emptyIndex] = stat;
-        }
-    }
-    
-    // Clean up - remove nulls and fill with nulls to maintain count
-    const filled = choice.selected.filter(s => s !== null);
-    choice.selected = [...filled];
-    while (choice.selected.length < choice.count) {
-        choice.selected.push(null);
-    }
-    
-    triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
-    renderAbilityScores();
-    refreshDebugIfOpen();
 }
 function toggleFeat(featName) {
     const idx = userSelection.feats.indexOf(featName);

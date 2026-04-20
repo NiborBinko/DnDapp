@@ -76,14 +76,72 @@ const EffectHandler = {
             userSelection.featureChoices = {};
         }
         
-        if (!userSelection.featureChoices[keyName]) {
-            userSelection.featureChoices[keyName] = {
-                type: effect.type,
-                options: effect.options || [],
-                count: effect.count || 1,
-                selected: []
-            };
+        // Handle stat-increase type choices - initialize with null slots
+        if (effect.effectType === 'stat') {
+            if (!userSelection.featureChoices[keyName]) {
+                userSelection.featureChoices[keyName] = {
+                    type: effect.type,
+                    effectType: effect.effectType,
+                    value: effect.value || 1,
+                    options: effect.options || [],
+                    count: effect.count || 1,
+                    selected: Array(effect.count || 1).fill(null)
+                };
+            }
+        } else {
+            // Regular choice (non-stat)
+            if (!userSelection.featureChoices[keyName]) {
+                userSelection.featureChoices[keyName] = {
+                    type: effect.type,
+                    options: effect.options || [],
+                    count: effect.count || 1,
+                    selected: Array(effect.count || 1).fill(null)
+                };
+            }
         }
+    },
+    
+    // Generic toggle function for any choice (stat or proficiency)
+    toggleChoice(choiceKey, value) {
+        if (!userSelection.featureChoices) userSelection.featureChoices = {};
+        
+        const choice = userSelection.featureChoices[choiceKey];
+        if (!choice) return;
+        
+        // If already selected, deselect it (toggle)
+        const existingIndex = choice.selected.indexOf(value);
+        if (existingIndex !== -1) {
+            choice.selected[existingIndex] = null;
+        } else if (choice.selected.filter(s => s !== null).length < choice.count) {
+            // Find first empty slot
+            const emptyIndex = choice.selected.findIndex(s => s === null);
+            if (emptyIndex !== -1) {
+                choice.selected[emptyIndex] = value;
+            }
+        }
+        
+        // Clean up - remove nulls and fill with nulls to maintain count
+        const filled = choice.selected.filter(s => s !== null);
+        choice.selected = [...filled];
+        while (choice.selected.length < choice.count) {
+            choice.selected.push(null);
+        }
+    },
+    
+    // Apply selected choices to calculate stat bonuses
+    applyChoiceBonuses(userSelection) {
+        if (!userSelection.featureChoices) return;
+        
+        Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
+            if (!choice || choice.type !== 'choice' || choice.effectType !== 'stat') return;
+            
+            // Apply bonus for each selected stat
+            choice.selected.forEach(stat => {
+                if (stat && userSelection.stats) {
+                    userSelection.stats[stat] = (userSelection.stats[stat] || 8) + (choice.value || 1);
+                }
+            });
+        });
     },
     
     processAllFeatures(features, userSelection) {
@@ -100,7 +158,7 @@ const EffectHandler = {
         if (!userSelection.featureChoices) return pending;
         
         Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
-            if (choice && choice.selected && choice.selected.length < choice.count) {
+            if (choice && choice.selected && choice.selected.filter(s => s !== null).length < choice.count) {
                 pending[key] = choice;
             }
         });
