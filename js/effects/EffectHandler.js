@@ -128,6 +128,16 @@ const EffectHandler = {
         }
     },
     
+    // Create window function for HTML onclick handlers - delegates to toggleChoice
+    makeChoiceHandler(choiceKey) {
+        return (value) => {
+            this.toggleChoice(choiceKey, value);
+            triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
+            renderAbilityScores();
+            refreshDebugIfOpen();
+        };
+    },
+    
     // Apply selected choices to calculate stat bonuses
     applyChoiceBonuses(userSelection) {
         if (!userSelection.featureChoices) return;
@@ -179,3 +189,5 @@ async function loadJson(path) {
 
 window.EffectHandler = EffectHandler;
 window.loadJson = loadJson;
+window.toggleChoice = (choiceKey, value) => EffectHandler.toggleChoice(choiceKey, value);
+window.makeChoiceHandler = (choiceKey) => EffectHandler.makeChoiceHandler(choiceKey);

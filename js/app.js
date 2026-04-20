@@ -82,27 +82,7 @@ function toggleSkill(skillName) {
     refreshDebugIfOpen();
 }
 function selectClassOption(groupName, optionId) { userSelection.selectedFeatureChoices[groupName] = optionId; triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED); renderFeaturesFeats(); refreshDebugIfOpen(); }
-function selectHumanBonusStat(stat) {
-    // Use generic EffectHandler toggle for stat-increase choices
-    if (typeof EffectHandler !== 'undefined') {
-        EffectHandler.toggleChoice('human-bonus-stats', stat);
-        triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
-        renderAbilityScores();
-        refreshDebugIfOpen();
-    }
-}
-function toggleFeat(featName) {
-    const idx = userSelection.feats.indexOf(featName);
-    if (idx > -1) userSelection.feats.splice(idx, 1);
-    else if (userSelection.feats.length < Math.floor(userSelection.lvl / 4)) userSelection.feats.push(featName);
-    triggerRecalc(RECALC_FLAGS.FEAT_CHANGED);
-    renderFeaturesFeats();
-    refreshDebugIfOpen();
-}
-function viewCharacter(index) { const char = loadCharacter(index); if (char) { navigateToStage(7); renderOverview(); } }
-function confirmDelete(index) { UIState.deleteCharacterIndex = index; document.getElementById('delete-char-name').textContent = (getSavedCharacter(index) || {}).name || ''; document.getElementById('delete-confirm-modal').style.display = 'flex'; }
-function closeDeleteModal() { document.getElementById('delete-confirm-modal').style.display = 'none'; UIState.deleteCharacterIndex = null; }
-
+// Keep triggerRecalc and render functions exposed for window
 window.handleRaceSelect = handleRaceSelect;
 window.handleSubraceSelect = handleSubraceSelect;
 window.handleClassSelect = handleClassSelect;
@@ -110,7 +90,6 @@ window.updateLevel = updateLevel;
 window.adjustStat = adjustStat;
 window.toggleSkill = toggleSkill;
 window.selectClassOption = selectClassOption;
-window.selectHumanBonusStat = selectHumanBonusStat;
 window.toggleFeat = toggleFeat;
 window.viewCharacter = viewCharacter;
 window.confirmDelete = confirmDelete;
