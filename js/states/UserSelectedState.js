@@ -1,5 +1,5 @@
 /**
- * User selection state - tracks user choices
+ * User selection state - tracks user choices and logic for updating state
  */
 let userSelection = {
     name: '', lvl: 1, race: null, subrace: null, class: null, subclass: null,
@@ -18,6 +18,142 @@ function resetUserSelection() {
         selectedLanguages: [], spellbookSpells: [], selectedCantrips: [], selectedSpells: [], preparedSpells: []
     };
 }
+
+// ===== Race/Class Selection =====
+
+function handleRaceSelect(raceId) {
+    userSelection.race = raceId;
+    userSelection.subrace = null;
+    triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
+    renderChooseRace();
+    refreshDebugIfOpen();
+}
+
+function handleSubraceSelect(subraceId) {
+    userSelection.subrace = subraceId;
+    triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
+    renderChooseRace();
+    refreshDebugIfOpen();
+}
+
+function handleClassSelect(classId) {
+    userSelection.class = classId;
+    userSelection.subclass = null;
+    triggerRecalc(RECALC_FLAGS.CLASS_CHANGED);
+    renderChooseClass();
+    refreshDebugIfOpen();
+}
+
+function updateLevel(level) {
+    userSelection.lvl = parseInt(level) || 1;
+    triggerRecalc(RECALC_FLAGS.LEVEL_CHANGED);
+    renderAbilityScores();
+    refreshDebugIfOpen();
+}
+
+// ===== Stats =====
+
+function getStatCost(currentValue) {
+    return currentValue >= 13 ? 2 : 1;
+}
+
+function adjustStat(stat, delta) {
+    const currentValue = userSelection.stats[stat] || 8;
+    const cost = getStatCost(currentValue);
+
+    if (delta > 0 && UIState.pointsRemaining >= cost) {
+        userSelection.stats[stat] = currentValue + delta;
+        UIState.pointsRemaining -= cost;
+    } else if (delta < 0 && currentValue > 8) {
+        userSelection.stats[stat] = currentValue + delta;
+        UIState.pointsRemaining += getStatCost(currentValue - 1);
+    }
+    triggerRecalc(RECALC_FLAGS.STAT_CHANGED);
+    renderAbilityScores();
+    refreshDebugIfOpen();
+}
+
+// ===== Skills =====
+
+function getMaxSkillProficiencies() {
+    if (!userSelection.class) return 2;
+    return window.classesData[userSelection.class]?.proficiencies?.skills?.count || 2;
+}
+
+function toggleSkill(skillName) {
+    const idx = userSelection.selectedSkills.indexOf(skillName);
+    if (idx > -1) {
+        userSelection.selectedSkills.splice(idx, 1);
+    } else if (userSelection.selectedSkills.length < getMaxSkillProficiencies()) {
+        userSelection.selectedSkills.push(skillName);
+    }
+    triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED);
+    renderProficienciesStage();
+    refreshDebugIfOpen();
+}
+
+// ===== Feats =====
+
+function toggleFeat(featName) {
+    const idx = userSelection.feats.indexOf(featName);
+    if (idx > -1) {
+        userSelection.feats.splice(idx, 1);
+    } else {
+        const maxFeats = Math.floor(userSelection.lvl / 4);
+        if (userSelection.feats.length < maxFeats) {
+            userSelection.feats.push(featName);
+        }
+    }
+    triggerRecalc(RECALC_FLAGS.FEAT_CHANGED);
+    renderFeaturesFeats();
+    refreshDebugIfOpen();
+}
+
+// ===== Class Options =====
+
+function selectClassOption(groupName, optionId) {
+    userSelection.selectedFeatureChoices[groupName] = optionId;
+    triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED);
+    renderFeaturesFeats();
+    refreshDebugIfOpen();
+}
+
+// ===== Feature Choices (Generic) =====
+
+function selectFeatureChoice(choiceKey, value) {
+    if (!userSelection.featureChoices) {
+        userSelection.featureChoices = {};
+    }
+    const choice = userSelection.featureChoices[choiceKey];
+    if (!choice) return;
+
+    const existingIndex = choice.selected.indexOf(value);
+    if (existingIndex > -1) {
+        choice.selected[existingIndex] = null;
+    } else {
+        const filledCount = choice.selected.filter(s => s !== null).length;
+        if (filledCount < choice.count) {
+            const emptyIndex = choice.selected.findIndex(s => s === null);
+            if (emptyIndex !== -1) {
+                choice.selected[emptyIndex] = value;
+            }
+        }
+    }
+    triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED);
+    renderFeaturesFeats();
+    refreshDebugIfOpen();
+}
+
+// Expose functions to window
+window.handleRaceSelect = handleRaceSelect;
+window.handleSubraceSelect = handleSubraceSelect;
+window.handleClassSelect = handleClassSelect;
+window.updateLevel = updateLevel;
+window.adjustStat = adjustStat;
+window.toggleSkill = toggleSkill;
+window.toggleFeat = toggleFeat;
+window.selectClassOption = selectClassOption;
+window.selectFeatureChoice = selectFeatureChoice;
 
 window.userSelection = userSelection;
 window.resetUserSelection = resetUserSelection;

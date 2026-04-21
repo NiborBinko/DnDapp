@@ -22,6 +22,7 @@ function loadCharacter(index) {
     userSelection = { ...resetUserSelection(), ...c.selection };
     characterSheet = { ...characterSheet, ...c.sheet };
     triggerRecalc(RECALC_FLAGS.ALL_CHANGED);
+    refreshDebugIfOpen();
     return c;
 }
 
@@ -32,8 +33,38 @@ function deleteCharacter(index) {
 
 function getSavedCharacter(index) { const chars = getAllSaved(); return chars[index] || null; }
 
+// ===== View/Delete Saved Characters =====
+
+function viewCharacter(index) {
+    const c = loadCharacter(index);
+    if (c) {
+        navigateToStage(0);
+        renderSavedCharactersList();
+        refreshDebugIfOpen();
+    }
+}
+
+function confirmDelete(index) {
+    UIState.deleteCharacterIndex = index;
+    const modal = document.getElementById('delete-confirm-modal');
+    const charName = document.getElementById('delete-char-name');
+    const c = getSavedCharacter(index);
+    if (charName && c) charName.textContent = c.name;
+    if (modal) modal.style.display = 'block';
+}
+
+function closeDeleteModal() {
+    UIState.deleteCharacterIndex = null;
+    const modal = document.getElementById('delete-confirm-modal');
+    if (modal) modal.style.display = 'none';
+    renderSavedCharactersList();
+}
+
 window.saveCharacter = saveCharacter;
 window.getAllSaved = getAllSaved;
 window.loadCharacter = loadCharacter;
 window.deleteCharacter = deleteCharacter;
 window.getSavedCharacter = getSavedCharacter;
+window.viewCharacter = viewCharacter;
+window.confirmDelete = confirmDelete;
+window.closeDeleteModal = closeDeleteModal;

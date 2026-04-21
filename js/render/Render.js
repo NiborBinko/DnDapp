@@ -44,32 +44,7 @@ function renderAbilityScores() {
     const stats = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
     const raceBonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace);
     const primaryStat = getClassPrimaryStat();
-    
-    // Check for "chosen" bonus - show UI if pending
-    const chosenBonus = raceBonuses.chosen;
-    let chosenUI = '';
-    if (chosenBonus && chosenBonus.isChosen) {
-        const choiceKey = 'human-bonus-stats';
-        const selected = userSelection.featureChoices?.[choiceKey]?.selected || [null, null];
-        const count = chosenBonus.count;
-        
-        chosenUI += `<div class="section-header">Human Bonus: Select ${count} stat${count > 1 ? 's' : ''} (+1 each)</div>`;
-        chosenUI += `<div class="bonus-stats-grid">`;
-        
-        stats.forEach(stat => {
-            const isSelected = selected.includes(stat);
-            const selectedCount = selected.filter(s => s !== null).length;
-            const canSelect = selectedCount < count;
-            
-            chosenUI += `<button class="bonus-stat-btn ${isSelected ? 'selected' : ''}" 
-                ${!canSelect && !isSelected ? 'disabled' : ''} 
-                onclick="selectHumanBonusStat('${stat}')">
-                ${stat.toUpperCase().slice(0,3)} ${isSelected ? '✓' : ''}
-            </button>`;
-        });
-        chosenUI += `</div>`;
-    }
-    
+
     // Calculate points spent: cost 1 per point if stat < 13, else cost 2
     let pointsSpent = 0;
     stats.forEach(stat => {
@@ -80,24 +55,21 @@ function renderAbilityScores() {
         }
     });
     UIState.pointsRemaining = 27 - pointsSpent;
-    
+
     let html = `<div class="points-remaining">Points: <span id="points-remaining">${UIState.pointsRemaining}</span></div>`;
-    
-    if (chosenUI) html += chosenUI;
-    
+
     html += stats.map(stat => {
         const base = userSelection.stats[stat] || 8;
-        const rBonus = raceBonuses[stat] || (raceBonuses.chosen && raceBonuses.chosen.isChosen && userSelection.featureChoices?.['human-bonus-stats']?.selected?.includes(stat) ? 1 : 0);
+        const rBonus = raceBonuses[stat] || 0;
         const total = base + (typeof rBonus === 'number' ? rBonus : 0);
         const mod = Math.floor((total - 10) / 2);
         const cost = base >= 13 ? 2 : 1;
         const canDec = base > 8;
-        const canInc = UIState.pointsRemaining >= cost && base < (rBonus > 0 ? 15 : 14);
+        const canInc = UIState.pointsRemaining >= cost && base < 15;
         return `<div class="stat-row ${primaryStat === stat ? 'primary-stat-row' : ''}"><div class="stat-name">${stat.toUpperCase().slice(0, 3)} ${primaryStat === stat ? '⭐' : ''}</div><div class="stat-controls"><button class="stat-btn" onclick="adjustStat('${stat}', -1)" ${!canDec ? 'disabled' : ''}>-</button><div class="stat-value">${base}</div><button class="stat-btn" onclick="adjustStat('${stat}', 1)" ${!canInc ? 'disabled' : ''}>+${cost > 1 ? cost : ''}</button><div class="stat-bonus">${(rBonus && rBonus > 0) ? '+' + rBonus : ''}</div><div class="stat-total">${total}</div><div class="stat-modifier">${mod >= 0 ? '+' : ''}${mod}</div></div></div>`;
     }).join('');
     container.innerHTML = html;
     updateNextButton();
-    
 }
 
 function getClassPrimaryStat() {
@@ -134,7 +106,7 @@ function renderProficienciesStage() {
 function renderFeaturesFeats() {
     const abilitiesGrid = document.getElementById('abilities-grid');
     const featsGrid = document.getElementById('feats-grid');
-    
+
     if (abilitiesGrid) {
         let html = '';
         if (userSelection.race) {
@@ -142,6 +114,31 @@ function renderFeaturesFeats() {
             if (race?.raceAbilities) {
                 html += `<div class="section-header">Race Abilities</div><div class="checkbox-grid">`;
                 html += race.raceAbilities.map(a => `<label class="checkbox-item"><input type="checkbox" checked disabled>${a} 🔒</label>`).join('');
+                html += '</div>';
+            }
+            // Human bonus stats choice - create pending choice if needed
+            if (userSelection.race === 'human' && race.raceAbilities.includes('Choose 2 Times +1 Bonus Stat')) {
+                const choiceKey = 'choose-2-times-1-bonus-stat';
+                if (!userSelection.featureChoices) userSelection.featureChoices = {};
+                if (!userSelection.featureChoices[choiceKey]) {
+                    userSelection.featureChoices[choiceKey] = {
+                        type: 'choice',
+                        effectType: 'stat',
+                        value: 1,
+                        options: ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'],
+                        count: 2,
+                        selected: [null, null]
+                    };
+                }
+                const choice = userSelection.featureChoices[choiceKey];
+                const selectedStats = choice.selected.filter(s => s !== null);
+                html += `<div class="section-header">Choose 2 Stats (+1 each)</div><div class="bonus-stats-grid">`;
+                choice.options.forEach(stat => {
+                    const isSelected = selectedStats.includes(stat);
+                    const canSelect = selectedStats.length < choice.count;
+                    const disabled = !canSelect && !isSelected ? 'disabled' : '';
+                    html += `<label class="checkbox-item ${isSelected ? 'selected' : ''}"><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${choiceKey}', '${stat}')">${stat.toUpperCase()}</label>`;
+                });
                 html += '</div>';
             }
         }
@@ -164,13 +161,13 @@ function renderFeaturesFeats() {
         }
         abilitiesGrid.innerHTML = html;
     }
-    
+
     if (featsGrid) {
         const feats = Object.keys(window.descriptions?.feats || {});
         const maxFeats = Math.floor(userSelection.lvl / 4);
         const note = document.getElementById('feats-note');
         if (note) note.textContent = maxFeats > 0 ? `Select ${maxFeats - userSelection.feats.length} feat(s)` : 'Feats at lvl 4, 8, 12, 16, 19';
-        
+
         let html = '<div class="checkbox-grid">';
         html += feats.map(feat => {
             const isSel = userSelection.feats.includes(feat);
@@ -180,7 +177,6 @@ function renderFeaturesFeats() {
         html += '</div>';
         featsGrid.innerHTML = html;
     }
-    
 }
 
 function renderSpellsStage() {

@@ -47,39 +47,19 @@ const STAT_NAMES = ['strength', 'dexterity', 'constitution', 'intelligence', 'wi
 function recalcRaceEffects() {
     // Reset stats to base 8 first (idempotent)
     STAT_NAMES.forEach(stat => { userSelection.stats[stat] = 8; });
-    
-    // Clear previous race choices if race changed
-    if (userSelection.featureChoices && userSelection.featureChoices['human-bonus-stats']) {
-        delete userSelection.featureChoices['human-bonus-stats'];
+
+    // Clear human bonus stat choice when race changes
+    if (userSelection.featureChoices && userSelection.featureChoices['choose-2-times-1-bonus-stat']) {
+        delete userSelection.featureChoices['choose-2-times-1-bonus-stat'];
     }
-    
+
     if (!userSelection.race) return;
     const bonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace);
-    
-    // Handle normal numeric bonuses (non-chosen)
+
+    // Handle normal numeric bonuses
     Object.keys(bonuses).forEach(stat => {
-        if (stat !== 'chosen') {
-            userSelection.stats[stat] = (userSelection.stats[stat] || 8) + bonuses[stat];
-        }
+        userSelection.stats[stat] = (userSelection.stats[stat] || 8) + bonuses[stat];
     });
-    
-    // Handle "chosen" - create pending choices in featureChoices with null slots
-    if (bonuses.chosen && bonuses.chosen.isChosen) {
-        if (!userSelection.featureChoices) {
-            userSelection.featureChoices = {};
-        }
-        
-        // Create pending choice with null slots
-        const choiceKey = 'human-bonus-stats';
-        if (!userSelection.featureChoices[choiceKey]) {
-            userSelection.featureChoices[choiceKey] = {
-                type: 'choice',
-                options: ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'],
-                count: bonuses.chosen.count,
-                selected: Array(bonuses.chosen.count).fill(null)
-            };
-        }
-    }
 }
 
 function recalcClassBase() {
@@ -215,10 +195,22 @@ function recalcFeats() {
 
 function recalcStats() {
     // Reset characterSheet.stats to base (from userSelection.stats which already has race bonuses applied)
-    // This function combines base stats + race bonuses + feat bonuses
+    // This function combines base stats + race bonuses + feat bonuses + feature choice bonuses
     const featBonuses = getFeatStatBonuses();
+
+    // Apply Human bonus stat from feature choice (Choose 2 Times +1 Bonus Stat)
+    const humanChoice = userSelection.featureChoices?.['choose-2-times-1-bonus-stat'];
+    const humanBonus = {};
+    if (humanChoice && humanChoice.selected) {
+        humanChoice.selected.forEach(stat => {
+            if (stat) {
+                humanBonus[stat] = (humanBonus[stat] || 0) + (humanChoice.value || 1);
+            }
+        });
+    }
+
     STAT_NAMES.forEach(stat => {
-        characterSheet.stats[stat] = (userSelection.stats[stat] || 8) + (featBonuses[stat] || 0);
+        characterSheet.stats[stat] = (userSelection.stats[stat] || 8) + (featBonuses[stat] || 0) + (humanBonus[stat] || 0);
     });
     recalcStatModifiers();
 }

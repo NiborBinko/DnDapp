@@ -8,10 +8,9 @@
   "Common",
   "One extra language of your choice"
  ],
- "bonuses": {
-  "chosen": 2
- },
+ "bonuses": {},
  "raceAbilities": [
+  "Choose 2 Times +1 Bonus Stat",
   "+1 Proficiency",
   "+1 Feat"
  ]

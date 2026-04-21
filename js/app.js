@@ -1,5 +1,5 @@
 /**
- * Main application initialization
+ * Main application initialization and startup
  */
 async function initApp() {
     try {
@@ -25,11 +25,10 @@ function setupEventListeners() {
             if (UIState.deleteCharacterIndex !== null) {
                 deleteCharacter(UIState.deleteCharacterIndex);
                 closeDeleteModal();
-                renderSavedCharactersList();
             }
         });
     }
-    
+
     const newCharBtn = document.getElementById('btn-new-char');
     if (newCharBtn) {
         newCharBtn.addEventListener('click', startNewCharacter);
@@ -40,7 +39,7 @@ function startNewCharacter() {
     resetUIState();
     userSelection = resetUserSelection();
     characterSheet = getDefaultSheet();
-    navigateToStage(1);  // Go to Choose Race step
+    navigateToStage(1);
 }
 
 function getDefaultSheet() {
@@ -59,41 +58,7 @@ function getDefaultSheet() {
     };
 }
 
-// Event handlers
-function handleRaceSelect(raceId) { userSelection.race = raceId; userSelection.subrace = null; triggerRecalc(RECALC_FLAGS.RACE_CHANGED); renderChooseRace(); refreshDebugIfOpen(); }
-function handleSubraceSelect(subraceId) { userSelection.subrace = subraceId; triggerRecalc(RECALC_FLAGS.SUBCLASS_CHANGED); renderChooseRace(); refreshDebugIfOpen(); }
-function handleClassSelect(classId) { userSelection.class = classId; userSelection.subclass = null; triggerRecalc(RECALC_FLAGS.CLASS_CHANGED); renderChooseClass(); refreshDebugIfOpen(); }
-function updateLevel(level) { userSelection.lvl = parseInt(level) || 1; triggerRecalc(RECALC_FLAGS.LEVEL_CHANGED); renderAbilityScores(); refreshDebugIfOpen(); }
-function adjustStat(stat, delta) {
-    const currentValue = userSelection.stats[stat] || 8;
-    const cost = getStatCost(currentValue);
-    if (delta > 0 && UIState.pointsRemaining >= cost) { userSelection.stats[stat] = currentValue + delta; UIState.pointsRemaining -= cost; }
-    else if (delta < 0 && currentValue > 8) { userSelection.stats[stat] = currentValue + delta; UIState.pointsRemaining += getStatCost(currentValue - 1); }
-    triggerRecalc(RECALC_FLAGS.STAT_CHANGED);
-    renderAbilityScores();
-    refreshDebugIfOpen();
-}
-function getStatCost(currentValue) { return currentValue >= 13 ? 2 : 1; }
-function toggleSkill(skillName) {
-    const idx = userSelection.selectedSkills.indexOf(skillName);
-    if (idx > -1) userSelection.selectedSkills.splice(idx, 1);
-    else if (userSelection.selectedSkills.length < getMaxSkillProficiencies()) userSelection.selectedSkills.push(skillName);
-    renderProficienciesStage();
-    refreshDebugIfOpen();
-}
-function selectClassOption(groupName, optionId) { userSelection.selectedFeatureChoices[groupName] = optionId; triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED); renderFeaturesFeats(); refreshDebugIfOpen(); }
-// Keep triggerRecalc and render functions exposed for window
-window.handleRaceSelect = handleRaceSelect;
-window.handleSubraceSelect = handleSubraceSelect;
-window.handleClassSelect = handleClassSelect;
-window.updateLevel = updateLevel;
-window.adjustStat = adjustStat;
-window.toggleSkill = toggleSkill;
-window.selectClassOption = selectClassOption;
-window.toggleFeat = toggleFeat;
-window.viewCharacter = viewCharacter;
-window.confirmDelete = confirmDelete;
-window.closeDeleteModal = closeDeleteModal;
+// Expose startNewCharacter for HTML
 window.startNewCharacter = startNewCharacter;
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp);
