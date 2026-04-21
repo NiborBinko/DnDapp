@@ -20,13 +20,60 @@ function prevStage() { navigateToStage(UIState.currentStage - 1); }
 function canProceed() {
     switch (UIState.currentStage) {
         case 0: return true;
-        case 1: return userSelection && userSelection.race !== null;
-        case 2: return userSelection && userSelection.class !== null;
-        case 3: return UIState.pointsRemaining >= 0;
-        case 4: return true;
-        case 5: return true;
-        case 6: return true;
-        case 7: return true;
+        case 1: {
+            // Race must be selected
+            if (!userSelection.race) return false;
+            // If race has subraces, one must be selected
+            const race = window.racesData[userSelection.race];
+            if (race?.subraces && Object.keys(race.subraces).length > 0 && !userSelection.subrace) return false;
+            return true;
+        }
+        case 2: {
+            // Class must be selected
+            if (!userSelection.class) return false;
+            // If class has pending options at current level, must select one
+            const cls = window.classesData[userSelection.class];
+            const feats = cls?.features?.[userSelection.lvl];
+            if (feats?.options?.length > 0) {
+                const pendingChoices = feats.options.filter(opt => !userSelection.selectedFeatureChoices[opt.exclusiveGroup]);
+                if (pendingChoices.length > 0) return false;
+            }
+            return true;
+        }
+        case 3: {
+            // All points must be spent (pointsRemaining === 0)
+            // AND check if Human race has pending bonus stat choice
+            if (UIState.pointsRemaining !== 0) return false;
+            if (userSelection.race === 'human') {
+                const choice = userSelection.featureChoices?.['choose-2-times-1-bonus-stat'];
+                if (choice) {
+                    const filledCount = choice.selected.filter(s => s !== null).length;
+                    if (filledCount < choice.count) return false;
+                }
+            }
+            return true;
+        }
+        case 4: {
+            // All required skills must be selected
+            const classData = window.classesData[userSelection.class];
+            const requiredCount = classData?.proficiencies?.skills?.count || 2;
+            if (userSelection.selectedSkills.length < requiredCount) return false;
+            return true;
+        }
+        case 5: {
+            // All pending feature choices must be completed
+            // Check Human bonus stat choice is complete
+            if (userSelection.race === 'human') {
+                const choice = userSelection.featureChoices?.['choose-2-times-1-bonus-stat'];
+                if (choice) {
+                    const filledCount = choice.selected.filter(s => s !== null).length;
+                    if (filledCount < choice.count) return false;
+                }
+            }
+            return true;
+        }
+        case 6: return true; // Spell selection (future)
+        case 7: return true; // Overview (future: name required)
         default: return false;
     }
 }

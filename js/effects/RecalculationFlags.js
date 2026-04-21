@@ -110,15 +110,21 @@ function recalcProficiencies() {
 
 function recalcFeatures() {
     characterSheet.features = [];
-    
+
     // Add race features
     if (userSelection.race) {
         const race = window.racesData[userSelection.race];
         if (race?.raceAbilities) {
             race.raceAbilities.forEach(a => characterSheet.features.push({ name: a, source: 'race', sourceId: race.id }));
         }
+        // Add subrace features if subrace selected
+        if (userSelection.subrace && race.subraces?.[userSelection.subrace]?.raceAbilities) {
+            race.subraces[userSelection.subrace].raceAbilities.forEach(a => {
+                characterSheet.features.push({ name: a, source: 'race', sourceId: race.id, subraceId: userSelection.subrace });
+            });
+        }
     }
-    
+
     // Add class features (all levels up to current)
     if (userSelection.class) {
         const cls = window.classesData[userSelection.class];
