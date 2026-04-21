@@ -37,7 +37,8 @@
       "inheritFromRace": true
     },
     "Dwarven Tool Proficiency": {
-      "type": "choice",
+      "type": "proficiency",
+      "proficiencyType": "tool",
       "options": ["smith's tools", "brewer's supplies", "mason's tools"],
       "count": 1,
       "inheritFromRace": true
@@ -117,23 +118,11 @@
       "type": "none",
       "description": "Carrying capacity is doubled."
     },
-    "Human Versatility": {
-      "type": "choice",
-      "choiceName": "Human Bonus",
-      "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],
-      "count": 2,
-      "effectType": "stat",
-      "value": 1
-    },
     "Relentless Endurance": {
       "type": "none",
       "description": "When reduced to 0 HP, can drop to 1 HP instead once per long rest."
     },
-    "Menacing": {
-      "type": "skill",
-      "skill": "Intimidation",
-      "inheritFromRace": true
-    },
+
     "Hellfire Resistance": {
       "type": "resistance",
       "damageType": "fire"
@@ -147,8 +136,7 @@
       }
     },
     "Choose 2 Times +1 Bonus Stat": {
-      "type": "choice",
-      "effectType": "stat",
+      "type": "stat",
       "value": 1,
       "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],
       "count": 2

@@ -44,6 +44,35 @@ function recalcAll() {
 // Constants
 const STAT_NAMES = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
 
+// Helper: Look up effect by feature name from race-effects.json
+function getRaceEffect(featureName) {
+    const key = featureName.toLowerCase().replace(/\s+/g, '-');
+    return window.raceEffectsData?.effects?.[key] || null;
+}
+
+// Helper: Get selections for a feature choice
+// Returns: user's selections OR auto-apply if options.length === count
+function getEffectSelections(effect, defaultOptions) {
+    if (!effect || !effect.options) return null;
+
+    const key = effect.options[0]?.includes(' ') ?
+        effect.options[0].toLowerCase().replace(/\s+/g, '-').replace(/-.*/, '') :
+        defaultOptions?.[0]?.toLowerCase().replace(/\s+/g, '-') || '';
+
+    const choice = userSelection.featureChoices?.[key];
+    if (choice && choice.selected) {
+        const selections = choice.selected.filter(s => s !== null);
+        if (selections.length > 0) return selections;
+    }
+
+    // Auto-apply if options.length === count
+    if (effect.options.length === effect.count) {
+        return effect.options;
+    }
+
+    return null;
+}
+
 function recalcRaceEffects() {
     // Reset stats to base 8 first (idempotent)
     STAT_NAMES.forEach(stat => { userSelection.stats[stat] = 8; });
@@ -84,6 +113,17 @@ function recalcVision() {
 function recalcSpeed() {
     let speed = 30;
     if (userSelection.race) speed = window.racesData[userSelection.race]?.speed || 30;
+
+    // Process race features for speed bonuses (type: "speed")
+    if (characterSheet.features) {
+        characterSheet.features.forEach(feature => {
+            const effect = getRaceEffect(feature.name);
+            if (effect?.type === 'speed' && effect.value) {
+                speed += effect.value;
+            }
+        });
+    }
+
     characterSheet.speed = speed;
 }
 
@@ -106,6 +146,28 @@ function recalcProficiencies() {
         }
     }
     userSelection.selectedSkills.forEach(s => { if (!characterSheet.proficiencies.skills.includes(s)) characterSheet.proficiencies.skills.push(s); });
+
+    // Process race features for proficiencies (type: "proficiency")
+    if (characterSheet.features) {
+        characterSheet.features.forEach(feature => {
+            const effect = getRaceEffect(feature.name);
+            if (effect?.type === 'proficiency') {
+                const profType = effect.proficiencyType;
+                const selections = getEffectSelections(effect);
+                if (selections) {
+                    selections.forEach(item => {
+                        if (profType === 'tool' && !characterSheet.proficiencies.tools.includes(item)) {
+                            characterSheet.proficiencies.tools.push(item);
+                        } else if (profType === 'weapon' && !characterSheet.proficiencies.weapons.includes(item)) {
+                            characterSheet.proficiencies.weapons.push(item);
+                        } else if (profType === 'armor' && !characterSheet.proficiencies.armor.includes(item)) {
+                            characterSheet.proficiencies.armor.push(item);
+                        }
+                    });
+                }
+            }
+        });
+    }
 }
 
 function recalcFeatures() {
@@ -201,23 +263,31 @@ function recalcFeats() {
 
 function recalcStats() {
     // Reset characterSheet.stats to base (from userSelection.stats which already has race bonuses applied)
-    // This function combines base stats + race bonuses + feat bonuses + feature choice bonuses
+    // This function combines base stats + race bonuses + feat bonuses
     const featBonuses = getFeatStatBonuses();
 
-    // Apply Human bonus stat from feature choice (Choose 2 Times +1 Bonus Stat)
-    const humanChoice = userSelection.featureChoices?.['choose-2-times-1-bonus-stat'];
-    const humanBonus = {};
-    if (humanChoice && humanChoice.selected) {
-        humanChoice.selected.forEach(stat => {
-            if (stat) {
-                humanBonus[stat] = (humanBonus[stat] || 0) + (humanChoice.value || 1);
+    // Start with base stats + race bonuses
+    STAT_NAMES.forEach(stat => {
+        characterSheet.stats[stat] = (userSelection.stats[stat] || 8) + (featBonuses[stat] || 0);
+    });
+
+    // Apply stat bonuses from features (type: "stat")
+    if (characterSheet.features) {
+        characterSheet.features.forEach(feature => {
+            const effect = getRaceEffect(feature.name);
+            if (effect?.type === 'stat') {
+                const selections = getEffectSelections(effect, effect.options);
+                if (selections) {
+                    selections.forEach(stat => {
+                        if (STAT_NAMES.includes(stat.toLowerCase())) {
+                            characterSheet.stats[stat.toLowerCase()] = (characterSheet.stats[stat.toLowerCase()] || 8) + (effect.value || 1);
+                        }
+                    });
+                }
             }
         });
     }
 
-    STAT_NAMES.forEach(stat => {
-        characterSheet.stats[stat] = (userSelection.stats[stat] || 8) + (featBonuses[stat] || 0) + (humanBonus[stat] || 0);
-    });
     recalcStatModifiers();
 }
 
