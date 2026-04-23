@@ -154,31 +154,25 @@ function recalcProficiencies() {
             if (effect?.type === 'proficiency') {
                 const profType = effect.proficiencyType;
                 const selections = getEffectSelections(effect);
+
                 // Store pending choice if options exist but selections don't match count
                 if (effect.options && effect.options.length !== effect.count && !selections) {
                     const key = feature.name.toLowerCase();
-                    if (!userSelection.featureChoices[key]) {
-                        userSelection.featureChoices[key] = {
-                            count: effect.count,
-                            selected: Array(effect.count).fill(null),
-                            options: effect.options,
-                            type: 'proficiency',
-                            proficiencyType: profType
-                        };
-                    }
+                    userSelection.featureChoices[key] = {
+                        count: effect.count,
+                        selected: Array(effect.count).fill(null),
+                        options: effect.options,
+                        type: 'proficiency',
+                        proficiencyType: profType
+                    };
                 }
-                if (profType === 'skill') {
-                    // Auto-add if selections.length === count (no choice needed)
-                    if (selections && selections.length === effect.count) {
-                        selections.forEach(skill => {
-                            if (!characterSheet.proficiencies.skills.includes(skill)) {
-                                characterSheet.proficiencies.skills.push(skill);
-                            }
-                        });
-                    }
-                } else if (selections) {
+
+                // Auto-add if selections.length === count (no choice needed)
+                if (selections && selections.length === effect.count) {
                     selections.forEach(item => {
-                        if (profType === 'tool' && !characterSheet.proficiencies.tools.includes(item)) {
+                        if (profType === 'skill' && !characterSheet.proficiencies.skills.includes(item)) {
+                            characterSheet.proficiencies.skills.push(item);
+                        } else if (profType === 'tool' && !characterSheet.proficiencies.tools.includes(item)) {
                             characterSheet.proficiencies.tools.push(item);
                         } else if (profType === 'weapon' && !characterSheet.proficiencies.weapons.includes(item)) {
                             characterSheet.proficiencies.weapons.push(item);
