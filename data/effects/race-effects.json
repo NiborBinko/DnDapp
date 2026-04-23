@@ -160,6 +160,17 @@
       "value": 1,
       "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],
       "count": 2
+    },
+    "+1 proficiency": {
+      "type": "proficiency",
+      "proficiencyType": "skill",
+      "options": ["Athletics", "Acrobatics", "Sleight of Hand", "Stealth", "Arcana", "History", "Investigation", "Medicine", "Nature", "Perception", "Religion", "Animal Handling", "Insight", "Persuasion", "Deception", "Intimidation"],
+      "count": 1
+    },
+    "+1 feat": {
+      "type": "feat",
+      "options": [],
+      "count": 1
     }
   }
 }
