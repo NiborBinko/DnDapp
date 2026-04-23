@@ -22,19 +22,19 @@
       "type": "proficiency",
       "proficiencyType": "armor",
       "options": ["light armor", "medium armor", "shields"],
-      "count": 3
+      "count": 2
     },
     "elf weapon training": {
       "type": "proficiency",
       "proficiencyType": "weapon",
       "options": ["longswords", "shortswords", "shortbows", "longbows"],
-      "count": 4
+      "count": 1
     },
     "drow weapon training": {
       "type": "proficiency",
       "proficiencyType": "weapon",
       "options": ["rapiers", "shortswords", "hand crossbows"],
-      "count": 3
+      "count": 1
     },
     "dwarven tool proficiency": {
       "type": "proficiency",
@@ -130,7 +130,7 @@
         "3": ["faerie-fire"]
       }
     },
-"sunlight sensitivity": {
+    "sunlight sensitivity": {
       "type": "none",
       "description": "Disadvantage on Wisdom (Perception) checks in direct sunlight."
     },
@@ -141,6 +141,18 @@
     "relentless endurance": {
       "type": "none",
       "description": "When reduced to 0 HP, can drop to 1 HP instead once per long rest."
+    },
+    "hellfire resistance": {
+      "type": "resistance",
+      "damageType": "fire"
+    },
+    "infernal legacy": {
+      "type": "spell",
+      "spellLevels": {
+        "1": ["hellfire"],
+        "3": ["darkness"],
+        "5": ["fireball"]
+      }
     },
     "mask of the wild": {
       "type": "none",
@@ -178,9 +190,6 @@
     "breath weapon (cold)": {
       "type": "none",
       "description": "As an action, exhale cold in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
-    }
-  }
-}
     },
     "choose 2 times +1 bonus stat": {
       "type": "stat",
