@@ -130,7 +130,7 @@
         "3": ["faerie-fire"]
       }
     },
-    "sunlight sensitivity": {
+"sunlight sensitivity": {
       "type": "none",
       "description": "Disadvantage on Wisdom (Perception) checks in direct sunlight."
     },
@@ -142,18 +142,45 @@
       "type": "none",
       "description": "When reduced to 0 HP, can drop to 1 HP instead once per long rest."
     },
-
-    "hellfire resistance": {
-      "type": "resistance",
-      "damageType": "fire"
+    "mask of the wild": {
+      "type": "none",
+      "description": "You can attempt to hide when only lightly obscured by foliage, heavy rain, mist, or snow."
     },
-    "infernal legacy": {
-      "type": "spell",
-      "spellLevels": {
-        "1": ["hellfire"],
-        "3": ["darkness"],
-        "5": ["fireball"]
-      }
+    "natural illusionist": {
+      "type": "cantrip",
+      "class": "wizard",
+      "spellList": "illusion"
+    },
+    "artificer's lore": {
+      "type": "none",
+      "description": "Whenever you make an Intelligence check related to magical, alchemical, or technological items, double your proficiency bonus."
+    },
+    "stout resilience": {
+      "type": "none",
+      "description": "You have advantage on saving throws against poison."
+    },
+    "breath weapon (acid)": {
+      "type": "none",
+      "description": "As an action, exhale acid in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
+    },
+    "breath weapon (lightning)": {
+      "type": "none",
+      "description": "As an action, exhale lightning in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
+    },
+    "breath weapon (poison)": {
+      "type": "none",
+      "description": "As an action, exhale poison in a 5-foot by 30-foot line or 15-foot cone. Con save to take 2d6 damage."
+    },
+    "breath weapon (fire)": {
+      "type": "none",
+      "description": "As an action, exhale fire in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
+    },
+    "breath weapon (cold)": {
+      "type": "none",
+      "description": "As an action, exhale cold in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
+    }
+  }
+}
     },
     "choose 2 times +1 bonus stat": {
       "type": "stat",
