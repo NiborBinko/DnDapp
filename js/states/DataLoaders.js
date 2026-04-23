@@ -82,7 +82,7 @@ function getRaceVision(raceId, subraceId) {
     const allAbilities = [...abilities, ...subAbilities];
     let night = null;
     allAbilities.forEach(a => {
-        const effect = window.raceEffectsData?.effects?.[a.toLowerCase().replace(/\s+/g, '-')];
+        const effect = window.raceEffectsData?.effects?.[a.toLowerCase()];
         if (effect?.type === 'vision' && effect.value?.nightvision) night = Math.max(night || 0, effect.value.nightvision);
     });
     return { nightvision: night, dayvision: null };
@@ -91,7 +91,7 @@ function getRaceVision(raceId, subraceId) {
 function getFeatStatBonuses() {
     const bonuses = {};
     userSelection?.feats?.forEach(feat => {
-        const effect = window.featEffectsData?.effects?.[feat.toLowerCase().replace(/\s+/g, '-')];
+        const effect = window.featEffectsData?.effects?.[feat.toLowerCase()];
         if (effect?.type === 'stat' && effect.value) bonuses[effect.value.stat] = (bonuses[effect.value.stat] || 0) + effect.value.amount;
     });
     return bonuses;

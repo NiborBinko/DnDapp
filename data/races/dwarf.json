@@ -12,19 +12,18 @@
   "constitution": 2
  },
 "raceAbilities": [
-   "Darkvision",
-   "Dwarven Resilience",
-   "Stonecunning",
-   "Dwarven Tool Proficiency"
-  ],
+    "Darkvision",
+    "Dwarven Resilience",
+    "Dwarven Combat Training",
+    "Stonecunning",
+    "Dwarven Tool Proficiency"
+   ],
  "subraces": {
   "Hill Dwarf": {
-   "speed": 25,
    "bonuses": {"wisdom": 1},
    "raceAbilities": ["Dwarven Toughness"]
   },
   "Mountain Dwarf": {
-   "speed": 25,
    "bonuses": {"strength": 2},
    "raceAbilities": ["Dwarven Armor Training"]
   }

@@ -24,7 +24,6 @@
    "languages": ["One extra language of your choice"]
   },
   "Wood Elf": {
-   "speed": 35,
    "bonuses": {"wisdom": 1},
    "raceAbilities": ["Mask of the Wild", "Fleet Footed", "Elf Weapon Training"]
   },

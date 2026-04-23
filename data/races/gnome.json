@@ -17,12 +17,10 @@
   ],
  "subraces": {
   "Forest Gnome": {
-   "speed": 25,
    "bonuses": {"dexterity": 1},
    "raceAbilities": ["Natural Illusionist"]
   },
   "Rock Gnome": {
-   "speed": 25,
    "bonuses": {"constitution": 1},
    "raceAbilities": ["Artificer's Lore"]
   }

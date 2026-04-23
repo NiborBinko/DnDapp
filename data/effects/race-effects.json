@@ -1,108 +1,116 @@
 {
   "effects": {
-    "Keen Senses": {
-      "type": "skill",
-      "skill": "Perception",
-      "inheritFromRace": true
+    "keen senses": {
+      "type": "proficiency",
+      "proficiencyType": "skill",
+      "options": ["Perception"],
+      "count": 1
     },
-    "Menacing": {
-      "type": "skill",
-      "skill": "Intimidation",
-      "inheritFromRace": true
+    "menacing": {
+      "type": "proficiency",
+      "proficiencyType": "skill",
+      "options": ["Intimidation"],
+      "count": 1
     },
-    "Naturally Stealthy": {
-      "type": "skill",
-      "skill": "Stealth",
-      "inheritFromRace": true
+    "naturally stealthy": {
+      "type": "proficiency",
+      "proficiencyType": "skill",
+      "options": ["Stealth"],
+      "count": 1
     },
-    "Dwarven Armor Training": {
+    "dwarven armor training": {
       "type": "proficiency",
       "proficiencyType": "armor",
       "options": ["light armor", "medium armor", "shields"],
-      "count": 1,
-      "inheritFromRace": true
+      "count": 3
     },
-    "Elf Weapon Training": {
+    "elf weapon training": {
       "type": "proficiency",
       "proficiencyType": "weapon",
       "options": ["longswords", "shortswords", "shortbows", "longbows"],
-      "count": 1,
-      "inheritFromRace": true
+      "count": 4
     },
-    "Drow Weapon Training": {
+    "drow weapon training": {
       "type": "proficiency",
       "proficiencyType": "weapon",
       "options": ["rapiers", "shortswords", "hand crossbows"],
-      "count": 1,
-      "inheritFromRace": true
+      "count": 3
     },
-    "Dwarven Tool Proficiency": {
+    "dwarven tool proficiency": {
       "type": "proficiency",
       "proficiencyType": "tool",
       "options": ["smith's tools", "brewer's supplies", "mason's tools"],
-      "count": 1,
-      "inheritFromRace": true
+      "count": 1
     },
-    "High Elf Cantrip": {
+    "high elf cantrip": {
       "type": "cantrip",
       "class": "wizard",
       "spellList": "all"
     },
-    "Drow Magic": {
+    "drow magic": {
       "type": "innateSpell",
       "spellLevels": {
         "3": ["faerie-fire"],
         "5": ["darkness"]
       }
     },
-    "Dwarven Toughness": {
+    "dwarven toughness": {
       "type": "stat",
       "stat": "constitution",
       "value": 1,
       "effectType": "modifier"
     },
-    "Fleet Footed": {
+    "dwarven resilience": {
+      "type": "none",
+      "description": "Advantage on saving throws against poison. Resistance against poison damage."
+    },
+    "dwarven combat training": {
+      "type": "proficiency",
+      "proficiencyType": "weapon",
+      "options": ["battleaxe", "handaxe", "lighthammer", "warhammer"],
+      "count": 4
+    },
+    "fleet footed": {
       "type": "speed",
       "value": 5
     },
-    "Darkvision": {
+    "darkvision": {
       "type": "vision",
       "value": 60
     },
-    "Superior Darkvision": {
+    "superior darkvision": {
       "type": "vision",
       "value": 120
     },
-    "Trance": {
+    "trance": {
       "type": "none",
       "description": "Elves don't need to sleep. They can rest while doing light activity for 4 hours."
     },
-    "Fey Ancestry": {
+    "fey ancestry": {
       "type": "none",
       "description": "Advantage on saving throws against being charmed."
     },
-    "Keen Smell": {
+    "keen smell": {
       "type": "none",
       "description": "Advantage on Wisdom (Perception) checks that rely on smell."
     },
-    "Stonecunning": {
+    "stonecunning": {
       "type": "none",
       "description": "History check related to stonework has advantage."
     },
-    "Hill Dwarf Resistance": {
+    "hill dwarf resistance": {
       "type": "stat",
       "stat": "constitution",
       "value": 1,
       "effectType": "modifier"
     },
-    "Mountain Dwarf Resilience": {
+    "mountain dwarf resilience": {
       "type": "proficiency",
       "proficiencyType": "armor",
       "options": ["light armor", "medium armor"],
-      "count": 2,
-      "inheritFromRace": true
+      "count": 2
     },
-    "Drow Innate Magic": {
+    "drow innate magic": {
       "type": "innateSpell",
       "spellLevels": {
         "1": ["dancing-lights"],
@@ -110,24 +118,24 @@
         "3": ["faerie-fire"]
       }
     },
-    "Sunlight Sensitivity": {
+    "sunlight sensitivity": {
       "type": "none",
       "description": "Disadvantage on Wisdom (Perception) checks in direct sunlight."
     },
-    "Powerful Build": {
+    "powerful build": {
       "type": "none",
       "description": "Carrying capacity is doubled."
     },
-    "Relentless Endurance": {
+    "relentless endurance": {
       "type": "none",
       "description": "When reduced to 0 HP, can drop to 1 HP instead once per long rest."
     },
 
-    "Hellfire Resistance": {
+    "hellfire resistance": {
       "type": "resistance",
       "damageType": "fire"
     },
-    "Infernal Legacy": {
+    "infernal legacy": {
       "type": "spell",
       "spellLevels": {
         "1": ["hellfire"],
@@ -135,7 +143,7 @@
         "5": ["fireball"]
       }
     },
-    "Choose 2 Times +1 Bonus Stat": {
+    "choose 2 times +1 bonus stat": {
       "type": "stat",
       "value": 1,
       "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],

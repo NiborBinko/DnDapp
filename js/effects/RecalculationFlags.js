@@ -46,7 +46,7 @@ const STAT_NAMES = ['strength', 'dexterity', 'constitution', 'intelligence', 'wi
 
 // Helper: Look up effect by feature name from race-effects.json
 function getRaceEffect(featureName) {
-    const key = featureName.toLowerCase().replace(/\s+/g, '-');
+    const key = featureName.toLowerCase();
     return window.raceEffectsData?.effects?.[key] || null;
 }
 
@@ -154,7 +154,29 @@ function recalcProficiencies() {
             if (effect?.type === 'proficiency') {
                 const profType = effect.proficiencyType;
                 const selections = getEffectSelections(effect);
-                if (selections) {
+                // Store pending choice if options exist but selections don't match count
+                if (effect.options && effect.options.length !== effect.count && !selections) {
+                    const key = feature.name.toLowerCase();
+                    if (!userSelection.featureChoices[key]) {
+                        userSelection.featureChoices[key] = {
+                            count: effect.count,
+                            selected: Array(effect.count).fill(null),
+                            options: effect.options,
+                            type: 'proficiency',
+                            proficiencyType: profType
+                        };
+                    }
+                }
+                if (profType === 'skill') {
+                    // Auto-add if selections.length === count (no choice needed)
+                    if (selections && selections.length === effect.count) {
+                        selections.forEach(skill => {
+                            if (!characterSheet.proficiencies.skills.includes(skill)) {
+                                characterSheet.proficiencies.skills.push(skill);
+                            }
+                        });
+                    }
+                } else if (selections) {
                     selections.forEach(item => {
                         if (profType === 'tool' && !characterSheet.proficiencies.tools.includes(item)) {
                             characterSheet.proficiencies.tools.push(item);
