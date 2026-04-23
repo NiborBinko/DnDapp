@@ -117,7 +117,7 @@ function renderFeaturesFeats() {
                 html += '</div>';
             }
             // Human bonus stats choice - create pending choice if needed
-            if (userSelection.race === 'human' && race.raceAbilities.includes('Choose 2 Times +1 Bonus Stat')) {
+            if (userSelection.race === 'human' && race.raceAbilities.includes('Human Stat Bonus')) {
                 const choiceKey = 'choose-2-times-1-bonus-stat';
                 if (!userSelection.featureChoices) userSelection.featureChoices = {};
                 if (!userSelection.featureChoices[choiceKey]) {

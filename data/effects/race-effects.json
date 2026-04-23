@@ -22,19 +22,19 @@
       "type": "proficiency",
       "proficiencyType": "armor",
       "options": ["light armor", "medium armor", "shields"],
-      "count": 2
+      "count": 3
     },
     "elf weapon training": {
       "type": "proficiency",
       "proficiencyType": "weapon",
       "options": ["longswords", "shortswords", "shortbows", "longbows"],
-      "count": 1
+      "count": 4
     },
     "drow weapon training": {
       "type": "proficiency",
       "proficiencyType": "weapon",
       "options": ["rapiers", "shortswords", "hand crossbows"],
-      "count": 1
+      "count": 3
     },
     "dwarven tool proficiency": {
       "type": "proficiency",
@@ -55,10 +55,8 @@
       }
     },
     "dwarven toughness": {
-      "type": "stat",
-      "stat": "constitution",
-      "value": 1,
-      "effectType": "modifier"
+      "type": "maxHP",
+      "value": "lvl"
     },
     "dwarven resilience": {
       "type": "none",
@@ -191,7 +189,7 @@
       "type": "none",
       "description": "As an action, exhale cold in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
     },
-    "choose 2 times +1 bonus stat": {
+    "human stat bonus": {
       "type": "stat",
       "value": 1,
       "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],

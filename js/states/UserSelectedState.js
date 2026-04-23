@@ -24,14 +24,14 @@ function resetUserSelection() {
 function handleRaceSelect(raceId) {
     userSelection.race = raceId;
     userSelection.subrace = null;
-    triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
+    triggerRecalc();
     renderChooseRace();
     refreshDebugIfOpen();
 }
 
 function handleSubraceSelect(subraceId) {
     userSelection.subrace = subraceId;
-    triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
+    triggerRecalc();
     renderChooseRace();
     refreshDebugIfOpen();
 }
@@ -39,14 +39,14 @@ function handleSubraceSelect(subraceId) {
 function handleClassSelect(classId) {
     userSelection.class = classId;
     userSelection.subclass = null;
-    triggerRecalc(RECALC_FLAGS.CLASS_CHANGED);
+    triggerRecalc();
     renderChooseClass();
     refreshDebugIfOpen();
 }
 
 function updateLevel(level) {
     userSelection.lvl = parseInt(level) || 1;
-    triggerRecalc(RECALC_FLAGS.LEVEL_CHANGED);
+    triggerRecalc();
     renderAbilityScores();
     refreshDebugIfOpen();
 }
@@ -68,7 +68,7 @@ function adjustStat(stat, delta) {
         userSelection.stats[stat] = currentValue + delta;
         UIState.pointsRemaining += getStatCost(currentValue - 1);
     }
-    triggerRecalc(RECALC_FLAGS.STAT_CHANGED);
+    triggerRecalc();
     renderAbilityScores();
     refreshDebugIfOpen();
 }
@@ -87,7 +87,7 @@ function toggleSkill(skillName) {
     } else if (userSelection.selectedSkills.length < getMaxSkillProficiencies()) {
         userSelection.selectedSkills.push(skillName);
     }
-    triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED);
+    triggerRecalc();
     renderProficienciesStage();
     refreshDebugIfOpen();
 }
@@ -104,7 +104,7 @@ function toggleFeat(featName) {
             userSelection.feats.push(featName);
         }
     }
-    triggerRecalc(RECALC_FLAGS.FEAT_CHANGED);
+    triggerRecalc();
     renderFeaturesFeats();
     refreshDebugIfOpen();
 }
@@ -113,7 +113,7 @@ function toggleFeat(featName) {
 
 function selectClassOption(groupName, optionId) {
     userSelection.selectedFeatureChoices[groupName] = optionId;
-    triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED);
+    triggerRecalc();
     renderFeaturesFeats();
     refreshDebugIfOpen();
 }
@@ -139,7 +139,7 @@ function selectFeatureChoice(choiceKey, value) {
             }
         }
     }
-    triggerRecalc(RECALC_FLAGS.FEATURE_CHANGED);
+    triggerRecalc();
     renderFeaturesFeats();
     refreshDebugIfOpen();
 }

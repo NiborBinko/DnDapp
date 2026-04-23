@@ -16,10 +16,23 @@ const EffectHandler = {
     },
     
     getEffectByName(name, source) {
-        const effects = this.effectsData[source];
+        let effects;
+        switch (source) {
+            case 'race':
+                effects = window.raceEffectsData;
+                break;
+            case 'class':
+                effects = window.classEffectsData;
+                break;
+            case 'feat':
+                effects = window.featEffectsData;
+                break;
+            default:
+                effects = this.effectsData[source];
+        }
         if (!effects || !effects.effects) return null;
-        
-        const key = name.toLowerCase().replace(/\s+/g, '-');
+
+        const key = name.toLowerCase();
         return effects.effects[key] || null;
     },
     
@@ -62,6 +75,9 @@ const EffectHandler = {
                 break;
             case 'resistance':
                 recalcStats();
+                break;
+            case 'maxHP':
+                recalcMaxHp();
                 break;
             case 'none':
             default:
@@ -132,7 +148,7 @@ const EffectHandler = {
     makeChoiceHandler(choiceKey) {
         return (value) => {
             this.toggleChoice(choiceKey, value);
-            triggerRecalc(RECALC_FLAGS.RACE_CHANGED);
+            triggerRecalc();
             renderAbilityScores();
             refreshDebugIfOpen();
         };

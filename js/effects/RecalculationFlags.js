@@ -1,44 +1,16 @@
 /**
- * Recalculation system - Flag-based updates
+ * Recalculation system - Always recalculate everything on any change
  */
-const RECALC_FLAGS = {
-    RACE_CHANGED: 'race',
-    CLASS_CHANGED: 'class',
-    LEVEL_CHANGED: 'level',
-    STAT_CHANGED: 'stat',
-    FEATURE_CHANGED: 'feature',
-    FEAT_CHANGED: 'feat',
-    ALL_CHANGED: 'all'
-};
 
-function triggerRecalc(flag) { recalculateAll(flag); }
+function triggerRecalc() { recalcAll(); }
 
-function recalculateAll(flag) {
-    switch (flag) {
-        case RECALC_FLAGS.RACE_CHANGED:
-            recalcRaceEffects(); recalcFeatures(); recalcVision(); recalcSpeed(); recalcProficiencies(); recalcStats();
-            break;
-        case RECALC_FLAGS.CLASS_CHANGED:
-            recalcClassBase(); recalcFeatures(); recalcProficiencies(); recalcSpellcasting(); recalcMaxHp(); recalcSpellSlots(); recalcCantrips();
-            break;
-        case RECALC_FLAGS.LEVEL_CHANGED:
-            recalcFeatures(); recalcMaxHp(); recalcSpellSlots(); recalcCantrips();
-            break;
-        case RECALC_FLAGS.STAT_CHANGED:
-            recalcStatModifiers(); recalcMaxHp(); recalcSpellStats();
-            break;
-        case RECALC_FLAGS.FEAT_CHANGED:
-            recalcFeats(); recalcFeatures(); recalcStats(); recalcProficiencies(); recalcSpeed(); recalcVision(); recalcMaxHp();
-            break;
-        case RECALC_FLAGS.ALL_CHANGED:
-            recalcAll();
-            break;
-    }
-}
+function recalculateAll() { recalcAll(); }
 
 function recalcAll() {
     recalcRaceEffects(); recalcClassBase(); recalcStatModifiers(); recalcVision(); recalcSpeed();
-    recalcMaxHp(); recalcProficiencies(); recalcFeatures(); recalcSpellcasting(); recalcSpellSlots(); recalcFeats();
+    recalcProficiencies(); recalcFeatures();
+    recalcMaxHp();
+    recalcSpellcasting(); recalcSpellSlots(); recalcFeats();
 }
 
 // Constants
@@ -128,10 +100,31 @@ function recalcSpeed() {
 }
 
 function recalcMaxHp() {
-    if (!userSelection.class) { characterSheet.maxHp = 10; characterSheet.currentHp = 10; return; }
-    const cls = window.classesData[userSelection.class];
-    const hitDie = cls?.hitDie || 8;
-    characterSheet.maxHp = hitDie + characterSheet.statModifiers.constitution;
+    let baseHp;
+
+    if (!userSelection.class) {
+        baseHp = 10;
+    } else {
+        const cls = window.classesData[userSelection.class];
+        const hitDie = cls?.hitDie || 8;
+        baseHp = hitDie + characterSheet.statModifiers.constitution;
+    }
+
+    // Add maxHP bonuses from features (type: "maxHP") - WORKS FOR BOTH CASES NOW!
+    if (characterSheet.features) {
+        characterSheet.features.forEach(feature => {
+            const effect = getRaceEffect(feature.name);
+            if (effect?.type === 'maxHP') {
+                if (effect.value === 'lvl') {
+                    baseHp += userSelection.lvl;
+                } else {
+                    baseHp += effect.value;
+                }
+            }
+        });
+    }
+
+    characterSheet.maxHp = baseHp;
     characterSheet.currentHp = characterSheet.maxHp;
 }
 
@@ -315,6 +308,5 @@ function recalcStats() {
 
 function getProficiencyBonus() { return Math.floor((userSelection.lvl - 1) / 4) + 2; }
 
-window.RECALC_FLAGS = RECALC_FLAGS;
 window.triggerRecalc = triggerRecalc;
 window.recalculateAll = recalculateAll;

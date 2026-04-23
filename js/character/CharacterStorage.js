@@ -21,7 +21,7 @@ function loadCharacter(index) {
     const c = chars[index];
     userSelection = { ...resetUserSelection(), ...c.selection };
     characterSheet = { ...characterSheet, ...c.sheet };
-    triggerRecalc(RECALC_FLAGS.ALL_CHANGED);
+    triggerRecalc();
     refreshDebugIfOpen();
     return c;
 }
