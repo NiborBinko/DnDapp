@@ -7,20 +7,14 @@ function triggerRecalc() { recalcAll(); }
 function recalculateAll() { recalcAll(); }
 
 function recalcAll() {
-    recalcRaceEffects(); recalcClassBase(); recalcStatModifiers(); recalcVision(); recalcSpeed();
-    recalcProficiencies(); recalcFeatures();
-    recalcMaxHp();
+    recalcRaceEffects(); recalcClassBase(); recalcFeatures(); recalcStatModifiers();
+    recalcProficiencies();
+    recalcMaxHp();  recalcVision(); recalcSpeed();
     recalcSpellcasting(); recalcSpellSlots(); recalcFeats();
 }
 
 // Constants
 const STAT_NAMES = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
-
-// Helper: Look up effect by feature name from race-effects.json
-function getRaceEffect(featureName) {
-    const key = featureName.toLowerCase();
-    return window.raceEffectsData?.effects?.[key] || null;
-}
 
 // Helper: Get selections for a feature choice
 // Returns: user's selections OR auto-apply if options.length === count
@@ -48,11 +42,6 @@ function getEffectSelections(effect, defaultOptions) {
 function recalcRaceEffects() {
     // Reset stats to base 8 first (idempotent)
     STAT_NAMES.forEach(stat => { userSelection.stats[stat] = 8; });
-
-    // Clear human bonus stat choice when race changes
-    if (userSelection.featureChoices && userSelection.featureChoices['choose-2-times-1-bonus-stat']) {
-        delete userSelection.featureChoices['choose-2-times-1-bonus-stat'];
-    }
 
     if (!userSelection.race) return;
     const bonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace);
@@ -89,7 +78,7 @@ function recalcSpeed() {
     // Process race features for speed bonuses (type: "speed")
     if (characterSheet.features) {
         characterSheet.features.forEach(feature => {
-            const effect = getRaceEffect(feature.name);
+            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
             if (effect?.type === 'speed' && effect.value) {
                 speed += effect.value;
             }
@@ -113,7 +102,7 @@ function recalcMaxHp() {
     // Add maxHP bonuses from features (type: "maxHP") - WORKS FOR BOTH CASES NOW!
     if (characterSheet.features) {
         characterSheet.features.forEach(feature => {
-            const effect = getRaceEffect(feature.name);
+            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
             if (effect?.type === 'maxHP') {
                 if (effect.value === 'lvl') {
                     baseHp += userSelection.lvl;
@@ -149,7 +138,7 @@ function recalcProficiencies() {
     // Process race features for proficiencies (type: "proficiency")
     if (characterSheet.features) {
         characterSheet.features.forEach(feature => {
-            const effect = getRaceEffect(feature.name);
+            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
             if (effect?.type === 'proficiency') {
                 const profType = effect.proficiencyType;
                 const selections = getEffectSelections(effect);
@@ -289,7 +278,7 @@ function recalcStats() {
     // Apply stat bonuses from features (type: "stat")
     if (characterSheet.features) {
         characterSheet.features.forEach(feature => {
-            const effect = getRaceEffect(feature.name);
+            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
             if (effect?.type === 'stat') {
                 const selections = getEffectSelections(effect, effect.options);
                 if (selections) {
