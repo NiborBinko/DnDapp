@@ -90,9 +90,21 @@
       "type": "none",
       "description": "Advantage on saving throws against being charmed."
     },
+    "lucky": {
+      "type": "none",
+      "description": "When you roll a 1, reroll the die and take the new result."
+    },
+    "gnome cunning": {
+      "type": "none",
+      "description": "Advantage on Intelligence, Wisdom, and Charisma saving throws against magic."
+    },
     "keen smell": {
       "type": "none",
       "description": "Advantage on Wisdom (Perception) checks that rely on smell."
+    },
+    "brave": {
+      "type": "none",
+      "description": "Advantage on saving throws against being frightened."
     },
     "stonecunning": {
       "type": "none",

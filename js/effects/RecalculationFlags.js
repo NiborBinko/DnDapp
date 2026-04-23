@@ -137,6 +137,12 @@ function recalcMaxHp() {
 
 function recalcProficiencies() {
     characterSheet.proficiencies = { skills: [], weapons: [], armor: [], tools: [], savingThrows: [] };
+
+    // Clear all featureChoices when recalculating (will be re-added based on current selections)
+    if (userSelection.featureChoices) {
+        userSelection.featureChoices = {};
+    }
+
     if (userSelection.class) {
         const cls = window.classesData[userSelection.class];
         if (cls?.proficiencies) {
