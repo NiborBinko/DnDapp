@@ -10,7 +10,7 @@ function recalcAll() {
     recalcRaceEffects(); recalcClassBase(); recalcFeatures(); recalcStatModifiers();
     recalcProficiencies();
     recalcMaxHp();  recalcVision(); recalcSpeed();
-    recalcSpellcasting(); recalcSpellSlots(); recalcFeats();
+    recalcSpellcasting(); recalcSpellSlots(); recalcInnateSpells(); recalcFeats();
 }
 
 // Constants
@@ -37,6 +37,25 @@ function getEffectSelections(effect, defaultOptions) {
     }
 
     return null;
+}
+
+// Helper: Look up effect by feature name from class-effects.json
+function getClassEffect(featureName) {
+    if (!featureName) return null;
+    const key = featureName.toLowerCase();
+    return window.classEffectsData?.effects?.[key] || null;
+}
+
+// Helper: Look up effect by feature name from race-effects.json
+function getRaceEffect(featureName) {
+    if (!featureName) return null;
+    const key = featureName.toLowerCase();
+    return window.raceEffectsData?.effects?.[key] || null;
+}
+
+// Helper: Look up effect from either class or race effects
+function getFeatureEffect(featureName) {
+    return getClassEffect(featureName) || getRaceEffect(featureName);
 }
 
 function recalcRaceEffects() {
@@ -237,6 +256,18 @@ function recalcFeatures() {
 
 function recalcSpellcasting() {
     if (!userSelection.class) { characterSheet.spellcastingAbility = null; characterSheet.spellPreparationType = null; return; }
+
+    // Check if character has Spellcasting or Pact Magic feature
+    const hasSpellcasting = characterSheet.features?.some(f => f.name === 'Spellcasting');
+    const hasPactMagic = characterSheet.features?.some(f => f.name === 'Pact Magic');
+
+    if (!hasSpellcasting && !hasPactMagic) {
+        characterSheet.spellcastingAbility = null;
+        characterSheet.spellPreparationType = null;
+        recalcSpellStats();
+        return;
+    }
+
     const cls = window.classesData[userSelection.class];
     characterSheet.spellcastingAbility = cls?.spellcastingAbility || null;
     if (cls?.['spells prepared']) characterSheet.spellPreparationType = 'prepare';
@@ -244,6 +275,27 @@ function recalcSpellcasting() {
     else if (cls?.['spells known']) characterSheet.spellPreparationType = 'known';
     else { characterSheet.spellPreparationType = null; }
     recalcSpellStats();
+}
+
+function recalcInnateSpells() {
+    characterSheet.innateSpells = [];
+    characterSheet.innateAbility = null;
+
+    characterSheet.features?.forEach(feature => {
+        const effect = getFeatureEffect(feature.name);
+        if (effect?.type === 'innate') {
+            // Add spells at appropriate character levels
+            Object.keys(effect.spellLevels || {}).forEach(lvl => {
+                if (userSelection.lvl >= parseInt(lvl)) {
+                    characterSheet.innateSpells.push(...effect.spellLevels[lvl]);
+                }
+            });
+            // Override ability if specified
+            if (effect.ability) {
+                characterSheet.innateAbility = effect.ability;
+            }
+        }
+    });
 }
 
 function recalcSpellSlots() {

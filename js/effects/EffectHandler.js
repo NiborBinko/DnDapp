@@ -60,19 +60,23 @@ const EffectHandler = {
             case 'cantrips':
                 recalcCantrips();
                 break;
-            case 'spell':
-                recalcCantrips();
-                recalcSpellSlots();
+            case 'mainspell':
+                // Full spellcaster: Spellcasting or Pact Magic
                 recalcSpellcasting();
-                break;
-            case 'innateSpell':
                 recalcSpellSlots();
+                recalcCantrips();
+                break;
+            case 'innate':
+                recalcInnateSpells();
                 break;
             case 'resistance':
                 recalcStats();
                 break;
             case 'maxHP':
                 recalcMaxHp();
+                break;
+            case 'lookup':
+                // Complex feature - adds to features list only, no recalc here
                 break;
             case 'none':
             default:

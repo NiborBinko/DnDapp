@@ -51,7 +51,11 @@ function refreshDebugIfOpen() {
             armorClass: characterSheet?.armorClass || 0,
             speed: characterSheet?.speed || 0,
             vision: characterSheet?.vision || { nightvision: null, dayvision: null },
-            spellcastingAbility: characterSheet?.spellcastingAbility || null
+            spellcastingAbility: characterSheet?.spellcastingAbility || null,
+            spellPreparationType: characterSheet?.spellPreparationType || null,
+            spellSlots: characterSheet?.spellSlots || {},
+            innateSpells: characterSheet?.innateSpells || [],
+            innateAbility: characterSheet?.innateAbility || null
         }
     };
     

@@ -1,482 +1,154 @@
 {
-  "statIncreases": {
-    "Ability Score Improvement": {
-      "type": "statIncrease",
-      "maxUses": 5,
-      "description": "Increase one ability by 2 or two by 1 each"
-    }
-  },
-  "extraAttacks": {
-    "Extra Attack": {
-      "type": "extraAttack",
-      "maxAttacks": 4,
-      "levels": [1, 5, 11, 20],
-      "description": "Make additional attacks when taking the Attack action"
-    }
-  },
-  "resourceUses": {
-    "Second Wind": {
-      "type": "resourceUse",
-      "resource": "secondWind",
-      "usesPerRest": 1,
-      "recapType": "short",
-      "description": "Heal yourself as a bonus action"
-    },
-    "Action Surge (on use)": {
-      "type": "resourceUse",
-      "resource": "actionSurge",
-      "usesPerRest": 1,
-      "recapType": "short",
-      "description": "Take one additional action"
-    },
-    "Action Surge (two uses)": {
-      "type": "resourceUse",
-      "resource": "actionSurge",
-      "usesPerRest": 2,
-      "recapType": "short",
-      "replaces": "Action Surge (on use)",
-      "description": "Take two additional actions"
-    },
-    "Indomitable (one use)": {
-      "type": "resourceUse",
-      "resource": "indomitable",
-      "usesPerRest": 1,
-      "recapType": "long",
-      "usesStat": "proficiency",
-      "description": "Reroll a failed saving throw"
-    },
-    "Indomitable (two uses)": {
-      "type": "resourceUse",
-      "resource": "indomitable",
-      "usesPerRest": 2,
-      "recapType": "long",
-      "usesStat": "proficiency",
-      "replaces": "Indomitable (one use)",
-      "description": "Reroll failed saving throws twice"
-    },
-    "Indomitable (three uses)": {
-      "type": "resourceUse",
-      "resource": "indomitable",
-      "usesPerRest": 3,
-      "recapType": "long",
-      "usesStat": "proficiency",
-      "replaces": "Indomitable (two uses)",
-      "description": "Reroll failed saving throws three times"
-    },
-    "Channel Divinity (1/rest)": {
-      "type": "resourceUse",
-      "resource": "channelDivinity",
-      "usesPerRest": 1,
-      "recapType": "short",
-      "description": "Channel divine energy for varying effects"
-    },
-    "Channel Divinity (2/rest)": {
-      "type": "resourceUse",
-      "resource": "channelDivinity",
-      "usesPerRest": 2,
-      "recapType": "short",
-      "replaces": "Channel Divinity (1/rest)",
-      "description": "Channel divine energy twice per short rest"
-    },
-    "Channel Divinity (3/rest)": {
-      "type": "resourceUse",
-      "resource": "channelDivinity",
-      "usesPerRest": 3,
-      "recapType": "short",
-      "replaces": "Channel Divinity (2/rest)",
-      "description": "Channel divine energy three times per short rest"
-    }
-  },
-  "dicePools": {
-    "Sneak Attack": {
-      "type": "dicePool",
-      "die": "d6",
-      "dieName": "sneakAttackDie",
-      "maxDie": 10,
-      "levels": {
-        "1": 1, "2": 1, "3": 2, "4": 2, "5": 3, "6": 3, "7": 4, "8": 4, "9": 5, "10": 5,
-        "11": 6, "12": 6, "13": 7, "14": 7, "15": 8, "16": 8, "17": 9, "18": 9, "19": 10, "20": 10
-      },
-      "description": "Extra damage once per turn when you have advantage or enemy is nearby"
-    },
-    "Brutal Critical (1 die)": {
-      "type": "diceUpgrade",
-      "extraDie": 1,
-      "condition": "criticalHit",
-      "replaces": null,
-      "description": "Roll one extra weapon die on critical hits"
-    },
-    "Brutal Critical (2 dice)": {
-      "type": "diceUpgrade",
-      "extraDie": 2,
-      "condition": "criticalHit",
-      "replaces": "Brutal Critical (1 die)",
-      "description": "Roll two extra weapon dice on critical hits"
-    },
-    "Brutal Critical (3 dice)": {
-      "type": "diceUpgrade",
-      "extraDie": 3,
-      "condition": "criticalHit",
-      "replaces": "Brutal Critical (2 dice)",
-      "description": "Roll three extra weapon dies on critical hits"
-    },
-    "Bardic Inspiration (d6)": {
-      "type": "dicePool",
-      "die": "d6",
-      "dieName": "bardicInspirationDie",
-      "maxDie": 6,
-      "description": "Grant allies extra die for checks, attacks, or saves"
-    },
-    "Bardic Inspiration (d8)": {
-      "type": "dicePool",
-      "die": "d8",
-      "dieName": "bardicInspirationDie",
-      "maxDie": 8,
-      "replaces": "Bardic Inspiration (d6)",
-      "description": "Grant allies extra d8 for checks, attacks, or saves"
-    },
-    "Bardic Inspiration (d10)": {
-      "type": "dicePool",
-      "die": "d10",
-      "dieName": "bardicInspirationDie",
-      "maxDie": 10,
-      "replaces": "Bardic Inspiration (d8)",
-      "description": "Grant allies extra d10 for checks, attacks, or saves"
-    },
-    "Bardic Inspiration (d12)": {
-      "type": "dicePool",
-      "die": "d12",
-      "dieName": "bardicInspirationDie",
-      "maxDie": 12,
-      "replaces": "Bardic Inspiration (d10)",
-      "description": "Grant allies extra d12 for checks, attacks, or saves"
-    },
-    "Song of Rest (d6)": {
-      "type": "dicePool",
-      "die": "d6",
-      "dieName": "songOfRestDie",
-      "maxDie": 6,
-      "description": "Grant allies extra healing during short rest"
-    },
-    "Song of Rest (d8)": {
-      "type": "dicePool",
-      "die": "d8",
-      "dieName": "songOfRestDie",
-      "maxDie": 8,
-      "replaces": "Song of Rest (d6)",
-      "description": "Grant allies extra d8 healing during short rest"
-    },
-    "Song of Rest (d10)": {
-      "type": "dicePool",
-      "die": "d10",
-      "dieName": "songOfRestDie",
-      "maxDie": 10,
-      "replaces": "Song of Rest (d8)",
-      "description": "Grant allies extra d10 healing during short rest"
-    },
-    "Song of Rest (d12)": {
-      "type": "dicePool",
-      "die": "d12",
-      "dieName": "songOfRestDie",
-      "maxDie": 12,
-      "replaces": "Song of Rest (d10)",
-      "description": "Grant allies extra d12 healing during short rest"
-    }
-  },
-  "replacements": {
-    "Destroy Undead (CR 1)": {
-      "type": "replace",
-      "property": "turnUndeadCR",
-      "value": "1",
-      "replaces": null,
-      "description": "Destroy undead of CR 1 or lower"
-    },
-    "Destroy Undead (CR 1/2)": {
-      "type": "replace",
-      "property": "turnUndeadCR",
-      "value": "1/2",
-      "replaces": "Destroy Undead (CR 1)",
-      "description": "Destroy undead of CR 1/2 or lower"
-    },
-    "Destroy Undead (CR 2)": {
-      "type": "replace",
-      "property": "turnUndeadCR",
-      "value": "2",
-      "replaces": "Destroy Undead (CR 1/2)",
-      "description": "Destroy undead of CR 2 or lower"
-    },
-    "Destroy Undead (CR 3)": {
-      "type": "replace",
-      "property": "turnUndeadCR",
-      "value": "3",
-      "replaces": "Destroy Undead (CR 2)",
-      "description": "Destroy undead of CR 3 or lower"
-    },
-    "Destroy Undead (CR 4)": {
-      "type": "replace",
-      "property": "turnUndeadCR",
-      "value": "4",
-      "replaces": "Destroy Undead (CR 3)",
-      "description": "Destroy undead of CR 4 or lower"
-    }
-  },
-  "speedBonuses": {
-    "Fast Movement": {
-      "type": "speedBonus",
-      "value": 10,
-      "condition": "whileRaging",
-      "description": "Walking speed increases by 10 feet while raging"
-    },
-    "Unarmored Movement": {
-      "type": "speedBonus",
-      "value": 10,
-      "tiers": {
-        "2": 10, "6": 15, "10": 20, "14": 25, "18": 30
-      },
-      "description": "Walking speed increases. Can climb and swim without penalty"
-    },
-    "Unarmored Movement improvement": {
-      "type": "speedBonus",
-      "property": "unarmoredMovement",
-      "increasesAt": [6, 10, 14, 18],
-      "replaces": "Unarmored Movement",
-      "description": "Your Unarmored Movement speed increases further"
-    },
-    "Fleet Footed": {
-      "type": "speedBonus",
-      "value": 5,
-      "description": "Base walking speed increases by 5 feet"
-    }
-  },
-  "proficiencies": {
-    "Expertise": {
-      "type": "skillExpertise",
-      "count": 2,
-      "description": "Choose two skills, double proficiency bonus"
-    },
-    "Jack of All Trades": {
-      "type": "halfProf",
-      "target": "all",
-      "condition": "notAlreadyProficient",
-      "description": "Add half proficiency to any ability check"
-    },
-    "Druidic": {
-      "type": "language",
-      "language": "Druidic",
-      "description": "Know the Druidic language"
-    },
-    "Thieves' Cant": {
-      "type": "language",
-      "language": "Thieves' Cant",
-      "description": "Know the Thieves' Cant language"
-    }
-  },
-  "passiveEffects": {
-    "Blindsense": {
-      "type": "passive",
-      "effect": "detectHidden",
-      "range": 10,
-      "condition": "notBlindedOrDeafened",
-      "description": "Pinpoint hidden creatures within 10 feet"
-    },
-    "Danger Sense": {
-      "type": "passive",
-      "effect": "advantage",
-      "target": "dexteritySaves",
-      "condition": "traps",
-      "description": "Advantage on Dexterity saves against traps"
-    },
-    "Evasion": {
-      "type": "passive",
-      "effect": "evasion",
-      "saveType": "dexterity",
-      "description": "Take half damage on failed save, none on success"
-    },
-    "Uncanny Dodge": {
-      "type": "passive",
-      "effect": "halveDamage",
-      "trigger": "whenHit",
-      "usesPerRest": 1,
-      "description": "Use reaction to halve incoming damage"
-    },
-    "Reliable Talent": {
-      "type": "passive",
-      "effect": "minimumRoll",
-      "target": "proficiencyChecks",
-      "minimum": 10,
-      "description": "Proficiency checks can't roll below 10"
-    },
-    "Diamond Soul": {
-      "type": "passive",
-      "effect": "automaticSuccess",
-      "target": "concentrationSaves",
-      "description": "Automatically succeed on concentration saves"
-    },
-    "Timeless Body": {
-      "type": "passive",
-      "effect": "noAging",
-      "description": "Don't need food or water, don't age"
-    },
-    "Purity of Body": {
-      "type": "passive",
-      "effect": "immunity",
-      "conditions": ["poisoned", "diseased"],
-      "description": "Immune to poison and disease"
-    },
-    "Feral Senses": {
-      "type": "passive",
-      "effect": "detectHidden",
-      "range": 30,
-      "ignoreDimLight": true,
-      "description": "Detect hidden creatures within 30 feet, dim light doesn't impair vision"
-    },
-    "Elusive": {
-      "type": "passive",
-      "effect": "noAdvantage",
-      "target": "attackers",
-      "conditions": ["notParalyzed", "notUnconscious"],
-      "description": "Attackers can't gain advantage unless you're paralyzed or unconscious"
-    },
-    "Tongue of the Sun and Moon": {
-      "type": "passive",
-      "effect": "understandAll",
-      "languages": "all",
-      "description": "Understand all spoken languages"
-    }
-  },
-  "lookupAbilities": {
-    "Bard College Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Bard College",
-      "description": "Your Bard College grants additional features"
-    },
-    "Bard College": {
-      "type": "lookup",
-      "exclusiveGroup": "Bard College",
-      "description": "Choose College of Lore or College of Valor"
-    },
-    "Divine Domain Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Divine Domain",
-      "description": "Your Divine Domain grants additional features"
-    },
-    "Divine Domain": {
-      "type": "lookup",
-      "exclusiveGroup": "Divine Domain",
-      "description": "Choose a domain from your deity"
-    },
-    "Druid Circle Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Druid Circle",
-      "description": "Your Druid Circle grants additional features"
-    },
-    "Martial Archetype Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Martial Archetype",
-      "description": "Your Martial Archetype grants additional features"
-    },
-    "Martial Archetype": {
-      "type": "lookup",
-      "exclusiveGroup": "Martial Archetype",
-      "description": "Choose a Martial Archetype"
-    },
-    "Monastic Tradition Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Monastic Tradition",
-      "description": "Your Monastic Tradition grants additional features"
-    },
-    "Otherworldly Patron Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Otherworldly Patron",
-      "description": "Your Otherworldly Patron grants additional features"
-    },
-    "Path Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Primal Path",
-      "description": "Your Primal Path grants additional features"
-    },
-    "Roguish Archetype Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Roguish Archetype",
-      "description": "Your Roguish Archetype grants additional features"
-    },
-    "Ranger Archetype Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Ranger Archetype",
-      "description": "Your Ranger Archetype grants additional features"
-    },
-    "Sacred Oath Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Sacred Oath",
-      "description": "Your Sacred Oath grants additional features"
-    },
-    "Sorcerous Origin Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Sorcerous Origin",
-      "description": "Your Sorcerous Origin grants additional features"
-    },
-    "Tradition Feature": {
-      "type": "lookup",
-      "exclusiveGroup": "Arcane Tradition",
-      "description": "Your Arcane Tradition grants additional features"
-    }
-  },
-  "statEffects": {
-    "Lay on Hands": {
-      "type": "resourcePool",
-      "resource": "layOnHands",
-      "calculation": "level * 3",
-      "description": "Pool of healing equal to your cleric level"
-    },
-    "Lay on Hands (ability)": {
-      "type": "abilityUnlock",
-      "ability": "layOnHands",
-      "description": "Can use Lay on Hands to heal"
-    },
-    "Unarmored Defense": {
-      "type": "acCalculation",
-      "formula": "10 + dexterity + wisdom",
-      "condition": "noArmorOrShield",
-      "description": "AC is 10 + Dex + Wis when not wearing armor"
-    },
-    "Rage": {
-      "type": "condition",
-      "condition": "raging",
-      "benefits": {
-        "strengthChecks": "advantage",
-        "strengthSaves": "advantage",
-        "meleeDamage": "bonus",
-        "resistances": ["bludgeoning", "piercing", "slashing"]
-      },
-      "description": "While raging, gain advantages and resistances"
-    },
-    "Primal Champion": {
-      "type": "statIncrease",
-      "stats": { "strength": 4, "constitution": 4 },
-      "maxOverride": 24,
-      "alwaysRaging": true,
-      "description": "Strength and Constitution increase by 4 (max 24). Always considered raging."
-    },
-    "Indomitable Might": {
-      "type": "statEffect",
-      "stat": "carryingCapacity",
-      "override": 22,
-      "condition": "raging",
-      "description": "While raging, Strength counts as 22 for carrying capacity"
-    },
-    "Divine Smite": {
-      "type": "damageBonus",
-      "damageType": "radiant",
-      "calculation": "1d8 + spellcastingMod",
-      "condition": "meleeWeaponAttack",
-      "description": "Deal extra radiant damage on melee attacks"
-    },
-    "Improved Divine Smite": {
-      "type": "damageBonus",
-      "damageType": "radiant",
-      "calculation": "1d8 + spellcastingMod",
-      "condition": "anyMeleeAttack",
-      "description": "Deal extra radiant damage on any melee attack"
-    }
+  "effects": {
+    "spellcasting": { "type": "mainspell" },
+    "pact magic": { "type": "mainspell" },
+
+    "fast movement": { "type": "speed", "value": 10 },
+    "fleet footed": { "type": "speed", "value": 5 },
+    "unarmored movement": { "type": "speed", "value": 10 },
+
+    "ability score improvement": { "type": "stat", "value": 2, "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"], "count": 2 },
+
+    "rage": { "type": "lookup" },
+    "reckless attack": { "type": "lookup" },
+    "danger sense": { "type": "lookup" },
+    "unarmored defense": { "type": "lookup" },
+    "feral instinct": { "type": "lookup" },
+    "brutal critical (1 die)": { "type": "lookup" },
+    "brutal critical (2 dice)": { "type": "lookup" },
+    "brutal critical (3 dice)": { "type": "lookup" },
+    "relentless rage": { "type": "lookup" },
+    "persistent rage": { "type": "lookup" },
+    "primal champion": { "type": "lookup" },
+    "indomitable might": { "type": "lookup" },
+    "path feature": { "type": "lookup" },
+
+    "second wind": { "type": "lookup" },
+    "action surge (on use)": { "type": "lookup" },
+    "action surge (two uses)": { "type": "lookup" },
+    "fighting style": { "type": "lookup" },
+    "extra attack": { "type": "lookup" },
+    "extra attack (2)": { "type": "lookup" },
+    "extra attack (3)": { "type": "lookup" },
+    "indomitable (one use)": { "type": "lookup" },
+    "indomitable (two uses)": { "type": "lookup" },
+    "indomitable (three uses)": { "type": "lookup" },
+    "martial archetype feature": { "type": "lookup" },
+
+    "martial arts": { "type": "lookup" },
+    "ki": { "type": "lookup" },
+    "deflect missiles": { "type": "lookup" },
+    "slow fall": { "type": "lookup" },
+    "stunning strike": { "type": "lookup" },
+    "ki-empowered strikes": { "type": "lookup" },
+    "monastic tradition feature": { "type": "lookup" },
+    "evasion": { "type": "lookup" },
+    "stillness of mind": { "type": "lookup" },
+    "unarmored movement improvement": { "type": "lookup" },
+    "purity of body": { "type": "lookup" },
+    "tongue of the sun and moon": { "type": "lookup" },
+    "diamond soul": { "type": "lookup" },
+    "timeless body": { "type": "lookup" },
+    "empty body": { "type": "lookup" },
+    "perfect self": { "type": "lookup" },
+
+    "expertise": { "type": "lookup" },
+    "sneak attack": { "type": "lookup" },
+    "thieves' cant": { "type": "language", "language": "Thieves' Cant" },
+    "cunning action": { "type": "lookup" },
+    "roguish archetype feature": { "type": "lookup" },
+    "uncanny dodge": { "type": "lookup" },
+    "reliable talent": { "type": "lookup" },
+    "blindsense": { "type": "lookup" },
+    "slippery mind": { "type": "lookup" },
+    "elusive": { "type": "lookup" },
+    "stroke of luck": { "type": "lookup" },
+
+    "bardic inspiration (d6)": { "type": "lookup" },
+    "bardic inspiration (d8)": { "type": "lookup" },
+    "bardic inspiration (d10)": { "type": "lookup" },
+    "bardic inspiration (d12)": { "type": "lookup" },
+    "song of rest (d6)": { "type": "lookup" },
+    "song of rest (d8)": { "type": "lookup" },
+    "song of rest (d10)": { "type": "lookup" },
+    "song of rest (d12)": { "type": "lookup" },
+    "bard college": { "type": "lookup" },
+    "countercharm": { "type": "lookup" },
+    "font of inspiration": { "type": "lookup" },
+    "magical secrets": { "type": "lookup" },
+    "superior inspiration": { "type": "lookup" },
+
+    "divine domain feature": { "type": "lookup" },
+    "channel divinity (1/rest)": { "type": "lookup" },
+    "channel divinity (2/rest)": { "type": "lookup" },
+    "channel divinity (3/rest)": { "type": "lookup" },
+    "destroy undead (cr 1)": { "type": "lookup" },
+    "destroy undead (cr 1/2)": { "type": "lookup" },
+    "destroy undead (cr 2)": { "type": "lookup" },
+    "destroy undead (cr 3)": { "type": "lookup" },
+    "destroy undead (cr 4)": { "type": "lookup" },
+    "divine intervention": { "type": "lookup" },
+    "divine intervention improvement": { "type": "lookup" },
+
+    "druidic": { "type": "language", "language": "Druidic" },
+    "wild shape": { "type": "lookup" },
+    "wild shape improvement": { "type": "lookup" },
+    "druid circle feature": { "type": "lookup" },
+    "beast spells": { "type": "lookup" },
+    "archdruid": { "type": "lookup" },
+
+    "lay on hands": { "type": "lookup" },
+    "divine sense": { "type": "lookup" },
+    "divine smite": { "type": "lookup" },
+    "divine health": { "type": "lookup" },
+    "sacred oath feature": { "type": "lookup" },
+    "aura of protection": { "type": "lookup" },
+    "aura of courage": { "type": "lookup" },
+    "improved divine smite": { "type": "lookup" },
+    "cleansing touch": { "type": "lookup" },
+    "aura improvements": { "type": "lookup" },
+
+    "favored enemy": { "type": "lookup" },
+    "natural explorer": { "type": "lookup" },
+    "primeval awareness": { "type": "lookup" },
+    "ranger archetype feature": { "type": "lookup" },
+    "favored enemy improvement": { "type": "lookup" },
+    "natural explorer improvement": { "type": "lookup" },
+    "land's stride": { "type": "lookup" },
+    "hide in plain sight": { "type": "lookup" },
+    "vanish": { "type": "lookup" },
+    "feral senses": { "type": "lookup" },
+    "foe slayer": { "type": "lookup" },
+
+    "font of magic": { "type": "lookup" },
+    "sorcerous origin feature": { "type": "lookup" },
+    "sorcerous restoration": { "type": "lookup" },
+    "careful spell": { "type": "lookup" },
+    "distant spell": { "type": "lookup" },
+    "empowered spell": { "type": "lookup" },
+    "extended spell": { "type": "lookup" },
+    "heightened spell": { "type": "lookup" },
+    "quickened spell": { "type": "lookup" },
+    "subtle spell": { "type": "lookup" },
+    "twinned spell": { "type": "lookup" },
+
+    "eldritch invocations": { "type": "lookup" },
+    "otherworldly patron feature": { "type": "lookup" },
+    "mystic arcanum (6th level)": { "type": "lookup" },
+    "mystic arcanum (7th level)": { "type": "lookup" },
+    "mystic arcanum (8th level)": { "type": "lookup" },
+    "mystic arcanum (9th level)": { "type": "lookup" },
+    "eldritch master": { "type": "lookup" },
+
+    "arcane recovery": { "type": "lookup" },
+    "ritual casting": { "type": "lookup" },
+    "tradition feature": { "type": "lookup" },
+    "spell mastery": { "type": "lookup" },
+    "spell mastery (greater)": { "type": "lookup" },
+    "spell mastery (master)": { "type": "lookup" },
+    "spell mastery (supreme)": { "type": "lookup" },
+    "signature spells": { "type": "lookup" },
+
+    "jack of all trades": { "type": "lookup" }
   }
 }

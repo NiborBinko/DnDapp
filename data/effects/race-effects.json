@@ -43,18 +43,18 @@
       "count": 1
     },
     "high elf cantrip": {
-      "type": "cantrip",
+      "type": "cantrips",
       "class": "wizard",
       "spellList": "all"
     },
     "drow magic": {
-      "type": "innateSpell",
+      "type": "innate",
       "spellLevels": {
         "1": ["dancing-lights"],
         "3": ["faerie-fire"],
-        "5": ["darkness"],
-      "spellcastingAbility" : ["charisma"]
-      }
+        "5": ["darkness"]
+      },
+      "ability": "charisma"
     },
     "dwarven toughness": {
       "type": "maxHP",
@@ -133,20 +133,20 @@
       "damageType": "fire"
     },
     "infernal legacy": {
-      "type": "innateSpell",
+      "type": "innate",
       "spellLevels": {
         "1": ["taumaturgy"],
         "3": ["hellish rebuke"],
-        "5": ["darkness"],
-      "spellcastingAbility" : ["charisma"]
-      }
+        "5": ["darkness"]
+      },
+      "ability": "charisma"
     },
     "mask of the wild": {
       "type": "none",
       "description": "You can attempt to hide when only lightly obscured by foliage, heavy rain, mist, or snow."
     },
     "natural illusionist": {
-      "type": "cantrip",
+      "type": "cantrips",
       "class": "wizard",
       "spellList": "illusion"
     },
