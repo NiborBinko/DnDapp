@@ -48,7 +48,7 @@
       "spellList": "all"
     },
     "drow magic": {
-      "type": "none",
+      "type": "innateSpell",
       "spellLevels": {
         "1": ["dancing-lights"],
         "3": ["faerie-fire"],
@@ -133,7 +133,7 @@
       "damageType": "fire"
     },
     "infernal legacy": {
-      "type": "spell",
+      "type": "innateSpell",
       "spellLevels": {
         "1": ["taumaturgy"],
         "3": ["hellish rebuke"],

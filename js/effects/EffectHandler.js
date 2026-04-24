@@ -54,19 +54,14 @@ const EffectHandler = {
                 recalcStats();
                 recalcStatModifiers();
                 break;
-            case 'choice':
-                this.handleChoice(effect, userSelection, feature);
-                break;
             case 'proficiency':
                 recalcProficiencies();
                 break;
-            case 'skill':
-                recalcProficiencies();
-                break;
-            case 'cantrip':
+            case 'cantrips':
                 recalcCantrips();
                 break;
             case 'spell':
+                recalcCantrips();
                 recalcSpellSlots();
                 recalcSpellcasting();
                 break;
