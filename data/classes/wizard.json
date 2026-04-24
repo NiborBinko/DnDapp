@@ -2,6 +2,7 @@
  "id": "wizard",
  "name": "Wizard",
  "primaryStat": "intelligence",
+ "spellcastingAbility": "intelligence",
  "desc": "Arcane spellcasters",
  "hitDie": 6,
  "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},

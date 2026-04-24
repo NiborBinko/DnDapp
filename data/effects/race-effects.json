@@ -48,10 +48,12 @@
       "spellList": "all"
     },
     "drow magic": {
-      "type": "innateSpell",
+      "type": "none",
       "spellLevels": {
+        "1": ["dancing-lights"],
         "3": ["faerie-fire"],
-        "5": ["darkness"]
+        "5": ["darkness"],
+      "spellcastingAbility" : ["charisma"]
       }
     },
     "dwarven toughness": {
@@ -74,11 +76,11 @@
     },
     "darkvision": {
       "type": "vision",
-      "value": 60
+      "value": {"nightvision": 60}
     },
     "superior darkvision": {
       "type": "vision",
-      "value": 120
+      "value": {"nightvision": 120}
     },
     "trance": {
       "type": "none",
@@ -108,25 +110,11 @@
       "type": "none",
       "description": "History check related to stonework has advantage."
     },
-    "hill dwarf resistance": {
-      "type": "stat",
-      "stat": "constitution",
-      "value": 1,
-      "effectType": "modifier"
-    },
     "mountain dwarf resilience": {
       "type": "proficiency",
       "proficiencyType": "armor",
       "options": ["light armor", "medium armor"],
       "count": 2
-    },
-    "drow innate magic": {
-      "type": "innateSpell",
-      "spellLevels": {
-        "1": ["dancing-lights"],
-        "2": ["darkness"],
-        "3": ["faerie-fire"]
-      }
     },
     "sunlight sensitivity": {
       "type": "none",
@@ -147,9 +135,10 @@
     "infernal legacy": {
       "type": "spell",
       "spellLevels": {
-        "1": ["hellfire"],
-        "3": ["darkness"],
-        "5": ["fireball"]
+        "1": ["taumaturgy"],
+        "3": ["hellish rebuke"],
+        "5": ["darkness"],
+      "spellcastingAbility" : ["charisma"]
       }
     },
     "mask of the wild": {

@@ -2,6 +2,7 @@
  "id": "paladin",
  "name": "Paladin",
  "primaryStat": "strength",
+ "spellcastingAbility": "wisdom",
  "desc": "Holy warriors",
  "hitDie": 10,
  "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},

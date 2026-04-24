@@ -2,6 +2,7 @@
  "id": "bard",
  "name": "Bard",
  "primaryStat": "charisma",
+ "spellcastingAbility": "charisma",
  "desc": "Magical performers",
  "hitDie": 8,
  "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},

@@ -2,6 +2,7 @@
  "id": "cleric",
  "name": "Cleric",
  "primaryStat": "wisdom",
+ "spellcastingAbility": "wisdom",
  "desc": "Divine spellcasters",
  "hitDie": 8,
  "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},

@@ -5,7 +5,7 @@ A 7-step character creation wizard for Dungeons & Dragons 5th Edition (2014 rule
 - Character creation with point buy system
 - Spell selection system (Wizard spellbook)
 - Dynamic ability effect system for race/class features
-- Type-based effect processing via EffectHandler
+- Type-based effect processing via feature list
 
 ---
 
@@ -17,24 +17,24 @@ A 7-step character creation wizard for Dungeons & Dragons 5th Edition (2014 rule
 ├── ARCHITECTURE.md        # This file - project architecture
 ├── GoalStructure.md      # Project goals/target structure
 ├── css/
-│   └── theme.css       # All styling (tooltips, theme, bonus buttons)
+│   └── theme.css       # All styling (tooltips, theme, buttons)
 ├── js/
-│   ├── app.js          # Entry point, event handlers
+│   ├── app.js          # Entry point, initialization
 │   ├── debug.js        # Debug dropdown toggle
 │   ├── renderdebug.js  # Debug dropdown content refresh
 │   ├── character/      # Character data management
-│   │   ├── CharacterSheet.js    # Character sheet display
+│   │   ├── CharacterSheet.js    # Character sheet object
 │   │   └── CharacterStorage.js  # LocalStorage persistence
 │   ├── effects/       # Effect recalculation system
-│   │   ├── EffectHandler.js    # Central effect processor (NEW)
-│   │   └── RecalculationFlags.js # Recalculation triggers
+│   │   ├── EffectHandler.js    # Effect processing
+│   │   └── RecalculationFlags.js # Recalculation triggers & logic
 │   ├── render/        # UI rendering
 │   │   ├── Render.js         # Main render functions
 │   │   └── TooltipSystem.js  # Tooltip display
 │   └── states/       # State management
-│       ├── DataLoaders.js        # JSON loading, race stat bonuses
-│       ├── UIState.js           # Current step, navigation
-│       └── UserSelectedState.js  # User selections
+│       ├── DataLoaders.js        # JSON loading, data access helpers
+│       ├── UIState.js           # Current step, navigation, canProceed()
+│       └── UserSelectedState.js  # User selections & handlers
 ├── data/
 │   ├── classes/       # 12 class data files (JSON)
 │   ├── races/        # 9 race data files (JSON)
@@ -43,7 +43,7 @@ A 7-step character creation wizard for Dungeons & Dragons 5th Edition (2014 rule
 │   │   ├── race-effects.json       # Race effects (type-based)
 │   │   ├── class-effects.json     # Class effects
 │   │   ├── feat-effects.json      # Feat effects
-│   │   └── class-option-effects.json
+│   │   └── class-options-effects.json
 │   └── spells/       # Spells by school (339 spells)
 └── refPDFs/
     └── player handbook 2014/
@@ -51,79 +51,106 @@ A 7-step character creation wizard for Dungeons & Dragons 5th Edition (2014 rule
 
 ---
 
+## Architecture Principles
+
+### State Separation
+- **UserSelectedState.js**: Holds user selections + handler functions that modify state
+- **CharacterSheet.js**: Holds calculated values (derived from UserSelectedState)
+- **Render.js**: Pure rendering - reads state, generates HTML
+
+### Flow: User Action → State Update → Recalc → Render
+
+```
+User clicks → Handler (UserSelectedState.js)
+    ↓
+State updated (userSelection.*)
+    ↓
+triggerRecalc(flag) → recalculateAll()
+    ↓
+Recalc functions loop through characterSheet.features
+    ↓
+characterSheet updated
+    ↓
+renderXxx() called
+    ↓
+UI refreshed
+```
+
+---
+
 ## Directory Purposes
 
 ### `/home/binko/DND/js/app.js`
-- Entry point and event handlers
-- Functions: handleRaceSelect, handleClassSelect, adjustStat, toggleSkill, etc.
-- Delegates to EffectHandler for choice toggling
+- Entry point, initialization
+- Functions: `initApp()`, `startNewCharacter()`, `getDefaultSheet()`
+- Setup event listeners for modals
 
-### `/home/binko/DND/js/debug.js`
-- Debug dropdown toggle button
+### `/home/binko/DND/js/debug.js` & `/home/binko/DND/js/renderdebug.js`
+- Debug dropdown toggle and content refresh
+- Shows both `userSelection` AND `characterSheet` stats
+- Auto-refreshes when selections change (called from handlers)
 
-### `/home/binko/DND/js/renderdebug.js`
-- Debug dropdown content refresh
-- Shows both userSelection AND characterSheet stats
-- Auto-refreshes when selections change
+### `/home/binko/DND/js/character/`
+- **CharacterStorage.js** - LocalStorage save/load/delete
+- **CharacterSheet.js** - Character sheet object with calculated values
 
 ### `/home/binko/DND/js/effects/`
-- **EffectHandler.js** - Central effect processor
-  - `loadEffects()` - loads all effect JSON files
-  - `getEffectByName()` - looks up effect by name
-  - `processFeature()` - switches on type to trigger recalc
-  - `handleChoice()` - creates pending choice slots
-  - `toggleChoice()` - generic toggle for any choice-type feature
-  - `applyChoiceBonuses()` - applies stat bonuses from choices
-  
-- **RecalculationFlags.js** - Recalculation triggers
+- **RecalculationFlags.js** - Main recalculation logic
   - `triggerRecalc(flag)` - main entry point
   - `recalculateAll(flag)` - calls recalc functions in order
-  - Functions: recalcRaceEffects, recalcFeatures, recalcStats, recalcVision, etc.
+  - `getRaceEffect(featureName)` - looks up effect in race-effects.json
+  - `getEffectSelections(effect)` - handles options logic (auto-apply or user selection)
+  - Functions: `recalcRaceEffects`, `recalcFeatures`, `recalcStats`, `recalcProficiencies`, etc.
+  
+- **EffectHandler.js** - Effect processing helper
 
 ### `/home/binko/DND/js/render/`
 - **Render.js** - Main rendering functions for each step
 - **TooltipSystem.js** - Displays tooltips on hover
 
 ### `/home/binko/DND/js/states/`
-- **DataLoaders.js** - Loads JSON, getRaceStatBonuses()
-- **UIState.js** - Current step, navigation
-- **UserSelectedState.js** - User selections (race, class, stats, featureChoices, etc.)
+- **UserSelectedState.js** - User selections + handlers
+  - State: `race`, `class`, `stats`, `selectedSkills`, `feats`, `featureChoices`, etc.
+  - Handlers: `handleRaceSelect()`, `handleClassSelect()`, `toggleSkill()`, `toggleFeat()`, etc.
+- **UIState.js** - Navigation state + `canProceed()` validation
+- **DataLoaders.js** - Loads JSON, provides data access helpers
 
 ---
 
 ## Data Flow: Race Selection Change
 
-### Trigger → Reset → Process → Finalize
+### Step-by-Step Flow
 
 ```
 User clicks race card
     │
     ▼
-handleRaceSelect(raceId)
+handleRaceSelect(raceId) [UserSelectedState.js]
     │
     ├─► userSelection.race = raceId
-    └─► triggerRecalc(RECALC_FLAGS.RACE_CHANGED)
+    ├─► userSelection.subrace = null
+    ├─► triggerRecalc(RECALC_FLAGS.RACE_CHANGED)
+    ├─► renderChooseRace()
+    └─► refreshDebugIfOpen()
             │
             ▼
-        recalculateAll("race")
+        recalculateAll("race") [RecalculationFlags.js]
             │
-            ├─► recalcRaceEffects()        [RESET]
+            ├─► recalcRaceEffects()
             │       - Reset stats to 8
-            │       - Clear old choices
-            │       - getRaceStatBonuses()
-            │       - Create pending choice slots [null, null]
+            │       - getRaceStatBonuses() applies race bonuses
             │
-            ├─► recalcFeatures()          [PROCESS]
-            │       - Build features list
-            │       - EffectHandler.processAllFeatures()
-            │       - EffectHandler.applyChoiceBonuses()
+            ├─► recalcFeatures()
+            │       - Build features list (race + class)
+            │       - Each feature stored with name, source
             │
             ├─► recalcVision()
             ├─► recalcSpeed()
             ├─► recalcProficiencies()
             │
-            └─► recalcStats()             [FINALIZE]
-                    - Update characterSheet.stats
+            └─► recalcStats()
+                    - Apply stat bonuses from features
+                    - Loop: characterSheet.features → getRaceEffect() → apply if type matches
                     - recalcStatModifiers()
 ```
 
@@ -133,52 +160,28 @@ handleRaceSelect(raceId)
 
 Each feature in `data/effects/*.json` has a "type" field:
 
-| Type | Triggers | Example |
-|------|----------|---------|
-| `vision` | recalcVision() | Darkvision |
-| `speed` | recalcSpeed() | Fleet Footed |
-| `stat` | recalcStats() | Dwarven Toughness |
-| `choice` | Creates pending choice | Human Versatility, Dwarven Tool Proficiency |
-| `proficiency` | recalcProficiencies() | Elf Weapon Training |
-| `skill` | recalcProficiencies() | Keen Senses |
-| `cantrip` | recalcCantrips() | High Elf Cantrip |
-| `spell` | recalcSpellSlots() | Drow Magic |
-| `none` | (no recalc) | Trance, Fey Ancestry |
+| Type | Triggers | Example | Has Options |
+|------|----------|---------|-------------|
+| `vision` | recalcVision() | Darkvision | No |
+| `speed` | recalcSpeed() | Fleet Footed | No |
+| `stat` | recalcStats() | Dwarven Toughness | Yes (user choice) |
+| `proficiency` | recalcProficiencies() | Elf Weapon Training, Dwarven Tool Proficiency | Yes (auto-apply if length===count) |
+| `skill` | recalcProficiencies() | Keen Senses | No |
+| `cantrip` | recalcCantrips() | High Elf Cantrip | No |
+| `spell` | recalcSpellSlots() | Drow Magic | No |
+| `none` | (no recalc) | Trance, Fey Ancestry | No |
+
+### Options Logic
+If an effect has `options` array:
+1. Check if user has made selections in `userSelection.featureChoices`
+2. If yes → apply those selections
+3. If no AND `options.length === count` → auto-apply all options
+4. If no AND `options.length !== count` → wait for user to choose (don't apply)
 
 ---
 
-## Choice Handling System
+## Race Effects JSON Structure
 
-### How It Works
-
-1. **Feature has `type: "choice"`** in effects JSON
-2. **EffectHandler.handleChoice()** creates pending choice in featureChoices:
-   ```json
-   {
-     "human-bonus-stats": {
-       "type": "choice",
-       "effectType": "stat",
-       "value": 1,
-       "options": ["strength", "dexterity", ...],
-       "count": 2,
-       "selected": [null, null]
-     }
-   }
-   ```
-3. **User clicks** → EffectHandler.toggleChoice() updates selected
-4. **EffectHandler.applyChoiceBonuses()** applies bonuses to stats
-
-### Generic Choice Toggle
-```javascript
-// Any choice-type feature can use:
-EffectHandler.toggleChoice('choice-key', 'value')
-```
-
----
-
-## Key Data Structures
-
-### Race Effects JSON (data/effects/race-effects.json)
 ```json
 {
   "effects": {
@@ -186,16 +189,31 @@ EffectHandler.toggleChoice('choice-key', 'value')
       "type": "vision",
       "value": 60
     },
-    "Human Versatility": {
-      "type": "choice",
-      "effectType": "stat",
+    "Dwarven Toughness": {
+      "type": "stat",
+      "stat": "constitution",
+      "value": 1
+    },
+    "Fleet Footed": {
+      "type": "speed",
+      "value": 5
+    },
+    "Choose 2 Times +1 Bonus Stat": {
+      "type": "stat",
       "value": 1,
-      "options": ["strength", "dexterity", ...],
+      "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],
       "count": 2
     },
+    "Elf Weapon Training": {
+      "type": "proficiency",
+      "proficiencyType": "weapon",
+      "options": ["longswords", "shortswords", "shortbows", "longbows"],
+      "count": 4
+    },
     "Dwarven Tool Proficiency": {
-      "type": "choice",
-      "options": ["smith's tools", ...],
+      "type": "proficiency",
+      "proficiencyType": "tool",
+      "options": ["smith's tools", "brewer's supplies", "mason's tools"],
       "count": 1
     },
     "Keen Senses": {
@@ -206,22 +224,83 @@ EffectHandler.toggleChoice('choice-key', 'value')
 }
 ```
 
-### User Selection State (userSelection)
+---
+
+## User Selection State
+
+```javascript
+// In UserSelectedState.js
+let userSelection = {
+    name: '',
+    lvl: 1,
+    race: null,           // Selected race ID
+    subrace: null,       // Selected subrace name
+    class: null,         // Selected class ID
+    subclass: null,      // Selected subclass
+    stats: {
+        strength: 8, dexterity: 8, constitution: 8,
+        intelligence: 8, wisdom: 8, charisma: 8
+    },
+    selectedSkills: [],        // User-chosen skill proficiencies
+    feats: [],                 // User-chosen feats
+    featureChoices: {},        // Pending choices by key
+    // ... other fields
+};
+```
+
+---
+
+## Character Sheet (Calculated)
+
+```javascript
+// In CharacterSheet.js
+let characterSheet = {
+    stats: { strength: 10, ... },           // Calculated with bonuses
+    statModifiers: { strength: 0, ... },   // floor((score-10)/2)
+    maxHp: 10,
+    armorClass: 10,
+    speed: 30,
+    vision: { nightvision: 60, dayvision: null },
+    proficiencies: {
+        skills: [], weapons: [], armor: [], tools: [], savingThrows: []
+    },
+    features: [
+        { name: "Darkvision", source: "race", sourceId: "elf" },
+        { name: "Choose 2 Times +1 Bonus Stat", source: "race", sourceId: "human" }
+    ],
+    // ... spell data
+};
+```
+
+---
+
+## Next Button Validation (canProceed)
+
+Each step validates required selections before enabling Next button:
+
+| Stage | Validation |
+|-------|-----------|
+| 1: Race | Requires race + subrace if race has subraces |
+| 2: Class | Requires class + subclass options if any |
+| 3: Stats | All 27 points spent + pending choices complete |
+| 4: Skills | Required number of skills selected |
+| 5: Features | All pending choices complete |
+| 6: Spells | Always allowed (future: spell validation) |
+| 7: Overview | Always allowed (future: name required) |
+
+---
+
+## Key Data Structures
+
+### Feature Choice (Pending Choice)
+
 ```javascript
 {
-  race: "human",
-  class: "wizard",
-  stats: { strength: 10, dexterity: 8, ... },
-  featureChoices: {
-    "human-bonus-stats": {
-      type: "choice",
-      effectType: "stat",
-      value: 1,
-      options: [...],
-      count: 2,
-      selected: ["strength", "dexterity"]  // or [null, null]
-    }
-  }
+    type: "stat",           // Effect type (stat, proficiency, etc.)
+    value: 1,               // Amount to apply
+    options: ["str", "dex", ...],  // Available options
+    count: 2,               // How many must be chosen
+    selected: [null, null]  // User's selections (null = not chosen)
 }
 ```
 
@@ -229,15 +308,15 @@ EffectHandler.toggleChoice('choice-key', 'value')
 
 ## Character Creation Steps
 
-| Step | Action | Key Files |
-|------|--------|-----------|
-| 1 | Race Selection | data/races/*.json, Render.js |
-| 2 | Class Selection | data/classes/*.json, Render.js |
-| 3 | Point Buy + Bonus Choices | Render.js, EffectHandler.js |
-| 4 | Proficiencies | data/effects/*.json |
-| 5 | Abilities & Feats | data/descriptions/*.json |
-| 6 | Spells | data/spells/*.json |
-| 7 | Summary | CharacterSheet.js |
+| Step | Content | Key Files |
+|------|---------|-----------|
+| 1 | Race & Subrace Selection | `data/races/*.json`, Render.js |
+| 2 | Class Selection | `data/classes/*.json`, Render.js |
+| 3 | Point Buy (Stats) | DataLoaders.js, RecalculationFlags.js |
+| 4 | Skills & Proficiencies | UserSelectedState.js |
+| 5 | Abilities & Feats | Render.js, RecalculationFlags.js |
+| 6 | Spells | Render.js (future) |
+| 7 | Summary & Save | CharacterStorage.js |
 
 ---
 
@@ -245,15 +324,16 @@ EffectHandler.toggleChoice('choice-key', 'value')
 
 ### Adding a New Race Effect
 1. Add to `data/effects/race-effects.json`
-2. Include `type` field for automatic processing:
+2. Include `type` field:
    - `type: "vision"` → triggers recalcVision()
-   - `type: "choice"` → creates pending choice
-   - `type: "stat"` → adds to stats
+   - `type: "stat"` → adds to stats (may have options for user choice)
+   - `type: "proficiency"` → adds to proficiencies (may have options)
+   - etc.
 
-### Adding a New Choice-Type Feature
-1. Add effect with `type: "choice"` to effects JSON
-2. Specify options, count, and effectType
-3. EffectHandler handles the UI automatically
+### Auto-apply vs User Choice
+- If effect has `options` AND `options.length === count` → auto-apply all
+- If effect has `options` AND `options.length !== count` → user must choose
+- If no `options` → apply immediately
 
 ---
 
@@ -272,6 +352,6 @@ EffectHandler.toggleChoice('choice-key', 'value')
 
 - Data sourced from SRD 5.2 (2014 rules)
 - 339 spells across 8 schools
-- refPDFs/ contains original source PDFs
 - Debug dropdown shows both userSelection and characterSheet
-- All recalculations follow: Reset → Process → Finalize pattern
+- Recalculation follows: Reset → Process → Finalize pattern
+- All handlers call `refreshDebugIfOpen()` for live debug updates

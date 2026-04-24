@@ -22,8 +22,8 @@ function getEffectSelections(effect, defaultOptions) {
     if (!effect || !effect.options) return null;
 
     const key = effect.options[0]?.includes(' ') ?
-        effect.options[0].toLowerCase().replace(/\s+/g, '-').replace(/-.*/, '') :
-        defaultOptions?.[0]?.toLowerCase().replace(/\s+/g, '-') || '';
+        effect.options[0].toLowerCase() :
+        defaultOptions?.[0]?.toLowerCase() || '';
 
     const choice = userSelection.featureChoices?.[key];
     if (choice && choice.selected) {
@@ -55,7 +55,7 @@ function recalcRaceEffects() {
 function recalcClassBase() {
     if (!userSelection.class) return;
     const cls = window.classesData[userSelection.class];
-    if (cls?.primaryStat) characterSheet.spellcastingAbility = cls.primaryStat;
+    if (cls?.spellcastingAbility) characterSheet.spellcastingAbility = cls.spellcastingAbility;
 }
 
 function recalcStatModifiers() {
@@ -67,8 +67,22 @@ function recalcStatModifiers() {
 }
 
 function recalcVision() {
-    const v = getRaceVision(userSelection.race, userSelection.subrace);
-    characterSheet.vision = v || { nightvision: null, dayvision: null };
+    let vision = { nightvision: null, dayvision: 120 };
+
+    // Process features for vision bonuses (type: "vision")
+    if (characterSheet.features) {
+        characterSheet.features.forEach(feature => {
+            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
+            if (effect?.type === 'vision' && effect.value) {
+                if (typeof effect.value === 'object') {
+                    vision.nightvision = effect.value.nightvision || vision.nightvision;
+                    vision.dayvision = effect.value.dayvision || vision.dayvision;
+                }
+            }
+        });
+    }
+
+    characterSheet.vision = vision;
 }
 
 function recalcSpeed() {
@@ -224,7 +238,7 @@ function recalcFeatures() {
 function recalcSpellcasting() {
     if (!userSelection.class) { characterSheet.spellcastingAbility = null; characterSheet.spellPreparationType = null; return; }
     const cls = window.classesData[userSelection.class];
-    characterSheet.spellcastingAbility = cls?.primaryStat || null;
+    characterSheet.spellcastingAbility = cls?.spellcastingAbility || null;
     if (cls?.['spells prepared']) characterSheet.spellPreparationType = 'prepare';
     else if (cls?.['spells known'] === 'Spellbook') characterSheet.spellPreparationType = 'spellbook';
     else if (cls?.['spells known']) characterSheet.spellPreparationType = 'known';

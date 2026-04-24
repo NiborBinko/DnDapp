@@ -2,6 +2,7 @@
  "id": "druid",
  "name": "Druid",
  "primaryStat": "wisdom",
+ "spellcastingAbility": "wisdom",
  "desc": "Nature magic users",
  "hitDie": 8,
  "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},

@@ -2,6 +2,7 @@
  "id": "sorcerer",
  "name": "Sorcerer",
  "primaryStat": "charisma",
+ "spellcastingAbility": "charisma",
  "desc": "Innate magic users",
  "hitDie": 6,
  "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},

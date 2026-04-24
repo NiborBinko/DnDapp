@@ -50,6 +50,7 @@ function refreshDebugIfOpen() {
             maxHp: characterSheet?.maxHp || 0,
             armorClass: characterSheet?.armorClass || 0,
             speed: characterSheet?.speed || 0,
+            vision: characterSheet?.vision || { nightvision: null, dayvision: null },
             spellcastingAbility: characterSheet?.spellcastingAbility || null
         }
     };
