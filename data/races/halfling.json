@@ -20,9 +20,9 @@
    "bonuses": {"charisma": 1},
    "raceAbilities": ["Naturally Stealthy"]
   },
-  "Stout": {
-   "bonuses": {"constitution": 1},
-   "raceAbilities": ["Stout Resilience"]
-  }
+"Stout": {
+    "bonuses": {"constitution": 1},
+    "raceAbilities": ["Stout Resilience", "Stout Resilience Save"]
+   }
  }
 }

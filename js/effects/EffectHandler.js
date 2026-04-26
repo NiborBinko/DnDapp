@@ -58,7 +58,7 @@ const EffectHandler = {
                 recalcProficiencies();
                 break;
             case 'cantrips':
-                recalcCantrips();
+                // Don't call recalc here - let recalcProficiencies() in recalcAll() handle it after all features are built
                 break;
             case 'mainspell':
                 // Full spellcaster: Spellcasting or Pact Magic
@@ -70,7 +70,15 @@ const EffectHandler = {
                 recalcInnateSpells();
                 break;
             case 'resistance':
-                recalcStats();
+            case 'immunity':
+            case 'vulnerability':
+                recalcResistances();
+                break;
+            case 'savingThrow':
+                recalcSavingThrows();
+                break;
+            case 'feat':
+                recalcFeats();
                 break;
             case 'maxHP':
                 recalcMaxHp();

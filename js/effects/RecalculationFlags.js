@@ -7,23 +7,123 @@ function triggerRecalc() { recalcAll(); }
 function recalculateAll() { recalcAll(); }
 
 function recalcAll() {
-    recalcRaceEffects(); recalcClassBase(); recalcFeatures(); recalcStatModifiers();
-    recalcProficiencies();
+    recalcRaceEffects(); recalcClassBase(); recalcFeatures();
+    recalcProficiencies(); recalcKnownCantrips();
+    recalcStats();
+    recalcStatModifiers();
     recalcMaxHp();  recalcVision(); recalcSpeed();
     recalcSpellcasting(); recalcSpellSlots(); recalcInnateSpells(); recalcFeats();
+    recalcSavingThrows(); recalcResistances();
+}
+
+/**
+ * Gets all damage types available for resistances
+ * @returns {Array} - List of damage type strings
+ */
+function getAllDamageTypes() {
+    return ['acid', 'bludgeoning', 'cold', 'fire', 'force', 'lightning', 'necrotic', 'piercing', 'poison', 'psychic', 'radiant', 'slashing', 'thunder', 'nonmagical bps'];
+}
+
+/**
+ * Recalculates resistances, immunities, and vulnerabilities based on race/class/feat features
+ * @requires characterSheet.features
+ * @modifies characterSheet.resistances, characterSheet.immunities, characterSheet.vulnerabilities
+ */
+function recalcResistances() {
+    characterSheet.resistances = [];
+    characterSheet.immunities = [];
+    characterSheet.vulnerabilities = [];
+
+    if (!characterSheet.features) return;
+
+    characterSheet.features.forEach(feature => {
+        const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
+        if (!effect) return;
+
+        const dType = effect.damageType;
+        if (!dType) return;
+
+        if (effect.type === 'resistance') {
+            characterSheet.resistances.push({ type: dType, source: feature.source, sourceId: feature.sourceId });
+        } else if (effect.type === 'immunity') {
+            characterSheet.immunities.push({ type: dType, source: feature.source, sourceId: feature.sourceId });
+        } else if (effect.type === 'vulnerability') {
+            characterSheet.vulnerabilities.push({ type: dType, source: feature.source, sourceId: feature.sourceId });
+        }
+    });
+}
+
+/**
+ * Gets all save types for saving throws
+ * @returns {Array} - List of save type strings
+ */
+function getAllSaveTypes() {
+    return ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+}
+
+/**
+ * Recalculates saving throw advantages based on race/class/feat features
+ * @requires characterSheet.features
+ * @modifies characterSheet.savingThrowAdvantages
+ */
+function recalcSavingThrows() {
+    characterSheet.savingThrowAdvantages = [];
+
+    if (!characterSheet.features) return;
+
+    characterSheet.features.forEach(feature => {
+        const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
+        if (!effect) return;
+
+        if (effect.type === 'savingThrow' && effect.effect === 'advantage') {
+            characterSheet.savingThrowAdvantages.push({
+                saveType: effect.saveType,
+                effect: effect.effect,
+                source: feature.source,
+                sourceId: feature.sourceId
+            });
+        }
+    });
 }
 
 // Constants
 const STAT_NAMES = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
 
+// Helper: Get all available skills
+function getAllSkills() {
+    return Object.keys(window.descriptions?.proficiencies?.skills || {});
+}
+
+// Helper: Get all available feats
+function getAllFeats() {
+    return Object.keys(window.descriptions?.feats || {});
+}
+
+// Helper: Get cantrips based on class and spellList
+function getAvailableCantrips(effect) {
+    const cls = effect.class || 'wizard';
+    const spellListType = effect.spellList;
+    const classData = window.classesData?.[cls];
+    
+    if (!classData?.spellList) return [];
+    
+    if (spellListType === 'all') {
+        return classData?.spellList?.['0'] || [];
+    }
+    if (spellListType) {
+        return classData?.spellList?.[spellListType] || [];
+    }
+    
+    return [];
+}
+
 // Helper: Get selections for a feature choice
-// Returns: user's selections OR auto-apply if options.length === count
-function getEffectSelections(effect, defaultOptions) {
+// Returns: user's existing selections OR auto-apply if options.length === count
+function getEffectSelections(effect, defaultOptions, choiceKey) {
     if (!effect || !effect.options) return null;
 
-    const key = effect.options[0]?.includes(' ') ?
-        effect.options[0].toLowerCase() :
-        defaultOptions?.[0]?.toLowerCase() || '';
+    // Use provided key, or fall back to old behavior for backwards compatibility
+    const key = choiceKey || effect.options[0]?.toLowerCase() || defaultOptions?.[0]?.toLowerCase() || '';
 
     const choice = userSelection.featureChoices?.[key];
     if (choice && choice.selected) {
@@ -31,7 +131,7 @@ function getEffectSelections(effect, defaultOptions) {
         if (selections.length > 0) return selections;
     }
 
-    // Auto-apply if options.length === count
+    // Auto-apply if options.length === count (single choice = automatic)
     if (effect.options.length === effect.count) {
         return effect.options;
     }
@@ -58,6 +158,51 @@ function getFeatureEffect(featureName) {
     return getClassEffect(featureName) || getRaceEffect(featureName);
 }
 
+/**
+ * Ensures featureChoice exists for a feature, returns selections
+ * @param {Object} feature - The feature {name, source}
+ * @param {Object} effect - Effect from JSON (has type, options, count, etc.)
+ * @param {Array} availableOptions - Populated options array
+ * @param {String} type - 'proficiency', 'feat', 'cantrips', 'stat'
+ * @param {Object} extraFields - Additional fields (proficiencyType, ability, class, value)
+ * @returns {Array|null} - Selected items or null
+ */
+function ensureFeatureChoice(feature, effect, availableOptions, type, extraFields = {}) {
+    const key = feature.name.toLowerCase();
+    let selections = getEffectSelections(effect, availableOptions);
+    
+    // Create choice if options exist and user hasn't selected yet
+    if (availableOptions.length > 0 && !selections) {
+        userSelection.featureChoices[key] = {
+            count: effect.count,
+            selected: Array(effect.count).fill(null),
+            options: availableOptions,
+            type: type,
+            ...extraFields
+        };
+        selections = getEffectSelections(effect, availableOptions, key);
+    }
+    
+    // If selections exist (including auto-applied), ensure featureChoices has them for downstream functions
+    if (selections && !userSelection.featureChoices[key]) {
+        userSelection.featureChoices[key] = {
+            count: effect.count,
+            selected: selections,
+            options: availableOptions,
+            type: type,
+            ...extraFields
+        };
+    }
+    
+    return selections;
+}
+
+/**
+ * Recalculates race stat bonuses applied to userSelection.stats
+ * @requires window.racesData, window.getRaceStatBonuses (from DataLoaders)
+ * @requires userSelection.race
+ * @modifies userSelection.stats
+ */
 function recalcRaceEffects() {
     // Reset stats to base 8 first (idempotent)
     STAT_NAMES.forEach(stat => { userSelection.stats[stat] = 8; });
@@ -71,12 +216,23 @@ function recalcRaceEffects() {
     });
 }
 
+/**
+ * Sets base class spellcasting ability on characterSheet
+ * @requires window.classesData
+ * @requires userSelection.class
+ * @modifies characterSheet.spellcastingAbility
+ */
 function recalcClassBase() {
     if (!userSelection.class) return;
     const cls = window.classesData[userSelection.class];
     if (cls?.spellcastingAbility) characterSheet.spellcastingAbility = cls.spellcastingAbility;
 }
 
+/**
+ * Calculates stat modifiers from characterSheet.stats
+ * @requires characterSheet.stats
+ * @modifies characterSheet.statModifiers, initiative, armorClass
+ */
 function recalcStatModifiers() {
     Object.keys(characterSheet.stats).forEach(stat => {
         characterSheet.statModifiers[stat] = Math.floor((characterSheet.stats[stat] - 10) / 2);
@@ -85,6 +241,11 @@ function recalcStatModifiers() {
     characterSheet.armorClass = 10 + characterSheet.statModifiers.dexterity;
 }
 
+/**
+ * Recalculates vision based on race features
+ * @requires window.racesData, characterSheet.features
+ * @modifies characterSheet.vision
+ */
 function recalcVision() {
     let vision = { nightvision: null, dayvision: 120 };
 
@@ -104,6 +265,11 @@ function recalcVision() {
     characterSheet.vision = vision;
 }
 
+/**
+ * Recalculates speed based on race and features
+ * @requires window.racesData, characterSheet.features
+ * @modifies characterSheet.speed
+ */
 function recalcSpeed() {
     let speed = 30;
     if (userSelection.race) speed = window.racesData[userSelection.race]?.speed || 30;
@@ -121,6 +287,11 @@ function recalcSpeed() {
     characterSheet.speed = speed;
 }
 
+/**
+ * Recalculates max HP based on class hit die and features
+ * @requires window.classesData, characterSheet.statModifiers
+ * @modifies characterSheet.maxHp, currentHp
+ */
 function recalcMaxHp() {
     let baseHp;
 
@@ -150,13 +321,16 @@ function recalcMaxHp() {
     characterSheet.currentHp = characterSheet.maxHp;
 }
 
+/**
+ * Recalculates all proficiencies and creates featureChoices for race/class features
+ * @requires window.classesData, characterSheet.features, window.descriptions
+ * @modifies characterSheet.proficiencies, userSelection.featureChoices
+ */
 function recalcProficiencies() {
     characterSheet.proficiencies = { skills: [], weapons: [], armor: [], tools: [], savingThrows: [] };
 
-    // Clear all featureChoices when recalculating (will be re-added based on current selections)
-    if (userSelection.featureChoices) {
-        userSelection.featureChoices = {};
-    }
+    // Clear ALL featureChoices - rebuild from scratch each time
+    userSelection.featureChoices = {};
 
     if (userSelection.class) {
         const cls = window.classesData[userSelection.class];
@@ -174,19 +348,13 @@ function recalcProficiencies() {
             const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
             if (effect?.type === 'proficiency') {
                 const profType = effect.proficiencyType;
-                const selections = getEffectSelections(effect);
-
-                // Store pending choice if options exist but selections don't match count
-                if (effect.options && effect.options.length !== effect.count && !selections) {
-                    const key = feature.name.toLowerCase();
-                    userSelection.featureChoices[key] = {
-                        count: effect.count,
-                        selected: Array(effect.count).fill(null),
-                        options: effect.options,
-                        type: 'proficiency',
-                        proficiencyType: profType
-                    };
-                }
+                
+                // If options is empty, populate with all available options
+                const availableOptions = (effect.options && effect.options.length > 0) 
+                    ? effect.options 
+                    : (profType === 'skill' ? getAllSkills() : []);
+                
+                const selections = ensureFeatureChoice(feature, effect, availableOptions, 'proficiency', { proficiencyType: profType });
 
                 // Auto-add if selections.length === count (no choice needed)
                 if (selections && selections.length === effect.count) {
@@ -205,8 +373,42 @@ function recalcProficiencies() {
             }
         });
     }
+    
+    // Process race/class features for feats (type: "feat")
+    if (characterSheet.features) {
+        characterSheet.features.forEach(feature => {
+            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
+            if (effect?.type === 'feat') {
+                // If options is empty, populate with all available feats
+                const availableOptions = (effect.options && effect.options.length > 0) 
+                    ? effect.options 
+                    : getAllFeats();
+                
+                ensureFeatureChoice(feature, effect, availableOptions, 'feat');
+            }
+        });
+    }
+    
+    // Process race/class features for cantrips (type: "cantrips")
+    if (characterSheet.features) {
+        characterSheet.features.forEach(feature => {
+            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
+            if (effect?.type === 'cantrips') {
+                const availableOptions = (effect.options && effect.options.length > 0)
+                    ? effect.options
+                    : getAvailableCantrips(effect);
+                
+                ensureFeatureChoice(feature, effect, availableOptions, 'cantrips', { class: effect.class, ability: effect.ability });
+            }
+        });
+    }
 }
 
+/**
+ * Builds characterSheet.features from race abilities and class features
+ * @requires window.racesData, window.classesData
+ * @modifies characterSheet.features
+ */
 function recalcFeatures() {
     characterSheet.features = [];
 
@@ -254,6 +456,11 @@ function recalcFeatures() {
     recalcStats();
 }
 
+/**
+ * Sets spellcasting ability and preparation type if character has Spellcasting/Pact Magic
+ * @requires window.classesData, characterSheet.features
+ * @modifies characterSheet.spellcastingAbility, spellPreparationType
+ */
 function recalcSpellcasting() {
     if (!userSelection.class) { characterSheet.spellcastingAbility = null; characterSheet.spellPreparationType = null; return; }
 
@@ -277,27 +484,35 @@ function recalcSpellcasting() {
     recalcSpellStats();
 }
 
+/**
+ * Recalculates racial innate spells (e.g., Tiefling Infernal Legacy)
+ * Each spell stored as { name, ability }
+ * @requires characterSheet.features
+ * @modifies characterSheet.innateSpells
+ */
 function recalcInnateSpells() {
     characterSheet.innateSpells = [];
-    characterSheet.innateAbility = null;
 
     characterSheet.features?.forEach(feature => {
         const effect = getFeatureEffect(feature.name);
         if (effect?.type === 'innate') {
-            // Add spells at appropriate character levels
+            const ability = effect.ability || null;
             Object.keys(effect.spellLevels || {}).forEach(lvl => {
                 if (userSelection.lvl >= parseInt(lvl)) {
-                    characterSheet.innateSpells.push(...effect.spellLevels[lvl]);
+                    effect.spellLevels[lvl].forEach(spell => {
+                        characterSheet.innateSpells.push({ name: spell, ability: ability });
+                    });
                 }
             });
-            // Override ability if specified
-            if (effect.ability) {
-                characterSheet.innateAbility = effect.ability;
-            }
         }
     });
 }
 
+/**
+ * Sets spell slots based on class level
+ * @requires window.classesData, userSelection.lvl
+ * @modifies characterSheet.spellSlots
+ */
 function recalcSpellSlots() {
     characterSheet.spellSlots = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
     if (!userSelection.class) return;
@@ -306,6 +521,11 @@ function recalcSpellSlots() {
     if (slots) Object.keys(slots).forEach(lvl => characterSheet.spellSlots[lvl] = slots[lvl]);
 }
 
+/**
+ * Sets max cantrips known based on class and level
+ * @requires window.classesData, userSelection.lvl
+ * @modifies characterSheet.maxCantripsKnown
+ */
 function recalcCantrips() {
     if (!userSelection.class) { characterSheet.maxCantripsKnown = 0; return; }
     const cls = window.classesData[userSelection.class];
@@ -316,6 +536,33 @@ function recalcCantrips() {
     } else { characterSheet.maxCantripsKnown = cantrips || 0; }
 }
 
+/**
+ * Recalculates known cantrips from featureChoices (racial cantrips like High Elf)
+ * Each cantrip stored as { name, ability }
+ * @requires userSelection.featureChoices, characterSheet.features
+ * @modifies characterSheet.knownCantrips
+ */
+function recalcKnownCantrips() {
+    characterSheet.knownCantrips = [];
+    
+    if (!userSelection.featureChoices) return;
+    
+    Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
+        if (choice?.type === 'cantrips') {
+            const selected = choice.selected?.filter(s => s !== null) || [];
+            const ability = choice.ability || null;
+            selected.forEach(cantrip => {
+                characterSheet.knownCantrips.push({ name: cantrip, ability: ability });
+            });
+        }
+    });
+}
+
+/**
+ * Calculates spell save DC and attack modifier
+ * @requires characterSheet.spellcastingAbility, statModifiers
+ * @modifies characterSheet.spellSaveDC, spellAttackMod
+ */
 function recalcSpellStats() {
     if (!characterSheet.spellcastingAbility) return;
     const mod = characterSheet.statModifiers[characterSheet.spellcastingAbility];
@@ -324,6 +571,11 @@ function recalcSpellStats() {
     characterSheet.spellAttackMod = prof + mod;
 }
 
+/**
+ * Copies userSelection.feats to characterSheet.feats
+ * @requires userSelection.feats
+ * @modifies characterSheet.feats
+ */
 function recalcFeats() {
     characterSheet.feats = [];
     userSelection.feats.forEach(featName => {
@@ -331,6 +583,11 @@ function recalcFeats() {
     });
 }
 
+/**
+ * Applies stat bonuses from race features and feat choices
+ * @requires characterSheet.features, window.descriptions
+ * @modifies characterSheet.stats
+ */
 function recalcStats() {
     // Reset characterSheet.stats to base (from userSelection.stats which already has race bonuses applied)
     // This function combines base stats + race bonuses + feat bonuses
@@ -346,7 +603,7 @@ function recalcStats() {
         characterSheet.features.forEach(feature => {
             const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
             if (effect?.type === 'stat') {
-                const selections = getEffectSelections(effect, effect.options);
+                const selections = ensureFeatureChoice(feature, effect, effect.options, 'stat', { value: effect.value });
                 if (selections) {
                     selections.forEach(stat => {
                         if (STAT_NAMES.includes(stat.toLowerCase())) {
@@ -363,5 +620,9 @@ function recalcStats() {
 
 function getProficiencyBonus() { return Math.floor((userSelection.lvl - 1) / 4) + 2; }
 
+window.getAllDamageTypes = getAllDamageTypes;
+window.getAllSaveTypes = getAllSaveTypes;
+window.recalcResistances = recalcResistances;
+window.recalcSavingThrows = recalcSavingThrows;
 window.triggerRecalc = triggerRecalc;
 window.recalculateAll = recalculateAll;

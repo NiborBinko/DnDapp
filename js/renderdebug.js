@@ -26,42 +26,56 @@ function refreshDebugIfOpen() {
         characterProficiencies = { ...characterSheet.proficiencies };
     }
     
-    // Always rebuild content with current state
-    const state = {
-        // User Selection State (current selections)
-        userSelection: {
-            race: userSelection.race || 'none',
-            subrace: userSelection.subrace || 'none',
-            class: userSelection.class || 'none',
-            subclass: userSelection.subclass || 'none',
-            level: userSelection.lvl,
-            stats: { ...userSelection.stats },
-            pointsRemaining: UIState.pointsRemaining,
-            selectedSkills: [...userSelection.selectedSkills],
-            feats: [...userSelection.feats],
-            featureChoices: { ...userSelection.featureChoices },
-            selectedLanguages: [...userSelection.selectedLanguages]
-        },
-        // Character Sheet Stats (final calculated values)
-        characterSheet: {
-            stats: characterStats,
-            features: characterFeatures,
-            proficiencies: characterProficiencies,
-            maxHp: characterSheet?.maxHp || 0,
-            armorClass: characterSheet?.armorClass || 0,
-            speed: characterSheet?.speed || 0,
-            vision: characterSheet?.vision || { nightvision: null, dayvision: null },
-            spellcastingAbility: characterSheet?.spellcastingAbility || null,
-            spellPreparationType: characterSheet?.spellPreparationType || null,
-            spellSlots: characterSheet?.spellSlots || {},
-            innateSpells: characterSheet?.innateSpells || [],
-            innateAbility: characterSheet?.innateAbility || null
-        }
+    // User Selection data
+    const userSelectionState = {
+        race: userSelection.race || 'none',
+        subrace: userSelection.subrace || 'none',
+        class: userSelection.class || 'none',
+        subclass: userSelection.subclass || 'none',
+        level: userSelection.lvl,
+        stats: { ...userSelection.stats },
+        pointsRemaining: UIState.pointsRemaining,
+        selectedSkills: [...userSelection.selectedSkills],
+        feats: [...userSelection.feats],
+        featureChoices: { ...userSelection.featureChoices },
+        selectedLanguages: [...userSelection.selectedLanguages]
+    };
+    
+    // Character Sheet data
+    const characterSheetState = {
+        stats: characterStats,
+        features: characterFeatures,
+        proficiencies: characterProficiencies,
+        maxHp: characterSheet?.maxHp || 0,
+        armorClass: characterSheet?.armorClass || 0,
+        speed: characterSheet?.speed || 0,
+        vision: characterSheet?.vision || { nightvision: null, dayvision: null },
+        spellcastingAbility: characterSheet?.spellcastingAbility || null,
+        spellPreparationType: characterSheet?.spellPreparationType || null,
+        spellSlots: characterSheet?.spellSlots || {},
+        innateSpells: characterSheet?.innateSpells || [],
+        knownCantrips: characterSheet?.knownCantrips || [],
+        resistances: characterSheet?.resistances || [],
+        immunities: characterSheet?.immunities || [],
+        vulnerabilities: characterSheet?.vulnerabilities || [],
+        savingThrowAdvantages: characterSheet?.savingThrowAdvantages || []
     };
     
     let html = '<div class="debug-dropdown">';
-    html += '<div class="debug-header" onclick="toggleDebug()">▼ Debug: User Selection & Character Stats</div>';
-    html += '<pre class="debug-content">' + JSON.stringify(state, null, 2) + '</pre>';
+    html += '<div class="debug-header" onclick="toggleDebug()">▼ Debug</div>';
+    
+    // User Selection Section - Scrollable
+    html += '<div class="debug-section">';
+    html += '<div class="debug-section-header">User Selection</div>';
+    html += '<pre class="debug-content debug-scrollable">' + JSON.stringify(userSelectionState, null, 2) + '</pre>';
+    html += '</div>';
+    
+    // Character Sheet Section - Scrollable
+    html += '<div class="debug-section">';
+    html += '<div class="debug-section-header">Character Sheet</div>';
+    html += '<pre class="debug-content debug-scrollable">' + JSON.stringify(characterSheetState, null, 2) + '</pre>';
+    html += '</div>';
+    
     html += '</div>';
     
     container.innerHTML = html;

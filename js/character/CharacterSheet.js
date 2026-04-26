@@ -9,6 +9,8 @@ let characterSheet = {
     vision: { nightvision: null, dayvision: null },
     proficiencies: { skills: [], weapons: [], armor: [], tools: [], savingThrows: [] },
     expertises: [], languages: [], features: [], feats: [],
+    savingThrowAdvantages: [],
+    resistances: [], immunities: [], vulnerabilities: [],
     spellcastingAbility: null, spellSaveDC: 0, spellAttackMod: 0, spellPreparationType: null,
     spellbookSpells: [], knownCantrips: [], knownSpells: [], preparedSpells: [],
     spellSlots: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 },

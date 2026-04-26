@@ -45,7 +45,10 @@
     "high elf cantrip": {
       "type": "cantrips",
       "class": "wizard",
-      "spellList": "all"
+      "spellList": "all",
+      "options": [],
+      "count": 1,
+      "ability": "intelligence"
     },
     "drow magic": {
       "type": "innate",
@@ -61,8 +64,14 @@
       "value": "lvl"
     },
     "dwarven resilience": {
-      "type": "none",
-      "description": "Advantage on saving throws against poison. Resistance against poison damage."
+      "type": "resistance",
+      "damageType": "poison",
+      "description": "Advantage on saving throws against poison."
+    },
+    "dwarven resilience save": {
+      "type": "savingThrow",
+      "saveType": "poison",
+      "effect": "advantage"
     },
     "dwarven combat training": {
       "type": "proficiency",
@@ -147,36 +156,42 @@
     },
     "natural illusionist": {
       "type": "cantrips",
-      "class": "wizard",
-      "spellList": "illusion"
+      "options": ["Minor Illusion"],
+      "count": 1,
+      "ability": "intelligence"
     },
     "artificer's lore": {
       "type": "none",
       "description": "Whenever you make an Intelligence check related to magical, alchemical, or technological items, double your proficiency bonus."
     },
     "stout resilience": {
-      "type": "none",
-      "description": "You have advantage on saving throws against poison."
+      "type": "resistance",
+      "damageType": "poison"
+    },
+    "stout resilience save": {
+      "type": "savingThrow",
+      "saveType": "poison",
+      "effect": "advantage"
     },
     "breath weapon (acid)": {
-      "type": "none",
-      "description": "As an action, exhale acid in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
+      "type": "resistance",
+      "damageType": "acid"
     },
     "breath weapon (lightning)": {
-      "type": "none",
-      "description": "As an action, exhale lightning in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
+      "type": "resistance",
+      "damageType": "lightning"
     },
     "breath weapon (poison)": {
-      "type": "none",
-      "description": "As an action, exhale poison in a 5-foot by 30-foot line or 15-foot cone. Con save to take 2d6 damage."
+      "type": "resistance",
+      "damageType": "poison"
     },
     "breath weapon (fire)": {
-      "type": "none",
-      "description": "As an action, exhale fire in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
+      "type": "resistance",
+      "damageType": "fire"
     },
     "breath weapon (cold)": {
-      "type": "none",
-      "description": "As an action, exhale cold in a 5-foot by 30-foot line or 15-foot cone. Dex save to take 2d6 damage."
+      "type": "resistance",
+      "damageType": "cold"
     },
     "human stat bonus": {
       "type": "stat",
@@ -187,7 +202,7 @@
     "+1 proficiency": {
       "type": "proficiency",
       "proficiencyType": "skill",
-      "options": ["Athletics", "Acrobatics", "Sleight of Hand", "Stealth", "Arcana", "History", "Investigation", "Medicine", "Nature", "Perception", "Religion", "Animal Handling", "Insight", "Persuasion", "Deception", "Intimidation"],
+      "options": [],
       "count": 1
     },
     "+1 feat": {
