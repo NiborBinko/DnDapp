@@ -8,7 +8,14 @@ function renderChooseRace() {
     if (!grid) return;
     grid.innerHTML = Object.values(window.racesData).map(race => {
         const bonuses = race.bonuses ? Object.entries(race.bonuses).map(([s, v]) => `+${v} ${s.slice(0, 3).toUpperCase()}`).join(', ') : race.desc;
-        return `<div class="card ${userSelection.race === race.id ? 'selected' : ''}" onclick="handleRaceSelect('${race.id}')"><h3>${race.name}</h3><p>${bonuses}</p></div>`;
+        const desc = race.desc || '';
+        return `<div class="card ${userSelection.race === race.id ? 'selected' : ''}" 
+            onclick="handleRaceSelect('${race.id}')"
+            data-tooltip-id="${race.id}"
+            data-tooltip-type="race-ability"
+            data-origin="Race: ${race.name}"
+            data-tooltip="${desc}"
+            ><h3>${race.name}</h3><p>${bonuses}</p></div>`;
     }).join('');
     
     const subraceSection = document.getElementById('subrace-section');
@@ -33,7 +40,14 @@ function renderChooseClass() {
     const grid = document.getElementById('class-grid');
     if (!grid) return;
     grid.innerHTML = Object.values(window.classesData).map(cls => {
-        return `<div class="card ${userSelection.class === cls.id ? 'selected' : ''}" onclick="handleClassSelect('${cls.id}')"><h3>${cls.name} <span>(${cls.primaryStat?.slice(0, 3).toUpperCase()})</span></h3><p>d${cls.hitDie}</p></div>`;
+        const statDesc = window.descriptions?.stats?.[cls.primaryStat] || '';
+        return `<div class="card ${userSelection.class === cls.id ? 'selected' : ''}" 
+            onclick="handleClassSelect('${cls.id}')"
+            data-tooltip-id="${cls.id}"
+            data-tooltip-type="class-ability"
+            data-origin="Class"
+            data-tooltip="${cls.desc} ${statDesc}"
+            ><h3>${cls.name} <span>(${cls.primaryStat?.slice(0, 3).toUpperCase()})</span></h3><p>d${cls.hitDie}</p></div>`;
     }).join('');
     updateNextButton();
 }
@@ -42,16 +56,16 @@ function renderAbilityScores() {
     const container = document.getElementById('stats-container');
     if (!container) return;
     const stats = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
-    const raceBonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace);
+    const raceBonuses = window.raceStatBonuses || {};
     const primaryStat = getClassPrimaryStat();
 
-    // Calculate points spent: cost 1 per point if stat < 13, else cost 2
+    // Calculate points spent using user's allocated stats
     let pointsSpent = 0;
     stats.forEach(stat => {
-        const val = userSelection.stats[stat] || 8;
-        if (val > 8) {
-            if (val <= 13) pointsSpent += (val - 8);
-            else pointsSpent += (val - 8) + (val - 12);
+        const base = userSelection.stats[stat] || 8;
+        if (base > 8) {
+            if (base <= 13) pointsSpent += (base - 8);
+            else pointsSpent += 5 + (base - 13) * 2;
         }
     });
     UIState.pointsRemaining = 27 - pointsSpent;
@@ -60,13 +74,29 @@ function renderAbilityScores() {
 
     html += stats.map(stat => {
         const base = userSelection.stats[stat] || 8;
-        const rBonus = raceBonuses[stat] || 0;
-        const total = base + (typeof rBonus === 'number' ? rBonus : 0);
+        const total = base + (raceBonuses[stat] || 0);
         const mod = Math.floor((total - 10) / 2);
         const cost = base >= 13 ? 2 : 1;
         const canDec = base > 8;
-        const canInc = UIState.pointsRemaining >= cost && base < 15;
-        return `<div class="stat-row ${primaryStat === stat ? 'primary-stat-row' : ''}"><div class="stat-name">${stat.toUpperCase().slice(0, 3)} ${primaryStat === stat ? '⭐' : ''}</div><div class="stat-controls"><button class="stat-btn" onclick="adjustStat('${stat}', -1)" ${!canDec ? 'disabled' : ''}>-</button><div class="stat-value">${base}</div><button class="stat-btn" onclick="adjustStat('${stat}', 1)" ${!canInc ? 'disabled' : ''}>+${cost > 1 ? cost : ''}</button><div class="stat-bonus">${(rBonus && rBonus > 0) ? '+' + rBonus : ''}</div><div class="stat-total">${total}</div><div class="stat-modifier">${mod >= 0 ? '+' : ''}${mod}</div></div></div>`;
+        const raceBonus = raceBonuses[stat] || 0;
+        const canInc = UIState.pointsRemaining >= cost && base < (15 + raceBonus) && (base + 1 + raceBonus) <= 16;
+        return `<div class="stat-row ${primaryStat === stat ? 'primary-stat-row' : ''}"
+            data-tooltip-id="${stat}" 
+            data-tooltip-type="stat" 
+            data-origin="${stat.toUpperCase()} Score">
+            <div class="stat-name">${stat.toUpperCase().slice(0, 3)} ${primaryStat === stat ? '⭐' : ''}</div>
+            <div class="stat-controls">
+                <button class="stat-btn" onclick="adjustStat('${stat}', -1)" ${!canDec ? 'disabled' : ''}>-</button>
+                <div class="stat-value">${base}</div>
+                <button class="stat-btn" 
+                    onclick="adjustStat('${stat}', 1)" 
+                    ${!canInc ? 'disabled' : ''}
+                    >+${cost > 1 ? cost : ''}</button>
+                <div class="stat-bonus">${(raceBonuses[stat] && raceBonuses[stat] > 0) ? '+' + raceBonuses[stat] : ''}</div>
+                <div class="stat-total">${total}</div>
+                <div class="stat-modifier">${mod >= 0 ? '+' : ''}${mod}</div>
+            </div>
+        </div>`;
     }).join('');
     container.innerHTML = html;
     updateNextButton();
@@ -90,7 +120,13 @@ function renderProficienciesStage() {
     html += skillOptions.map(skill => {
         const isSel = userSelection.selectedSkills.includes(skill.name);
         const isDis = !isSel && currentSkills >= maxSkills;
-        return `<label class="checkbox-item ${isDis ? 'disabled' : ''}"><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleSkill('${skill.name}')">${skill.name}</label>`;
+        const skillDesc = window.descriptions?.proficiencies?.skills?.[skill.name] || '';
+        return `<label class="checkbox-item ${isDis ? 'disabled' : ''}" 
+            data-tooltip-id="${skill.name}" 
+            data-tooltip-type="proficiency" 
+            data-origin="Skill"
+            data-tooltip="${skillDesc}"
+            ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleSkill('${skill.name}')">${skill.name}</label>`;
     }).join('');
     html += '</div>';
     
@@ -113,7 +149,10 @@ function renderFeaturesFeats() {
             const race = window.racesData[userSelection.race];
             if (race?.raceAbilities) {
                 html += `<div class="section-header">Race Abilities</div><div class="checkbox-grid">`;
-                html += race.raceAbilities.map(a => `<label class="checkbox-item"><input type="checkbox" checked disabled>${a} 🔒</label>`).join('');
+                html += race.raceAbilities.map(a => {
+                    const desc = window.descriptions?.raceAbilities?.[a] || '';
+                    return `<label class="checkbox-item" data-tooltip-id="${a}" data-tooltip-type="race-ability" data-origin="Race: ${race.name}"><input type="checkbox" checked disabled>${a} 🔒</label>`;
+                }).join('');
                 html += '</div>';
             }
             // Generic choice rendering from featureChoices (created by RecalculationFlags)
@@ -135,7 +174,13 @@ function renderFeaturesFeats() {
                         const isSelected = selectedItems.includes(opt);
                         const disabled = !canSelect && !isSelected ? 'disabled' : '';
                         const displayName = typeof opt === 'string' ? opt : opt.name || opt;
-                        html += `<label class="checkbox-item ${isSelected ? 'selected' : ''}"><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${key}', '${displayName}')">${displayName}</label>`;
+                        const optDesc = window.descriptions?.feats?.[displayName] || window.descriptions?.classOptions?.[displayName] || '';
+                        html += `<label class="checkbox-item ${isSelected ? 'selected' : ''}" 
+                            data-tooltip-id="${displayName}" 
+                            data-tooltip-type="${choice.type === 'feat' ? 'feat' : (choice.type === 'stat' ? 'stat' : 'proficiency')}" 
+                            data-origin="Choice"
+                            data-tooltip="${optDesc}"
+                            ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${key}', '${displayName}')">${displayName}</label>`;
                     });
                     html += '</div>';
                 });
@@ -146,14 +191,18 @@ function renderFeaturesFeats() {
             const feats = cls?.features?.[userSelection.lvl];
             if (feats?.features?.length) {
                 html += `<div class="section-header">Class Features (L${userSelection.lvl})</div><div class="checkbox-grid">`;
-                html += feats.features.map(f => `<label class="checkbox-item"><input type="checkbox" checked disabled>${f} 🔒</label>`).join('');
+                html += feats.features.map(f => {
+                    const desc = window.descriptions?.classAbilities?.[f] || '';
+                    return `<label class="checkbox-item" data-tooltip-id="${f}" data-tooltip-type="class-ability" data-origin="Class: ${cls.name}"><input type="checkbox" checked disabled>${f} 🔒</label>`;
+                }).join('');
                 html += '</div>';
             }
             if (feats?.options?.length) {
                 html += `<div class="section-header">Choose One</div><div class="checkbox-grid">`;
                 html += feats.options.map(opt => {
                     const isSel = userSelection.selectedFeatureChoices[opt.exclusiveGroup] === opt.id;
-                    return `<label class="checkbox-item ${isSel ? 'selected' : ''}"><input type="checkbox" ${isSel ? 'checked' : ''} onchange="selectClassOption('${opt.exclusiveGroup}', '${opt.id}')">${opt.name}</label>`;
+                    const optDesc = window.descriptions?.classOptions?.[opt.name] || window.descriptions?.exclusiveGroups?.[opt.exclusiveGroup] || '';
+                    return `<label class="checkbox-item ${isSel ? 'selected' : ''}" data-tooltip-id="${opt.name}" data-tooltip-type="class-option" data-origin="Class: ${cls.name}"><input type="checkbox" ${isSel ? 'checked' : ''} onchange="selectClassOption('${opt.exclusiveGroup}', '${opt.id}')">${opt.name}</label>`;
                 }).join('');
                 html += '</div>';
             }
@@ -171,7 +220,13 @@ function renderFeaturesFeats() {
         html += feats.map(feat => {
             const isSel = userSelection.feats.includes(feat);
             const isDis = !isSel && userSelection.feats.length >= maxFeats;
-            return `<label class="checkbox-item ${isDis ? 'disabled' : ''}"><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleFeat('${feat}')">${feat}</label>`;
+            const featDesc = window.descriptions?.feats?.[feat] || '';
+            return `<label class="checkbox-item ${isDis ? 'disabled' : ''}" 
+                data-tooltip-id="${feat}" 
+                data-tooltip-type="feat" 
+                data-origin="Feat"
+                data-tooltip="${featDesc}"
+                ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleFeat('${feat}')">${feat}</label>`;
         }).join('');
         html += '</div>';
         featsGrid.innerHTML = html;

@@ -12,7 +12,8 @@ async function loadAllGameData() {
     const classPromises = classIds.map(id => loadJson('data/classes/' + id));
     const otherPromises = [
         loadJson('data/effects/race-effects'), loadJson('data/effects/class-effects'), loadJson('data/effects/feat-effects'),
-        loadJson('data/descriptions/stats'), loadJson('data/descriptions/feats'), loadJson('data/descriptions/race-abilities'), loadJson('data/descriptions/proficiencies')
+        loadJson('data/descriptions/stats'), loadJson('data/descriptions/feats'), loadJson('data/descriptions/race-abilities'), loadJson('data/descriptions/proficiencies'),
+        loadJson('data/descriptions/class-abilities'), loadJson('data/descriptions/class-options'), loadJson('data/descriptions/exclusive-groups')
     ];
     
     const results = await Promise.all([...racePromises, ...classPromises, ...otherPromises]);
@@ -28,7 +29,10 @@ async function loadAllGameData() {
         stats: results[rCount + cCount + 3] || {},
         feats: results[rCount + cCount + 4] || {},
         raceAbilities: results[rCount + cCount + 5] || {},
-        proficiencies: results[rCount + cCount + 6] || {}
+        proficiencies: results[rCount + cCount + 6] || {},
+        classAbilities: results[rCount + cCount + 7] || {},
+        classOptions: results[rCount + cCount + 8] || {},
+        exclusiveGroups: results[rCount + cCount + 9] || {}
     };
     
     window.racesData = racesData;

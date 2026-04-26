@@ -95,15 +95,20 @@ const EffectHandler = {
     applyChoiceBonuses(userSelection) {
         if (!userSelection.featureChoices) return;
         
+        // Store stat bonuses from choices separately - DON'T modify userSelection.stats
+        const choiceBonuses = {};
+        
         Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
             if (!choice || choice.type !== 'choice' || choice.effectType !== 'stat') return;
             
             choice.selected.forEach(stat => {
-                if (stat && userSelection.stats) {
-                    userSelection.stats[stat] = (userSelection.stats[stat] || 8) + (choice.value || 1);
+                if (stat) {
+                    choiceBonuses[stat] = (choiceBonuses[stat] || 0) + (choice.value || 1);
                 }
             });
         });
+        
+        window.featureChoiceBonuses = choiceBonuses;
     },
     
     processAllFeatures(features, userSelection) {

@@ -59,14 +59,12 @@ function getStatCost(currentValue) {
 
 function adjustStat(stat, delta) {
     const currentValue = userSelection.stats[stat] || 8;
-    const cost = getStatCost(currentValue);
+    const cost = currentValue >= 13 ? 2 : 1;
 
     if (delta > 0 && UIState.pointsRemaining >= cost) {
         userSelection.stats[stat] = currentValue + delta;
-        UIState.pointsRemaining -= cost;
     } else if (delta < 0 && currentValue > 8) {
         userSelection.stats[stat] = currentValue + delta;
-        UIState.pointsRemaining += getStatCost(currentValue - 1);
     }
     triggerRecalc();
     renderAbilityScores();

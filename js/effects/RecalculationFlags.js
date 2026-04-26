@@ -187,23 +187,16 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
 }
 
 /**
- * Recalculates race stat bonuses applied to userSelection.stats
+ * Recalculates race stat bonuses (stored separately, not applied to userSelection.stats)
  * @requires window.racesData, window.getRaceStatBonuses (from DataLoaders)
  * @requires userSelection.race
- * @modifies userSelection.stats
+ * @modifies window.raceStatBonuses (stored for display/output)
  */
 function recalcRaceEffects() {
-    // Reset stats to base 8 first (idempotent)
-    window.STAT_NAMES.forEach(stat => { userSelection.stats[stat] = 8; });
-
-    if (!userSelection.race) return;
-    const bonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace);
-
-    // Handle normal numeric bonuses
-    Object.keys(bonuses).forEach(stat => {
-        userSelection.stats[stat] = (userSelection.stats[stat] || 8) + bonuses[stat];
-    });
+    // Store race bonuses separately - DON'T modify userSelection.stats
+    window.raceStatBonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace) || {};
 }
+window.recalcRaceEffects = recalcRaceEffects;
 
 /**
  * Sets base class spellcasting ability on characterSheet
@@ -564,9 +557,11 @@ function recalcFeats() {
  */
 function recalcStats() {
     const featBonuses = getFeatStatBonuses();
+    const raceBonuses = window.raceStatBonuses || {};
+    const choiceBonuses = window.featureChoiceBonuses || {};
 
-window.STAT_NAMES.forEach(stat => {
-        characterSheet.stats[stat] = (userSelection.stats[stat] || 8) + (featBonuses[stat] || 0);
+    window.STAT_NAMES.forEach(stat => {
+        characterSheet.stats[stat] = (userSelection.stats[stat] || 8) + (raceBonuses[stat] || 0) + (choiceBonuses[stat] || 0) + (featBonuses[stat] || 0);
     });
 
     recalcFeaturesByType('stat', (effect, feature) => {

@@ -31,14 +31,6 @@ function canProceed() {
         case 2: {
             // Class must be selected
             if (!userSelection.class) return false;
-            // If class has pending options at current level, must select one
-            const cls = window.classesData[userSelection.class];
-            const feats = cls?.features?.[userSelection.lvl];
-            if (feats?.options?.length > 0) {
-                if (!userSelection.selectedFeatureChoices) return false;
-                const pendingChoices = feats.options.filter(opt => !userSelection.selectedFeatureChoices[opt.exclusiveGroup]);
-                if (pendingChoices.length > 0) return false;
-            }
             return true;
         }
         case 3: {
@@ -69,6 +61,16 @@ function canProceed() {
                 if (choice) {
                     const filledCount = choice.selected.filter(s => s !== null).length;
                     if (filledCount < choice.count) return false;
+                }
+            }
+            // Check class options at current level are selected
+            if (userSelection.class) {
+                const cls = window.classesData[userSelection.class];
+                const feats = cls?.features?.[userSelection.lvl];
+                if (feats?.options?.length > 0) {
+                    if (!userSelection.selectedFeatureChoices) return false;
+                    const pendingChoices = feats.options.filter(opt => !userSelection.selectedFeatureChoices[opt.exclusiveGroup]);
+                    if (pendingChoices.length > 0) return false;
                 }
             }
             return true;
