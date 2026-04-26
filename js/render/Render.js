@@ -72,6 +72,14 @@ function renderAbilityScores() {
 
     let html = `<div class="points-remaining">Points: <span id="points-remaining">${UIState.pointsRemaining}</span></div>`;
 
+    const statDescriptions = {
+        strength: "Measures your character's physical power. Affects melee damage, carrying capacity, and Athletics checks.",
+        dexterity: "Measures your character's agility, reflexes, and balance. Affects AC, initiative, and ranged attacks.",
+        constitution: "Measures your character's health and stamina. Affects hit point maximum.",
+        intelligence: "Measures your character's mental acuity and memory. Important for wizards and knowledge skills.",
+        wisdom: "Measures your character's perception, insight, and willpower. Important for clerics, rangers, and perception checks.",
+        charisma: "Measures your character's force of personality and social influence. Important for bards, paladins, and social checks."
+    };
     html += stats.map(stat => {
         const base = userSelection.stats[stat] || 8;
         const total = base + (raceBonuses[stat] || 0);
@@ -83,7 +91,8 @@ function renderAbilityScores() {
         return `<div class="stat-row ${primaryStat === stat ? 'primary-stat-row' : ''}"
             data-tooltip-id="${stat}" 
             data-tooltip-type="stat" 
-            data-origin="${stat.toUpperCase()} Score">
+            data-origin="${stat.toUpperCase()} Score"
+            data-tooltip="${statDescriptions[stat]}">
             <div class="stat-name">${stat.toUpperCase().slice(0, 3)} ${primaryStat === stat ? '⭐' : ''}</div>
             <div class="stat-controls">
                 <button class="stat-btn" onclick="adjustStat('${stat}', -1)" ${!canDec ? 'disabled' : ''}>-</button>
