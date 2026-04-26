@@ -14,7 +14,7 @@ function resetUserSelection() {
         name: '', lvl: 1, race: null, subrace: null, class: null, subclass: null,
         stats: { strength: 8, dexterity: 8, constitution: 8, intelligence: 8, wisdom: 8, charisma: 8 },
         selectedSkills: [], selectedWeapons: [], selectedArmor: [], selectedTools: [],
-        feats: [], featureChoices: {}, ASIHistory: [],
+        feats: [], featureChoices: {}, selectedFeatureChoices: {}, ASIHistory: [],
         selectedLanguages: [], spellbookSpells: [], selectedCantrips: [], selectedSpells: [], preparedSpells: []
     };
 }
@@ -112,6 +112,7 @@ function toggleFeat(featName) {
 // ===== Class Options =====
 
 function selectClassOption(groupName, optionId) {
+    if (!userSelection.selectedFeatureChoices) userSelection.selectedFeatureChoices = {};
     userSelection.selectedFeatureChoices[groupName] = optionId;
     triggerRecalc();
     renderFeaturesFeats();

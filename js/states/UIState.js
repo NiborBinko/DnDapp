@@ -35,6 +35,7 @@ function canProceed() {
             const cls = window.classesData[userSelection.class];
             const feats = cls?.features?.[userSelection.lvl];
             if (feats?.options?.length > 0) {
+                if (!userSelection.selectedFeatureChoices) return false;
                 const pendingChoices = feats.options.filter(opt => !userSelection.selectedFeatureChoices[opt.exclusiveGroup]);
                 if (pendingChoices.length > 0) return false;
             }

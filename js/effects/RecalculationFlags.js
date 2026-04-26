@@ -73,8 +73,6 @@ function recalcSavingThrows() {
     });
 }
 
-const STAT_NAMES = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
-
 function getFeatureEffect(name, source) {
     const key = name?.toLowerCase();
     if (!key) return null;
@@ -196,7 +194,7 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
  */
 function recalcRaceEffects() {
     // Reset stats to base 8 first (idempotent)
-    STAT_NAMES.forEach(stat => { userSelection.stats[stat] = 8; });
+    window.STAT_NAMES.forEach(stat => { userSelection.stats[stat] = 8; });
 
     if (!userSelection.race) return;
     const bonuses = getRaceStatBonuses(userSelection.race, userSelection.subrace);
@@ -279,22 +277,19 @@ function recalcMaxHp() {
     } else {
         const cls = window.classesData[userSelection.class];
         const hitDie = cls?.hitDie || 8;
-        baseHp = hitDie + characterSheet.statModifiers.constitution;
+        const lvl = userSelection.lvl;
+        const conMod = characterSheet.statModifiers.constitution || 0;
+        
+        baseHp = lvl * (hitDie + conMod);
     }
 
-    // Add maxHP bonuses from features (type: "maxHP") - WORKS FOR BOTH CASES NOW!
-    if (characterSheet.features) {
-        characterSheet.features.forEach(feature => {
-            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
-            if (effect?.type === 'maxHP') {
-                if (effect.value === 'lvl') {
-                    baseHp += userSelection.lvl;
-                } else {
-                    baseHp += effect.value;
-                }
-            }
-        });
-    }
+    recalcFeaturesByType('maxHP', (effect) => {
+        if (effect.value === 'lvl') {
+            baseHp += userSelection.lvl;
+        } else {
+            baseHp += effect.value || 0;
+        }
+    });
 
     characterSheet.maxHp = baseHp;
     characterSheet.currentHp = characterSheet.maxHp;
@@ -568,31 +563,22 @@ function recalcFeats() {
  * @modifies characterSheet.stats
  */
 function recalcStats() {
-    // Reset characterSheet.stats to base (from userSelection.stats which already has race bonuses applied)
-    // This function combines base stats + race bonuses + feat bonuses
     const featBonuses = getFeatStatBonuses();
 
-    // Start with base stats + race bonuses
-    STAT_NAMES.forEach(stat => {
+window.STAT_NAMES.forEach(stat => {
         characterSheet.stats[stat] = (userSelection.stats[stat] || 8) + (featBonuses[stat] || 0);
     });
 
-    // Apply stat bonuses from features (type: "stat")
-    if (characterSheet.features) {
-        characterSheet.features.forEach(feature => {
-            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
-            if (effect?.type === 'stat') {
-                const selections = ensureFeatureChoice(feature, effect, effect.options, 'stat', { value: effect.value });
-                if (selections) {
-                    selections.forEach(stat => {
-                        if (STAT_NAMES.includes(stat.toLowerCase())) {
-                            characterSheet.stats[stat.toLowerCase()] = (characterSheet.stats[stat.toLowerCase()] || 8) + (effect.value || 1);
-                        }
-                    });
+    recalcFeaturesByType('stat', (effect, feature) => {
+        const selections = ensureFeatureChoice(feature, effect, effect.options, 'stat', { value: effect.value });
+        if (selections) {
+            selections.forEach(stat => {
+                if (window.STAT_NAMES.includes(stat.toLowerCase())) {
+                    characterSheet.stats[stat.toLowerCase()] = (characterSheet.stats[stat.toLowerCase()] || 8) + (effect.value || 1);
                 }
-            }
-        });
-    }
+            });
+        }
+    });
 
     recalcStatModifiers();
 }
