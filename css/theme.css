@@ -553,8 +553,8 @@ button {
     position: fixed;
     top: 50px;
     right: 10px;
-    width: 300px;
-    max-height: 70vh;
+    width: 450px;
+    max-height: 80vh;
     background: var(--card-bg);
     border: 1px solid var(--border);
     display: none;
@@ -575,6 +575,29 @@ button {
     cursor: pointer;
     padding: 8px;
     background: var(--border);
+    margin-bottom: 10px;
+}
+
+.debug-section {
+    margin-bottom: 15px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.debug-section-header {
+    font-weight: bold;
+    padding: 8px;
+    background: var(--border);
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.debug-scrollable {
+    max-height: 250px;
+    overflow-y: auto;
 }
 
 .debug-content {

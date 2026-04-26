@@ -66,12 +66,13 @@
     "dwarven resilience": {
       "type": "resistance",
       "damageType": "poison",
-      "description": "Advantage on saving throws against poison."
+      "description": "resistance against poison."
     },
     "dwarven resilience save": {
       "type": "savingThrow",
       "saveType": "poison",
-      "effect": "advantage"
+      "effect": "advantage",
+      "description": "Advantage on saving throws against poison."
     },
     "dwarven combat training": {
       "type": "proficiency",
@@ -96,7 +97,9 @@
       "description": "Elves don't need to sleep. They can rest while doing light activity for 4 hours."
     },
     "fey ancestry": {
-      "type": "none",
+      "type": "savingThrow",
+      "saveType": "charmed",
+      "effect": "advantage",
       "description": "Advantage on saving throws against being charmed."
     },
     "lucky": {
@@ -112,7 +115,9 @@
       "description": "Advantage on Wisdom (Perception) checks that rely on smell."
     },
     "brave": {
-      "type": "none",
+      "type": "savingThrow",
+      "saveType": "frightened",
+      "effect": "advantage",
       "description": "Advantage on saving throws against being frightened."
     },
     "stonecunning": {

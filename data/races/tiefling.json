@@ -12,8 +12,9 @@
   "charisma": 2,
   "intelligence": 1
  },
- "raceAbilities": [
-  "Darkvision",
-  "Hellish Resistance"
- ]
+"raceAbilities": [
+   "Darkvision",
+   "Hellfire Resistance",
+   "Infernal Legacy"
+  ]
 }

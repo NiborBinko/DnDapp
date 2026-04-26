@@ -34,22 +34,14 @@ function recalcResistances() {
     characterSheet.immunities = [];
     characterSheet.vulnerabilities = [];
 
-    if (!characterSheet.features) return;
-
-    characterSheet.features.forEach(feature => {
-        const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
-        if (!effect) return;
-
-        const dType = effect.damageType;
-        if (!dType) return;
-
-        if (effect.type === 'resistance') {
-            characterSheet.resistances.push({ type: dType, source: feature.source, sourceId: feature.sourceId });
-        } else if (effect.type === 'immunity') {
-            characterSheet.immunities.push({ type: dType, source: feature.source, sourceId: feature.sourceId });
-        } else if (effect.type === 'vulnerability') {
-            characterSheet.vulnerabilities.push({ type: dType, source: feature.source, sourceId: feature.sourceId });
-        }
+    recalcFeaturesByType('resistance', (effect, feature) => {
+        characterSheet.resistances.push({ type: effect.damageType, source: feature.source, sourceId: feature.sourceId });
+    });
+    recalcFeaturesByType('immunity', (effect, feature) => {
+        characterSheet.immunities.push({ type: effect.damageType, source: feature.source, sourceId: feature.sourceId });
+    });
+    recalcFeaturesByType('vulnerability', (effect, feature) => {
+        characterSheet.vulnerabilities.push({ type: effect.damageType, source: feature.source, sourceId: feature.sourceId });
     });
 }
 
@@ -69,13 +61,8 @@ function getAllSaveTypes() {
 function recalcSavingThrows() {
     characterSheet.savingThrowAdvantages = [];
 
-    if (!characterSheet.features) return;
-
-    characterSheet.features.forEach(feature => {
-        const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
-        if (!effect) return;
-
-        if (effect.type === 'savingThrow' && effect.effect === 'advantage') {
+    recalcFeaturesByType('savingThrow', (effect, feature) => {
+        if (effect.effect === 'advantage') {
             characterSheet.savingThrowAdvantages.push({
                 saveType: effect.saveType,
                 effect: effect.effect,
@@ -86,8 +73,22 @@ function recalcSavingThrows() {
     });
 }
 
-// Constants
 const STAT_NAMES = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+
+function getFeatureEffect(name, source) {
+    const key = name?.toLowerCase();
+    if (!key) return null;
+    const effects = window[source + 'EffectsData'];
+    return effects?.effects?.[key] || null;
+}
+
+function recalcFeaturesByType(targetType, applyFn) {
+    if (!characterSheet.features) return;
+    characterSheet.features.forEach(feature => {
+        const effect = getFeatureEffect(feature.name, feature.source);
+        if (effect?.type === targetType) applyFn(effect, feature);
+    });
+}
 
 // Helper: Get all available skills
 function getAllSkills() {
@@ -139,24 +140,14 @@ function getEffectSelections(effect, defaultOptions, choiceKey) {
     return null;
 }
 
-// Helper: Look up effect by feature name from class-effects.json
-function getClassEffect(featureName) {
-    if (!featureName) return null;
-    const key = featureName.toLowerCase();
-    return window.classEffectsData?.effects?.[key] || null;
+function getFeatureEffect(name) {
+    const key = name?.toLowerCase();
+    if (!key) return null;
+    return window.classEffectsData?.effects?.[key] || window.raceEffectsData?.effects?.[key] || null;
 }
 
-// Helper: Look up effect by feature name from race-effects.json
-function getRaceEffect(featureName) {
-    if (!featureName) return null;
-    const key = featureName.toLowerCase();
-    return window.raceEffectsData?.effects?.[key] || null;
-}
-
-// Helper: Look up effect from either class or race effects
-function getFeatureEffect(featureName) {
-    return getClassEffect(featureName) || getRaceEffect(featureName);
-}
+function getClassEffect(featureName) { return getFeatureEffect(featureName); }
+function getRaceEffect(featureName) { return getFeatureEffect(featureName); }
 
 /**
  * Ensures featureChoice exists for a feature, returns selections
@@ -249,18 +240,12 @@ function recalcStatModifiers() {
 function recalcVision() {
     let vision = { nightvision: null, dayvision: 120 };
 
-    // Process features for vision bonuses (type: "vision")
-    if (characterSheet.features) {
-        characterSheet.features.forEach(feature => {
-            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
-            if (effect?.type === 'vision' && effect.value) {
-                if (typeof effect.value === 'object') {
-                    vision.nightvision = effect.value.nightvision || vision.nightvision;
-                    vision.dayvision = effect.value.dayvision || vision.dayvision;
-                }
-            }
-        });
-    }
+    recalcFeaturesByType('vision', (effect) => {
+        if (effect.value && typeof effect.value === 'object') {
+            vision.nightvision = effect.value.nightvision || vision.nightvision;
+            vision.dayvision = effect.value.dayvision || vision.dayvision;
+        }
+    });
 
     characterSheet.vision = vision;
 }
@@ -274,15 +259,9 @@ function recalcSpeed() {
     let speed = 30;
     if (userSelection.race) speed = window.racesData[userSelection.race]?.speed || 30;
 
-    // Process race features for speed bonuses (type: "speed")
-    if (characterSheet.features) {
-        characterSheet.features.forEach(feature => {
-            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
-            if (effect?.type === 'speed' && effect.value) {
-                speed += effect.value;
-            }
-        });
-    }
+    recalcFeaturesByType('speed', (effect) => {
+        if (effect.value) speed += effect.value;
+    });
 
     characterSheet.speed = speed;
 }

@@ -30,22 +30,22 @@
         {"id": "shadow", "name": "Way of Shadow", "exclusiveGroup": "Monastic Tradition"},
         {"id": "fourElements", "name": "Way of the Four Elements", "exclusiveGroup": "Monastic Tradition"}]
     },
-  "4": { "features": ["Ability Score Improvement", "Slow Fall"], "options": [] },
+  "4": { "features": ["Ability Score Improvement", "Ability Score Improvement", "Slow Fall"], "options": [] },
   "5": { "features": ["Extra Attack", "Stunning Strike"], "options": [] },
   "6": { "features": ["Ki-Empowered Strikes", "Monastic Tradition Feature"], "options": [] },
   "7": { "features": ["Evasion", "Stillness of Mind"], "options": [] },
-  "8": { "features": ["Ability Score Improvement"], "options": [] },
+  "8": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "9": { "features": ["Unarmored Movement improvement"], "options": [] },
   "10": { "features": ["Purity of Body"], "options": [] },
   "11": { "features": ["Monastic Tradition Feature"], "options": [] },
-  "12": { "features": ["Ability Score Improvement"], "options": [] },
+  "12": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "13": { "features": ["Tongue of the Sun and Moon"], "options": [] },
   "14": { "features": ["Diamond Soul"], "options": [] },
   "15": { "features": ["Timeless Body"], "options": [] },
-  "16": { "features": ["Ability Score Improvement"], "options": [] },
+  "16": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "17": { "features": ["Monastic Tradition Feature"], "options": [] },
   "18": { "features": ["Empty Body"], "options": [] },
-  "19": { "features": ["Ability Score Improvement"], "options": [] },
+  "19": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "20": { "features": ["Perfect Self"], "options": [] }
  }
 }

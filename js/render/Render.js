@@ -116,30 +116,29 @@ function renderFeaturesFeats() {
                 html += race.raceAbilities.map(a => `<label class="checkbox-item"><input type="checkbox" checked disabled>${a} 🔒</label>`).join('');
                 html += '</div>';
             }
-            // Human bonus stats choice - create pending choice if needed
-            if (userSelection.race === 'human' && race.raceAbilities.includes('Human Stat Bonus')) {
-                const choiceKey = 'choose-2-times-1-bonus-stat';
-                if (!userSelection.featureChoices) userSelection.featureChoices = {};
-                if (!userSelection.featureChoices[choiceKey]) {
-                    userSelection.featureChoices[choiceKey] = {
-                        type: 'choice',
-                        effectType: 'stat',
-                        value: 1,
-                        options: ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'],
-                        count: 2,
-                        selected: [null, null]
-                    };
-                }
-                const choice = userSelection.featureChoices[choiceKey];
-                const selectedStats = choice.selected.filter(s => s !== null);
-                html += `<div class="section-header">Choose 2 Stats (+1 each)</div><div class="bonus-stats-grid">`;
-                choice.options.forEach(stat => {
-                    const isSelected = selectedStats.includes(stat);
-                    const canSelect = selectedStats.length < choice.count;
-                    const disabled = !canSelect && !isSelected ? 'disabled' : '';
-                    html += `<label class="checkbox-item ${isSelected ? 'selected' : ''}"><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${choiceKey}', '${stat}')">${stat.toUpperCase()}</label>`;
+            // Generic choice rendering from featureChoices (created by RecalculationFlags)
+            if (userSelection.featureChoices) {
+                Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
+                    if (!choice || !choice.options || choice.options.length === 0) return;
+                    
+                    const selectedItems = choice.selected?.filter(s => s !== null) || [];
+                    const canSelect = selectedItems.length < choice.count;
+                    
+                    let title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                    if (choice.type === 'proficiency') title = `+1 ${choice.proficiencyType} (Choose ${choice.count})`;
+                    else if (choice.type === 'stat') title = `+1 ${choice.count} Stat(s)`;
+                    else if (choice.type === 'feat') title = `+1 Feat`;
+                    else if (choice.type === 'cantrips') title = `Choose ${choice.count} Cantrip(s)`;
+                    
+                    html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
+                    choice.options.forEach(opt => {
+                        const isSelected = selectedItems.includes(opt);
+                        const disabled = !canSelect && !isSelected ? 'disabled' : '';
+                        const displayName = typeof opt === 'string' ? opt : opt.name || opt;
+                        html += `<label class="checkbox-item ${isSelected ? 'selected' : ''}"><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${key}', '${displayName}')">${displayName}</label>`;
+                    });
+                    html += '</div>';
                 });
-                html += '</div>';
             }
         }
         if (userSelection.class) {

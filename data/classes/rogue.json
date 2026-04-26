@@ -36,22 +36,22 @@
         {"id": "assassin", "name": "Assassin", "exclusiveGroup": "Roguish Archetype"},
         {"id": "arcaneTrickster", "name": "Arcane Trickster", "exclusiveGroup": "Roguish Archetype"}] 
     },
-  "4": { "features": ["Ability Score Improvement"], "options": [] },
+  "4": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "5": { "features": ["Uncanny Dodge"], "options": [] },
   "6": { "features": ["Expertise"], "options": [] },
   "7": { "features": ["Evasion"], "options": [] },
-  "8": { "features": ["Ability Score Improvement"], "options": [] },
+  "8": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "9": { "features": ["Roguish Archetype Feature"], "options": [] },
-  "10": { "features": ["Ability Score Improvement"], "options": [] },
+  "10": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "11": { "features": ["Reliable Talent"], "options": [] },
-  "12": { "features": ["Ability Score Improvement"], "options": [] },
+  "12": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "13": { "features": ["Roguish Archetype Feature"], "options": [] },
   "14": { "features": ["Blindsense"], "options": [] },
   "15": { "features": ["Slippery Mind"], "options": [] },
-  "16": { "features": ["Ability Score Improvement"], "options": [] },
+  "16": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "17": { "features": ["Roguish Archetype Feature"], "options": [] },
   "18": { "features": ["Elusive"], "options": [] },
-  "19": { "features": ["Ability Score Improvement"], "options": [] },
+  "19": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "20": { "features": ["Stroke of Luck"], "options": [] }
  }
 }

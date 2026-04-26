@@ -4,10 +4,9 @@
     "pact magic": { "type": "mainspell" },
 
     "fast movement": { "type": "speed", "value": 10 },
-    "fleet footed": { "type": "speed", "value": 5 },
     "unarmored movement": { "type": "speed", "value": 10 },
 
-    "ability score improvement": { "type": "stat", "value": 2, "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"], "count": 2 },
+    "ability score improvement": { "type": "stat", "value": 1, "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"], "count": 1 },
 
     "rage": { "type": "lookup" },
     "reckless attack": { "type": "lookup" },

@@ -12,8 +12,10 @@
  "bonuses": {
   "charisma": 2
  },
- "raceAbilities": [
-  "Darkvision",
-  "Fey Ancestry"
- ]
+"raceAbilities": [
+   "Darkvision",
+   "Fey Ancestry",
+   "+1 Proficiency",
+   "+1 Feat"
+  ]
 }

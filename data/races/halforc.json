@@ -12,8 +12,10 @@
   "strength": 2,
   "constitution": 1
  },
- "raceAbilities": [
-  "Menacing",
-  "Relentless Endurance"
- ]
+"raceAbilities": [
+   "Menacing",
+   "Relentless Endurance",
+   "+1 Proficiency",
+   "+1 Feat"
+  ]
 }

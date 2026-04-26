@@ -30,22 +30,22 @@
         {"id": "berserker", "name": "Path of the Berserker", "exclusiveGroup": "Primal Path"},
         {"id": "totem", "name": "Path of the Totem Warrior", "exclusiveGroup": "Primal Path"}] 
     },
-  "4": { "features": ["Ability Score Improvement"], "options": [] },
+  "4": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "5": { "features": ["Extra Attack", "Fast Movement"], "options": [] },
   "6": { "features": ["Path Feature"], "options": [] },
   "7": { "features": ["Feral Instinct"], "options": [] },
-  "8": { "features": ["Ability Score Improvement"], "options": [] },
+  "8": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "9": { "features": ["Brutal Critical (1 die)"], "options": [] },
   "10": { "features": ["Path Feature"], "options": [] },
   "11": { "features": ["Relentless Rage"], "options": [] },
-  "12": { "features": ["Ability Score Improvement"], "options": [] },
+  "12": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "13": { "features": ["Brutal Critical (2 dice)"], "options": [] },
   "14": { "features": ["Path Feature"], "options": [] },
   "15": { "features": ["Persistent Rage"], "options": [] },
-  "16": { "features": ["Ability Score Improvement"], "options": [] },
+  "16": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "17": { "features": ["Brutal Critical (3 dice)"], "options": [] },
   "18": { "features": ["Indomitable Might"], "options": [] },
-  "19": { "features": ["Ability Score Improvement"], "options": [] },
+  "19": { "features": ["Ability Score Improvement", "Ability Score Improvement"], "options": [] },
   "20": { "features": ["Primal Champion"], "options": [] }
  }
 }
