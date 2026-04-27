@@ -286,7 +286,7 @@ function renderFeaturesFeats() {
                 if (!choice || !choice.options || choice.options.length === 0) return;
                 
                 const selectedItems = choice.selected?.filter(s => s !== null) || [];
-                const canSelect = selectedItems.length < choice.count;
+                const filledCount = selectedItems.length;
                 
                 let title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
                 if (choice.type === 'proficiency') title = `+1 ${choice.proficiencyType} (Choose ${choice.count})`;
@@ -294,18 +294,31 @@ function renderFeaturesFeats() {
                 else if (choice.type === 'feat') title = `+1 Feat`;
                 else if (choice.type === 'cantrips') title = `Choose ${choice.count} Cantrip(s)`;
                 
-                html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
-                choice.options.forEach(opt => {
-                    const isSelected = selectedItems.includes(opt);
-                    const disabled = !canSelect && !isSelected ? 'disabled' : '';
-                    const displayName = typeof opt === 'string' ? opt : opt.name || opt;
-                    html += `<label class="checkbox-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''}" 
-                        data-tooltip-id="${displayName}" 
-                        data-tooltip-type="${choice.type === 'feat' ? 'feat' : (choice.type === 'stat' ? 'stat' : 'proficiency')}" 
-                        data-origin="${title}"
-                        ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${key}', '${displayName}')">${displayName}</label>`;
-                });
-                html += '</div>';
+                // For stat and proficiency in Stage 5: show as display-only (selected items only)
+                if (choice.type === 'stat' || choice.type === 'proficiency') {
+                    if (filledCount > 0) {
+                        html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
+                        selectedItems.filter(s => s !== null).forEach(sel => {
+                            html += `<label class="checkbox-item selected" data-tooltip-id="${sel}" data-tooltip-type="${choice.type}" data-origin="${title}"><input type="checkbox" checked disabled>${sel}</label>`;
+                        });
+                        html += '</div>';
+                    }
+                } else {
+                    // For other types (feat, cantrips): show selectable as before
+                    const canSelect = filledCount < choice.count;
+                    html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
+                    choice.options.forEach(opt => {
+                        const isSelected = selectedItems.includes(opt);
+                        const disabled = !canSelect && !isSelected ? 'disabled' : '';
+                        const displayName = typeof opt === 'string' ? opt : opt.name || opt;
+                        html += `<label class="checkbox-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''}" 
+                            data-tooltip-id="${displayName}" 
+                            data-tooltip-type="${choice.type === 'feat' ? 'feat' : (choice.type === 'stat' ? 'stat' : 'proficiency')}" 
+                            data-origin="${title}"
+                            ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${key}', '${displayName}')">${displayName}</label>`;
+                    });
+                    html += '</div>';
+                }
             });
         }
         
