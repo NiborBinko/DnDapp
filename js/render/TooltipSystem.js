@@ -1,41 +1,56 @@
 /**
- * Tooltip system with auto-lookup from descriptions
+ * Simple tooltip system - look up descriptions from JSON
  */
 
-const TOOLTIP_SOURCES = {
-    'race-ability': () => window.descriptions?.raceAbilities,
-    'feat': () => window.descriptions?.feats,
-    'class-ability': () => window.descriptions?.classAbilities,
-    'stat': () => window.descriptions?.stats,
-    'proficiency': (id) => {
-        const profs = window.descriptions?.proficiencies;
-        if (!profs) return null;
-        // Check nested structure: skills.armor.weapons.savingThrows
-        return profs.skills?.[id] || profs.armor?.[id] || profs.weapons?.[id] || profs[id];
-    },
-    'saving-throw': (id) => {
-        const st = window.descriptions?.proficiencies?.savingThrows;
-        return st?.[id] || null;
-    },
-    'class-option': () => window.descriptions?.classOptions,
-    'exclusive-group': () => window.descriptions?.exclusiveGroups,
-    'language': () => window.descriptions?.languages
-};
-
+// Simple lookup sources - use correct data locations
 function getTooltipDescription(id, type) {
     if (!id) return null;
     
     const key = id.toLowerCase();
-    const sourceGetter = TOOLTIP_SOURCES[type];
-    if (!sourceGetter) return null;
     
-    // Handle nested lookups (proficiency needs id passed)
-    if (typeof sourceGetter === 'function') {
-        return sourceGetter(id);
+    // Race descriptions from racesData
+    if (type === 'race') {
+        return window.racesData?.[id]?.desc || null;
     }
     
-    const source = sourceGetter();
-    return source?.[key] || null;
+    // Class descriptions from classesData
+    if (type === 'class') {
+        return window.classesData?.[id]?.desc || null;
+    }
+    
+    // Stats from descriptions
+    if (type === 'stat') {
+        return window.descriptions?.stats?.[key] || null;
+    }
+    
+    // Proficiencies - check nested structure
+    if (type === 'proficiency') {
+        const profs = window.descriptions?.proficiencies;
+        if (!profs) return null;
+        return profs.skills?.[id] || profs.armor?.[id] || profs.weapons?.[id] || null;
+    }
+    
+    // Saving throws
+    if (type === 'saving-throw') {
+        return window.descriptions?.proficiencies?.savingThrows?.[id] || null;
+    }
+    
+    // Abilities from class-abilities
+    if (type === 'ability') {
+        return window.descriptions?.classAbilities?.[key] || null;
+    }
+    
+    // Feats
+    if (type === 'feat') {
+        return window.descriptions?.feats?.[key] || null;
+    }
+    
+    // Race abilities (for Stage 5 race features)
+    if (type === 'race-ability') {
+        return window.descriptions?.raceAbilities?.[key] || null;
+    }
+    
+    return null;
 }
 
 function getTooltipContent(target) {
@@ -43,23 +58,20 @@ function getTooltipContent(target) {
     const type = target.getAttribute('data-tooltip-type');
     const origin = target.getAttribute('data-origin');
     
-    // Get description
-    let content = getTooltipDescription(id, type);
-    if (!content) {
-        content = target.getAttribute('data-tooltip');
+    // Get description from lookup
+    const description = getTooltipDescription(id, type);
+    
+    // Build tooltip: description first, then origin if present
+    if (description && origin) {
+        return `${description}\n\n📍 ${origin}`;
     }
     
-    // Show description first, then origin if present
-    if (content && origin) {
-        return `${content}\n\n📍 ${origin}`;
-    }
-    
-    return content || origin;
+    return description || null;
 }
 
 function initTooltips() {
     document.addEventListener('mouseover', function(e) {
-        const target = e.target.closest('[data-tooltip-id], [data-tooltip]');
+        const target = e.target.closest('[data-tooltip-id]');
         if (!target) return;
         
         const content = getTooltipContent(target);
@@ -68,8 +80,9 @@ function initTooltips() {
         }
     });
     document.addEventListener('mouseout', function(e) {
-        const target = e.target.closest('[data-tooltip-id], [data-tooltip]');
-        if (!target) hideTooltip();
+        const target = e.target.closest('[data-tooltip-id]');
+        if (!target) return;
+        hideTooltip();
     });
 }
 
@@ -84,14 +97,8 @@ function showTooltip(target, content) {
     t.textContent = content;
     t.style.display = 'block';
     
-    t.style.maxWidth = '400px';
-    t.style.whiteSpace = 'normal';
-    t.style.zIndex = '1000';
-    
     const rect = target.getBoundingClientRect();
     t.style.left = rect.left + 'px';
-    t.style.top = (rect.bottom + 5) + 'px';
-    
     const scrollY = window.scrollY;
     t.style.top = (rect.bottom + scrollY + 5) + 'px';
 }

@@ -11,7 +11,7 @@ function renderChooseRace() {
         return `<div class="card ${userSelection.race === race.id ? 'selected' : ''}" 
             onclick="handleRaceSelect('${race.id}')"
             data-tooltip-id="${race.id}"
-            data-tooltip-type="race-ability"
+            data-tooltip-type="race"
             ><h3>${race.name}</h3><p>${bonuses}</p></div>`;
     }).join('');
     
@@ -40,7 +40,7 @@ function renderChooseClass() {
         return `<div class="card ${userSelection.class === cls.id ? 'selected' : ''}" 
             onclick="handleClassSelect('${cls.id}')"
             data-tooltip-id="${cls.id}"
-            data-tooltip-type="class-ability"
+            data-tooltip-type="class"
             ><h3>${cls.name} <span>(${cls.primaryStat?.slice(0, 3).toUpperCase()})</span></h3><p>d${cls.hitDie}</p></div>`;
     }).join('');
     updateNextButton();
@@ -76,7 +76,8 @@ function renderAbilityScores() {
         const canInc = UIState.pointsRemaining >= cost && base < (15 + raceBonus) && (base + 1 + raceBonus) <= 16;
         return `<div class="stat-row ${primaryStat === stat ? 'primary-stat-row' : ''}"
             data-tooltip-id="${stat}" 
-            data-tooltip-type="stat">
+            data-tooltip-type="stat"
+            ${raceBonuses[stat] ? `data-origin="Race: ${userSelection.race}"` : ''}>
             <div class="stat-name">${stat.toUpperCase().slice(0, 3)} ${primaryStat === stat ? '⭐' : ''}</div>
             <div class="stat-controls">
                 <button class="stat-btn" onclick="adjustStat('${stat}', -1)" ${!canDec ? 'disabled' : ''}>-</button>
@@ -203,8 +204,7 @@ function renderFeaturesFeats() {
             if (race?.raceAbilities) {
                 html += `<div class="section-header">Race Abilities</div><div class="checkbox-grid">`;
                 html += race.raceAbilities.map(a => {
-                    const desc = window.descriptions?.raceAbilities?.[a] || '';
-                    return `<label class="checkbox-item locked" data-tooltip-id="${a}" data-tooltip-type="race-ability" data-origin="Race: ${race.name}" data-tooltip="${desc}"><input type="checkbox" checked disabled>${a} 🔒</label>`;
+                    return `<label class="checkbox-item locked" data-tooltip-id="${a}" data-tooltip-type="race-ability" data-origin="Race: ${race.name}"><input type="checkbox" checked disabled>${a} 🔒</label>`;
                 }).join('');
                 html += '</div>';
             }
@@ -215,8 +215,7 @@ function renderFeaturesFeats() {
             if (feats?.features?.length) {
                 html += `<div class="section-header">Class Features (L${userSelection.lvl})</div><div class="checkbox-grid">`;
                 html += feats.features.map(f => {
-                    const desc = window.descriptions?.classAbilities?.[f] || '';
-                    return `<label class="checkbox-item locked" data-tooltip-id="${f}" data-tooltip-type="class-ability" data-origin="Class: ${cls.name}" data-tooltip="${desc}"><input type="checkbox" checked disabled>${f} 🔒</label>`;
+                    return `<label class="checkbox-item locked" data-tooltip-id="${f}" data-tooltip-type="ability" data-origin="Class: ${cls.name}"><input type="checkbox" checked disabled>${f} 🔒</label>`;
                 }).join('');
                 html += '</div>';
             }
@@ -224,8 +223,7 @@ function renderFeaturesFeats() {
                 html += `<div class="section-header">Choose One</div><div class="checkbox-grid">`;
                 html += feats.options.map(opt => {
                     const isSel = userSelection.selectedFeatureChoices[opt.exclusiveGroup] === opt.id;
-                    const optDesc = window.descriptions?.classOptions?.[opt.name] || window.descriptions?.exclusiveGroups?.[opt.exclusiveGroup] || '';
-                    return `<label class="checkbox-item ${isSel ? 'selected' : ''}" data-tooltip-id="${opt.name}" data-tooltip-type="class-option" data-origin="Class: ${cls.name}" data-tooltip="${optDesc}"><input type="checkbox" ${isSel ? 'checked' : ''} onchange="selectClassOption('${opt.exclusiveGroup}', '${opt.id}')">${opt.name}</label>`;
+                    return `<label class="checkbox-item ${isSel ? 'selected' : ''}" data-tooltip-id="${opt.name}" data-tooltip-type="class-option" data-origin="Class: ${cls.name}"><input type="checkbox" ${isSel ? 'checked' : ''} onchange="selectClassOption('${opt.exclusiveGroup}', '${opt.id}')">${opt.name}</label>`;
                 }).join('');
                 html += '</div>';
             }
@@ -250,12 +248,10 @@ function renderFeaturesFeats() {
                     const isSelected = selectedItems.includes(opt);
                     const disabled = !canSelect && !isSelected ? 'disabled' : '';
                     const displayName = typeof opt === 'string' ? opt : opt.name || opt;
-                    const optDesc = window.descriptions?.feats?.[displayName] || window.descriptions?.classOptions?.[displayName] || '';
                     html += `<label class="checkbox-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''}" 
                         data-tooltip-id="${displayName}" 
                         data-tooltip-type="${choice.type === 'feat' ? 'feat' : (choice.type === 'stat' ? 'stat' : 'proficiency')}" 
                         data-origin="${title}"
-                        data-tooltip="${optDesc}"
                         ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${key}', '${displayName}')">${displayName}</label>`;
                 });
                 html += '</div>';
@@ -271,16 +267,14 @@ function renderFeaturesFeats() {
         const note = document.getElementById('feats-note');
         if (note) note.textContent = maxFeats > 0 ? `Select ${maxFeats - userSelection.feats.length} feat(s)` : 'Feats at lvl 4, 8, 12, 16, 19';
 
-        let html = '<div class="checkbox-grid">';
+        let html = '<div class="feats-list">';
         html += feats.map(feat => {
             const isSel = userSelection.feats.includes(feat);
             const isDis = !isSel && userSelection.feats.length >= maxFeats;
-            const featDesc = window.descriptions?.feats?.[feat] || '';
             return `<label class="checkbox-item ${isSel ? 'selected' : ''} ${isDis ? 'disabled' : ''}" 
                 data-tooltip-id="${feat}" 
                 data-tooltip-type="feat" 
                 data-origin="Feat"
-                data-tooltip="${featDesc}"
                 ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleFeat('${feat}')">${feat}</label>`;
         }).join('');
         html += '</div>';
