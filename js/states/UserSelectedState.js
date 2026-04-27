@@ -141,7 +141,13 @@ function selectFeatureChoice(choiceKey, value) {
         }
     }
     
-    triggerRecalc();  // Now preserves selections during rebuild
+    // Calculate how many are now selected
+    const newFilledCount = choice.selected.filter(s => s !== null).length;
+    
+    // Only call triggerRecalc when ALL options for this feature are selected
+    if (newFilledCount === choice.count) {
+        triggerRecalc();
+    }
     
     // Re-render all stages with choice logic
     renderAbilityScores();
