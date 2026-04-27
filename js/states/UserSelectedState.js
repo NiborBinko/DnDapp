@@ -24,7 +24,6 @@ function resetUserSelection() {
 function handleRaceSelect(raceId) {
     userSelection.race = raceId;
     userSelection.subrace = null;
-    userSelection.featureChoices = {};  // Clear for new race
     triggerRecalc();
     renderChooseRace();
     refreshDebugIfOpen();
@@ -40,7 +39,6 @@ function handleSubraceSelect(subraceId) {
 function handleClassSelect(classId) {
     userSelection.class = classId;
     userSelection.subclass = null;
-    userSelection.featureChoices = {};  // Clear for new class
     triggerRecalc();
     renderChooseClass();
     refreshDebugIfOpen();
@@ -144,10 +142,8 @@ function selectFeatureChoice(choiceKey, value) {
     // Calculate how many are now selected
     const newFilledCount = choice.selected.filter(s => s !== null).length;
     
-    // Only call triggerRecalc when ALL options for this feature are selected
-    if (newFilledCount === choice.count) {
-        triggerRecalc();
-    }
+    // ALWAYS call triggerRecalc to refresh stats (not just when full)
+    triggerRecalc();
     
     // Re-render all stages with choice logic
     renderAbilityScores();

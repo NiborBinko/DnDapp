@@ -31,13 +31,13 @@ const EffectHandler = {
     },
     
     handleChoice(effect, userSelection, feature) {
-        const keyName = feature.name.replace(/\s+/g, '-').toLowerCase();
+        const keyName = feature.name.toLowerCase();
         
         if (!userSelection.featureChoices) {
             userSelection.featureChoices = {};
         }
         
-        if (effect.effectType === 'stat') {
+        if (effect.type === 'stat') {
             if (!userSelection.featureChoices[keyName]) {
                 userSelection.featureChoices[keyName] = {
                     type: effect.type,
@@ -92,18 +92,21 @@ const EffectHandler = {
         };
     },
     
-    applyChoiceBonuses(userSelection) {
+    applyChoiceBonuses(userSelection, characterSheet) {
         if (!userSelection.featureChoices) return;
         
         // Store stat bonuses from choices separately - DON'T modify userSelection.stats
         const choiceBonuses = {};
         
         Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
-            if (!choice || choice.type !== 'choice' || choice.effectType !== 'stat') return;
+            if (!choice || choice.type !== 'stat') return;
+            
+            // Each entry applies its bonus once (value from the choice itself)
+            const bonusValue = (choice.value || 1);
             
             choice.selected.forEach(stat => {
                 if (stat) {
-                    choiceBonuses[stat] = (choiceBonuses[stat] || 0) + (choice.value || 1);
+                    choiceBonuses[stat] = (choiceBonuses[stat] || 0) + bonusValue;
                 }
             });
         });

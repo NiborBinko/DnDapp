@@ -8,6 +8,7 @@ function recalculateAll() { recalcAll(); }
 
 function recalcAll() {
     recalcRaceEffects(); recalcClassBase(); recalcFeatures();
+    clearRemovedFeatureSelections();
     recalcProficiencies(); recalcKnownCantrips();
     recalcStats();
     recalcStatModifiers();
@@ -22,6 +23,10 @@ function recalcAll() {
  */
 function getAllDamageTypes() {
     return ['acid', 'bludgeoning', 'cold', 'fire', 'force', 'lightning', 'necrotic', 'piercing', 'poison', 'psychic', 'radiant', 'slashing', 'thunder', 'nonmagical bps'];
+}
+
+function getAllSaveTypes() {
+    return ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
 }
 
 /**
@@ -46,11 +51,15 @@ function recalcResistances() {
 }
 
 /**
- * Gets all save types for saving throws
- * @returns {Array} - List of save type strings
+ * Clears selections for features that no longer exist in characterSheet.features
  */
-function getAllSaveTypes() {
-    return ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+function clearRemovedFeatureSelections() {
+    const currentFeatureNames = characterSheet.features ? characterSheet.features.map(f => f.name.toLowerCase()) : [];
+    Object.keys(userSelection.featureChoices).forEach(key => {
+        if (!currentFeatureNames.includes(key)) {
+            delete userSelection.featureChoices[key];
+        }
+    });
 }
 
 /**
@@ -157,8 +166,36 @@ function getRaceEffect(featureName) { return getFeatureEffect(featureName); }
  * @returns {Array|null} - Selected items or null
  */
 function ensureFeatureChoice(feature, effect, availableOptions, type, extraFields = {}) {
-    const key = feature.name.toLowerCase();
-    let selections = getEffectSelections(effect, availableOptions);
+    const baseKey = feature.name.toLowerCase();
+    
+    // For class features, ALWAYS use suffix to guarantee unique keys per instance
+    let key = baseKey;
+    
+    if (feature.source === 'class' && characterSheet?.features) {
+        const allMatches = characterSheet.features.filter(f => 
+            f.name.toLowerCase() === baseKey && f.source === 'class'
+        );
+        
+        if (allMatches.length > 0) {
+            // ALWAYS use suffix for class features - guarantees unique keys
+            const instanceIndex = allMatches.indexOf(feature);
+            key = `${baseKey}-${instanceIndex}`;
+        }
+    }
+    
+    // ROBUST PRESERVATION: Check if ANY related key already exists with selections
+    // This prevents overwriting user's selections during triggerRecalc
+    const existingEntry = Object.entries(userSelection.featureChoices || {}).find(([k, v]) => 
+        k === key || k.includes(baseKey)
+    );
+    
+    if (existingEntry) {
+        // Preserve existing selections - don't overwrite!
+        const existingChoice = existingEntry[1];
+        return existingChoice.selected?.filter(s => s !== null) || null;
+    }
+    
+    let selections = getEffectSelections(effect, availableOptions, key);
     
     // Create choice if options exist and user hasn't selected yet
     if (availableOptions.length > 0 && !selections) {
@@ -167,6 +204,7 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
             selected: Array(effect.count).fill(null),
             options: availableOptions,
             type: type,
+            source: feature.source,
             ...extraFields
         };
         selections = getEffectSelections(effect, availableOptions, key);
@@ -296,19 +334,6 @@ function recalcMaxHp() {
 function recalcProficiencies() {
     characterSheet.proficiencies = { skills: [], weapons: [], armor: [], tools: [], savingThrows: [] };
 
-    // Preserve existing user selections before rebuilding
-    const savedChoices = {};
-    if (userSelection.featureChoices) {
-        Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
-            if (choice && choice.selected) {
-                savedChoices[key] = { ...choice };
-            }
-        });
-    }
-
-    // Clear for rebuild but will restore saved selections
-    userSelection.featureChoices = {};
-
     if (userSelection.class) {
         const cls = window.classesData[userSelection.class];
         if (cls?.proficiencies) {
@@ -379,20 +404,6 @@ function recalcProficiencies() {
             }
         });
     }
-    
-    // Restore saved selections after rebuild
-    Object.entries(savedChoices).forEach(([key, savedChoice]) => {
-        const current = userSelection.featureChoices[key];
-        if (current && current.selected) {
-            // Restore user's selected values (but not more than current count allows)
-            const restoreCount = Math.min(savedChoice.selected.length, current.selected.length);
-            for (let i = 0; i < restoreCount; i++) {
-                if (savedChoice.selected[i] && current.options.includes(savedChoice.selected[i])) {
-                    current.selected[i] = savedChoice.selected[i];
-                }
-            }
-        }
-    });
 }
 
 /**
@@ -440,7 +451,7 @@ function recalcFeatures() {
     
     // Apply pending choices using EffectHandler - applies stat bonuses from choices
     if (typeof EffectHandler !== 'undefined') {
-        EffectHandler.applyChoiceBonuses(userSelection);
+        EffectHandler.applyChoiceBonuses(userSelection, characterSheet);
     }
     
     // Update characterSheet.stats after applying choices
@@ -589,6 +600,12 @@ function recalcStats() {
     });
 
     recalcFeaturesByType('stat', (effect, feature) => {
+        // Skip if already handled by applyChoiceBonuses (prevents double bonus)
+        const key = feature.name.toLowerCase();
+        if (userSelection.featureChoices?.[key]?.selected?.some(s => s)) {
+            return;
+        }
+        
         const selections = ensureFeatureChoice(feature, effect, effect.options, 'stat', { value: effect.value });
         if (selections) {
             selections.forEach(stat => {

@@ -68,11 +68,13 @@ function renderAbilityScores() {
 
     html += stats.map(stat => {
         const base = userSelection.stats[stat] || 8;
-        const total = base + (raceBonuses[stat] || 0);
-        const mod = Math.floor((total - 10) / 2);
+        const raceBonus = raceBonuses[stat] || 0;
+        const choiceBonus = window.featureChoiceBonuses?.[stat] || 0;
+        const totalBonus = raceBonus + choiceBonus;
+        const charStat = characterSheet.stats?.[stat] || (base + totalBonus);
+        const mod = Math.floor((charStat - 10) / 2);
         const cost = base >= 13 ? 2 : 1;
         const canDec = base > 8;
-        const raceBonus = raceBonuses[stat] || 0;
         const canInc = UIState.pointsRemaining >= cost && base < (15 + raceBonus) && (base + 1 + raceBonus) <= 16;
         return `<div class="stat-row ${primaryStat === stat ? 'primary-stat-row' : ''}"
             data-tooltip-id="${stat}" 
@@ -86,8 +88,8 @@ function renderAbilityScores() {
                     onclick="adjustStat('${stat}', 1)" 
                     ${!canInc ? 'disabled' : ''}
                     >+${cost > 1 ? cost : ''}</button>
-                <div class="stat-bonus">${(raceBonuses[stat] && raceBonuses[stat] > 0) ? '+' + raceBonuses[stat] : ''}</div>
-                <div class="stat-total">${total}</div>
+                <div class="stat-bonus">${(totalBonus && totalBonus > 0) ? '+' + totalBonus : ''}</div>
+                <div class="stat-total">${charStat}</div>
                 <div class="stat-modifier">${mod >= 0 ? '+' : ''}${mod}</div>
             </div>
         </div>`;
@@ -98,7 +100,8 @@ function renderAbilityScores() {
         if (choice && choice.type === 'stat' && choice.options && choice.options.length > 0) {
             const selectedItems = choice.selected?.filter(s => s !== null) || [];
             const canSelect = selectedItems.length < choice.count;
-            const title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            const displayKey = key.replace(/-?\d+$/, '');  // Strip trailing numbers for display
+            const title = displayKey.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
             
             html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
             choice.options.forEach(opt => {

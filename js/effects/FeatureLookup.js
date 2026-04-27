@@ -67,8 +67,36 @@ function getEffectSelections(effect, defaultOptions, choiceKey) {
 }
 
 function ensureFeatureChoice(feature, effect, availableOptions, type, extraFields = {}) {
-    const key = feature.name.toLowerCase();
-    let selections = getEffectSelections(effect, availableOptions);
+    const baseKey = feature.name.toLowerCase();
+    
+    // For class features, ALWAYS use suffix to guarantee unique keys per instance
+    let key = baseKey;
+    
+    if (feature.source === 'class' && characterSheet?.features) {
+        const allMatches = characterSheet.features.filter(f => 
+            f.name.toLowerCase() === baseKey && f.source === 'class'
+        );
+        
+        if (allMatches.length > 0) {
+            // ALWAYS use suffix for class features - guarantees unique keys
+            const instanceIndex = allMatches.indexOf(feature);
+            key = `${baseKey}-${instanceIndex}`;
+        }
+    }
+    
+    // ROBUST PRESERVATION: Check if ANY related key already exists with selections
+    // This prevents overwriting user's selections during triggerRecalc
+    const existingEntry = Object.entries(userSelection.featureChoices || {}).find(([k, v]) => 
+        k === key || k.includes(baseKey)
+    );
+    
+    if (existingEntry) {
+        // Preserve existing selections - don't overwrite!
+        const existingChoice = existingEntry[1];
+        return existingChoice.selected?.filter(s => s !== null) || null;
+    }
+    
+    let selections = getEffectSelections(effect, availableOptions, key);
     
     if (availableOptions.length > 0 && !selections) {
         userSelection.featureChoices[key] = {
@@ -76,6 +104,7 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
             selected: Array(effect.count).fill(null),
             options: availableOptions,
             type: type,
+            source: feature.source,
             ...extraFields
         };
         selections = getEffectSelections(effect, availableOptions, key);
@@ -87,6 +116,7 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
             selected: selections,
             options: availableOptions,
             type: type,
+            source: feature.source,
             ...extraFields
         };
     }
