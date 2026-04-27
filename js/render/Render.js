@@ -146,16 +146,32 @@ function renderProficienciesStage() {
     }).join('');
     html += '</div>';
     
+    // Helper to expand category to individual items
+    function expandCategory(category, items) {
+        if (!items || items.length === 0) return '';
+        const profs = window.descriptions?.proficiencies;
+        
+        return items.map(item => {
+            const catData = profs?.[category]?.[item.toLowerCase()];
+            if (catData && typeof catData === 'string') {
+                // Category with description - split to show items
+                const parts = catData.split(',').map(s => s.trim().split(' - ')[0].trim());
+                return parts.slice(0, 10).join(', ') + (parts.length > 10 ? '...' : '');
+            }
+            return item;
+        }).join(', ');
+    }
+    
     // Class default proficiencies (pre-selected/locked)
     const profs = classData.proficiencies || {};
     if (profs.armor?.length) {
         html += `<div class="section-header">Armor</div><div class="checkbox-grid">`;
-        html += profs.armor.map(a => `<label class="checkbox-item locked" data-tooltip-id="${a}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${a} 🔒</label>`).join('');
+        html += `<label class="checkbox-item locked" data-tooltip-id="armor" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${expandCategory('armor', profs.armor)} 🔒</label>`;
         html += '</div>';
     }
     if (profs.weapons?.length) {
         html += `<div class="section-header">Weapons</div><div class="checkbox-grid">`;
-        html += profs.weapons.map(w => `<label class="checkbox-item locked" data-tooltip-id="${w}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${w} 🔒</label>`).join('');
+        html += `<label class="checkbox-item locked" data-tooltip-id="weapons" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${expandCategory('weapons', profs.weapons)} 🔒</label>`;
         html += '</div>';
     }
     if (profs.savingThrows?.length) {
@@ -208,21 +224,59 @@ function renderFeaturesFeats() {
         }
         if (userSelection.class) {
             const cls = window.classesData[userSelection.class];
-            const feats = cls?.features?.[userSelection.lvl];
-            if (feats?.features?.length) {
-                html += `<div class="section-header">Class Features (L${userSelection.lvl})</div><div class="checkbox-grid">`;
-                html += feats.features.map(f => {
-                    return `<label class="checkbox-item locked" data-tooltip-id="${f}" data-tooltip-type="ability" data-origin="Class: ${cls.name}"><input type="checkbox" checked disabled>${f} 🔒</label>`;
+            const currentLvl = userSelection.lvl;
+            
+            // Collect ALL features from levels 1 to currentLevel
+            let allFeatures = [];
+            let levelsWithFeatures = [];
+            
+            for (let lvl = 1; lvl <= currentLvl; lvl++) {
+                const lvlFeatures = cls?.features?.[lvl];
+                if (lvlFeatures?.features?.length) {
+                    lvlFeatures.features.forEach(f => {
+                        allFeatures.push({ name: f, level: lvl });
+                    });
+                    levelsWithFeatures.push(lvl);
+                }
+            }
+            
+            if (allFeatures.length > 0) {
+                html += `<div class="section-header">Class Features (L${levelsWithFeatures.join(', ')})</div><div class="checkbox-grid">`;
+                html += allFeatures.map(f => {
+                    return `<label class="checkbox-item locked" data-tooltip-id="${f.name}" data-tooltip-type="ability" data-origin="Class: ${cls.name} (L${f.level})"><input type="checkbox" checked disabled>${f.name} (L${f.level}) 🔒</label>`;
                 }).join('');
                 html += '</div>';
             }
-            if (feats?.options?.length) {
-                html += `<div class="section-header">Choose One</div><div class="checkbox-grid">`;
-                html += feats.options.map(opt => {
-                    const isSel = userSelection.selectedFeatureChoices[opt.exclusiveGroup] === opt.id;
-                    return `<label class="checkbox-item ${isSel ? 'selected' : ''}" data-tooltip-id="${opt.name}" data-tooltip-type="class-option" data-origin="Class: ${cls.name}"><input type="checkbox" ${isSel ? 'checked' : ''} onchange="selectClassOption('${opt.exclusiveGroup}', '${opt.id}')">${opt.name}</label>`;
-                }).join('');
-                html += '</div>';
+            
+            // Collect options from ALL levels (not just current)
+            let allOptions = [];
+            for (let lvl = 1; lvl <= currentLvl; lvl++) {
+                const lvlFeatures = cls?.features?.[lvl];
+                if (lvlFeatures?.options?.length) {
+                    lvlFeatures.options.forEach(opt => {
+                        allOptions.push({ ...opt, level: lvl });
+                    });
+                }
+            }
+            
+            if (allOptions.length > 0) {
+                // Group by exclusiveGroup
+                const groupedOptions = {};
+                allOptions.forEach(opt => {
+                    if (!groupedOptions[opt.exclusiveGroup]) {
+                        groupedOptions[opt.exclusiveGroup] = [];
+                    }
+                    groupedOptions[opt.exclusiveGroup].push(opt);
+                });
+                
+                Object.entries(groupedOptions).forEach(([group, opts]) => {
+                    html += `<div class="section-header">Choose: ${group}</div><div class="checkbox-grid">`;
+                    html += opts.map(opt => {
+                        const isSel = userSelection.selectedFeatureChoices[opt.exclusiveGroup] === opt.id;
+                        return `<label class="checkbox-item ${isSel ? 'selected' : ''}" data-tooltip-id="${opt.name}" data-tooltip-type="class-option" data-origin="Class: ${cls.name} (L${opt.level})"><input type="checkbox" ${isSel ? 'checked' : ''} onchange="selectClassOption('${opt.exclusiveGroup}', '${opt.id}')">${opt.name} (L${opt.level})</label>`;
+                    }).join('');
+                    html += '</div>';
+                });
             }
         }
         

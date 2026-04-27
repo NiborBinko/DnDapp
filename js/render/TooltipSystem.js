@@ -98,9 +98,12 @@ function showTooltip(target, content) {
     t.style.display = 'block';
     
     const rect = target.getBoundingClientRect();
-    t.style.left = rect.left + 'px';
     const scrollY = window.scrollY;
-    t.style.top = (rect.bottom + scrollY + 5) + 'px';
+    
+    // Position ABOVE the element
+    t.style.top = (rect.top + scrollY - 10) + 'px';
+    t.style.left = rect.left + 'px';
+    t.style.bottom = 'auto';
 }
 
 function hideTooltip() {
