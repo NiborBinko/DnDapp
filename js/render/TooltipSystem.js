@@ -18,20 +18,10 @@ function getTooltipDescription(id, type) {
     
     const key = id.toLowerCase();
     const sourceGetter = TOOLTIP_SOURCES[type];
-    if (!sourceGetter) {
-        console.log('No sourceGetter for type:', type);
-        return null;
-    }
+    if (!sourceGetter) return null;
     
     const source = sourceGetter();
-    if (!source) {
-        console.log('No source for type:', type, 'key:', key);
-        return null;
-    }
-    
-    const desc = source[key] || null;
-    console.log('getTooltipDescription:', type, key, '=', desc);
-    return desc;
+    return source?.[key] || null;
 }
 
 function getTooltipContent(target) {

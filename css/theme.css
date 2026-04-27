@@ -485,6 +485,25 @@ button {
     background: #0f0f23 !important;
 }
 
+/* JS-created tooltip element */
+#tooltip {
+    position: absolute;
+    padding: 10px 14px;
+    background: #0f0f23;
+    color: #eee;
+    border: 1px solid #4ade80;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    max-width: 280px;
+    min-width: 200px;
+    z-index: 1000;
+    text-align: left;
+    line-height: 1.4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
 /* Disabled state for checkbox items - uses overlay instead of filter */
 .checkbox-item.disabled,
 .checkbox-item.future-item,
