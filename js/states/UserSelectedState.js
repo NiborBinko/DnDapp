@@ -138,8 +138,14 @@ function selectFeatureChoice(choiceKey, value) {
             }
         }
     }
+    
     triggerRecalc();
-    renderFeaturesFeats();
+    
+    // Re-render all stages with choice logic
+    renderAbilityScores();       // Stage 3: stat choices (Human bonus, ASI)
+    renderProficienciesStage(); // Stage 4: proficiency choices
+    renderFeaturesFeats();      // Stage 5: abilities, options, feats
+    
     refreshDebugIfOpen();
 }
 
