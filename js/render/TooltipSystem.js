@@ -98,12 +98,12 @@ function showTooltip(target, content) {
     t.style.display = 'block';
     
     const rect = target.getBoundingClientRect();
-    const scrollY = window.scrollY;
     
-    // Position ABOVE the element with more spacing
-    t.style.top = (rect.top + scrollY - 60) + 'px';
+    // Position tooltip so bottom edge aligns with top edge of element
+    // Use CSS bottom to position from viewport bottom
+    t.style.top = 'auto';
+    t.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
     t.style.left = rect.left + 'px';
-    t.style.bottom = 'auto';
 }
 
 function hideTooltip() {
