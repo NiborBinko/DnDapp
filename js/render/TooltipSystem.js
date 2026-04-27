@@ -100,8 +100,8 @@ function showTooltip(target, content) {
     const rect = target.getBoundingClientRect();
     const scrollY = window.scrollY;
     
-    // Position ABOVE the element
-    t.style.top = (rect.top + scrollY - 10) + 'px';
+    // Position ABOVE the element with more spacing
+    t.style.top = (rect.top + scrollY - 60) + 'px';
     t.style.left = rect.left + 'px';
     t.style.bottom = 'auto';
 }
