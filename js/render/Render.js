@@ -177,13 +177,10 @@ function renderProficienciesStage() {
             choice.options.forEach(opt => {
                 const isSelected = selectedItems.includes(opt);
                 const disabled = !canSelect && !isSelected ? 'disabled' : '';
-                const isLocked = selectedItems.length === choice.count && isSelected;
-                const optDesc = window.descriptions?.proficiencies?.[choice.proficiencyType]?.[opt] || '';
                 html += `<label class="checkbox-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''}" 
                     data-tooltip-id="${opt}" 
                     data-tooltip-type="proficiency" 
                     data-origin="${title}"
-                    data-tooltip="${optDesc}"
                     ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${key}', '${opt}')">${opt}</label>`;
             });
             html += '</div>';
