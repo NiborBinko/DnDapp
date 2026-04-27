@@ -7,7 +7,16 @@ const TOOLTIP_SOURCES = {
     'feat': () => window.descriptions?.feats,
     'class-ability': () => window.descriptions?.classAbilities,
     'stat': () => window.descriptions?.stats,
-    'proficiency': () => window.descriptions?.proficiencies,
+    'proficiency': (id) => {
+        const profs = window.descriptions?.proficiencies;
+        if (!profs) return null;
+        // Check nested structure: skills.armor.weapons.savingThrows
+        return profs.skills?.[id] || profs.armor?.[id] || profs.weapons?.[id] || profs[id];
+    },
+    'saving-throw': (id) => {
+        const st = window.descriptions?.proficiencies?.savingThrows;
+        return st?.[id] || null;
+    },
     'class-option': () => window.descriptions?.classOptions,
     'exclusive-group': () => window.descriptions?.exclusiveGroups,
     'language': () => window.descriptions?.languages
@@ -19,6 +28,11 @@ function getTooltipDescription(id, type) {
     const key = id.toLowerCase();
     const sourceGetter = TOOLTIP_SOURCES[type];
     if (!sourceGetter) return null;
+    
+    // Handle nested lookups (proficiency needs id passed)
+    if (typeof sourceGetter === 'function') {
+        return sourceGetter(id);
+    }
     
     const source = sourceGetter();
     return source?.[key] || null;

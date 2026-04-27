@@ -8,12 +8,10 @@ function renderChooseRace() {
     if (!grid) return;
     grid.innerHTML = Object.values(window.racesData).map(race => {
         const bonuses = race.bonuses ? Object.entries(race.bonuses).map(([s, v]) => `+${v} ${s.slice(0, 3).toUpperCase()}`).join(', ') : race.desc;
-        const desc = race.desc || '';
         return `<div class="card ${userSelection.race === race.id ? 'selected' : ''}" 
             onclick="handleRaceSelect('${race.id}')"
             data-tooltip-id="${race.id}"
             data-tooltip-type="race-ability"
-            data-tooltip="${desc}"
             ><h3>${race.name}</h3><p>${bonuses}</p></div>`;
     }).join('');
     
@@ -39,12 +37,10 @@ function renderChooseClass() {
     const grid = document.getElementById('class-grid');
     if (!grid) return;
     grid.innerHTML = Object.values(window.classesData).map(cls => {
-        const statDesc = window.descriptions?.stats?.[cls.primaryStat] || '';
         return `<div class="card ${userSelection.class === cls.id ? 'selected' : ''}" 
             onclick="handleClassSelect('${cls.id}')"
             data-tooltip-id="${cls.id}"
             data-tooltip-type="class-ability"
-            data-tooltip="${cls.desc} ${statDesc}"
             ><h3>${cls.name} <span>(${cls.primaryStat?.slice(0, 3).toUpperCase()})</span></h3><p>d${cls.hitDie}</p></div>`;
     }).join('');
     updateNextButton();
@@ -142,11 +138,9 @@ function renderProficienciesStage() {
     html += skillOptions.map(skill => {
         const isSel = userSelection.selectedSkills.includes(skill.name);
         const isDis = !isSel && currentSkills >= maxSkills;
-        const skillDesc = window.descriptions?.proficiencies?.skills?.[skill.name] || '';
         return `<label class="checkbox-item ${isDis ? 'disabled' : ''} ${isSel ? 'selected' : ''}" 
             data-tooltip-id="${skill.name}" 
-            data-tooltip-type="proficiency" 
-            data-tooltip="${skillDesc}"
+            data-tooltip-type="proficiency"
             ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleSkill('${skill.name}')">${skill.name}</label>`;
     }).join('');
     html += '</div>';
@@ -155,17 +149,17 @@ function renderProficienciesStage() {
     const profs = classData.proficiencies || {};
     if (profs.armor?.length) {
         html += `<div class="section-header">Armor</div><div class="checkbox-grid">`;
-        html += profs.armor.map(a => `<label class="checkbox-item locked" data-tooltip-id="${a}" data-tooltip-type="proficiency" data-tooltip="${a}"><input type="checkbox" checked disabled>${a} 🔒</label>`).join('');
+        html += profs.armor.map(a => `<label class="checkbox-item locked" data-tooltip-id="${a}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${a} 🔒</label>`).join('');
         html += '</div>';
     }
     if (profs.weapons?.length) {
         html += `<div class="section-header">Weapons</div><div class="checkbox-grid">`;
-        html += profs.weapons.map(w => `<label class="checkbox-item locked" data-tooltip-id="${w}" data-tooltip-type="proficiency" data-tooltip="${w}"><input type="checkbox" checked disabled>${w} 🔒</label>`).join('');
+        html += profs.weapons.map(w => `<label class="checkbox-item locked" data-tooltip-id="${w}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${w} 🔒</label>`).join('');
         html += '</div>';
     }
     if (profs.savingThrows?.length) {
         html += `<div class="section-header">Saves</div><div class="checkbox-grid">`;
-        html += profs.savingThrows.map(s => `<label class="checkbox-item locked" data-tooltip-id="${s}" data-tooltip-type="proficiency" data-tooltip="${s.toUpperCase().slice(0, 3)}"><input type="checkbox" checked disabled>${s.toUpperCase().slice(0, 3)} 🔒</label>`).join('');
+        html += profs.savingThrows.map(s => `<label class="checkbox-item locked" data-tooltip-id="${s}" data-tooltip-type="saving-throw" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${s.toUpperCase().slice(0, 3)} 🔒</label>`).join('');
         html += '</div>';
     }
     
