@@ -24,6 +24,7 @@ function resetUserSelection() {
 function handleRaceSelect(raceId) {
     userSelection.race = raceId;
     userSelection.subrace = null;
+    userSelection.featureChoices = {};  // Clear for new race
     triggerRecalc();
     renderChooseRace();
     refreshDebugIfOpen();
@@ -39,6 +40,7 @@ function handleSubraceSelect(subraceId) {
 function handleClassSelect(classId) {
     userSelection.class = classId;
     userSelection.subclass = null;
+    userSelection.featureChoices = {};  // Clear for new class
     triggerRecalc();
     renderChooseClass();
     refreshDebugIfOpen();
@@ -139,12 +141,12 @@ function selectFeatureChoice(choiceKey, value) {
         }
     }
     
-    triggerRecalc();
+    triggerRecalc();  // Now preserves selections during rebuild
     
     // Re-render all stages with choice logic
-    renderAbilityScores();       // Stage 3: stat choices (Human bonus, ASI)
-    renderProficienciesStage(); // Stage 4: proficiency choices
-    renderFeaturesFeats();      // Stage 5: abilities, options, feats
+    renderAbilityScores();
+    renderProficienciesStage();
+    renderFeaturesFeats();
     
     refreshDebugIfOpen();
 }

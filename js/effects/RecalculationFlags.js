@@ -296,7 +296,17 @@ function recalcMaxHp() {
 function recalcProficiencies() {
     characterSheet.proficiencies = { skills: [], weapons: [], armor: [], tools: [], savingThrows: [] };
 
-    // Clear ALL featureChoices - rebuild from scratch each time
+    // Preserve existing user selections before rebuilding
+    const savedChoices = {};
+    if (userSelection.featureChoices) {
+        Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
+            if (choice && choice.selected) {
+                savedChoices[key] = { ...choice };
+            }
+        });
+    }
+
+    // Clear for rebuild but will restore saved selections
     userSelection.featureChoices = {};
 
     if (userSelection.class) {
@@ -369,6 +379,20 @@ function recalcProficiencies() {
             }
         });
     }
+    
+    // Restore saved selections after rebuild
+    Object.entries(savedChoices).forEach(([key, savedChoice]) => {
+        const current = userSelection.featureChoices[key];
+        if (current && current.selected) {
+            // Restore user's selected values (but not more than current count allows)
+            const restoreCount = Math.min(savedChoice.selected.length, current.selected.length);
+            for (let i = 0; i < restoreCount; i++) {
+                if (savedChoice.selected[i] && current.options.includes(savedChoice.selected[i])) {
+                    current.selected[i] = savedChoice.selected[i];
+                }
+            }
+        }
+    });
 }
 
 /**
