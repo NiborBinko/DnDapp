@@ -208,14 +208,15 @@ button {
 
 .checkbox-item input { width: auto; margin: 0; }
 
-.checkbox-item.race-ability {
+.checkbox-item.locked, .checkbox-item.selected {
     background: #2a3a2e;
     border: 1px solid #4ade80;
 }
 
-.checkbox-item.spell-disabled {
+.checkbox-item.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
 }
 
 .checkbox-item.innate-spell {

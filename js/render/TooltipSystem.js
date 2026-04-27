@@ -35,9 +35,9 @@ function getTooltipContent(target) {
         content = target.getAttribute('data-tooltip');
     }
     
-    // Show both description and origin if available
+    // Show description first, then origin if present
     if (content && origin) {
-        return `${content}\n\n[Origin: ${origin}]`;
+        return `${content}\n\n📍 ${origin}`;
     }
     
     return content || origin;
