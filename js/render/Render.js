@@ -173,18 +173,51 @@ function renderProficienciesStage() {
         }).join(', ');
     }
     
-    // Class default proficiencies (pre-selected/locked)
+    // Class default proficiencies - Armor by category
     const profs = classData.proficiencies || {};
-    if (profs.armor?.length) {
-        html += `<div class="section-header">Armor</div><div class="checkbox-grid">`;
-        html += `<label class="checkbox-item locked" data-tooltip-id="armor" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${expandCategory('armor', profs.armor)} 🔒</label>`;
+    const armorCategories = ['light armor', 'medium armor', 'heavy armor', 'shields'];
+    armorCategories.forEach(cat => {
+        if (profs.armor?.includes(cat)) {
+            const isLocked = profs.armor?.includes(cat);
+            html += `<div class="section-header">${cat.replace(/^\w/, c => c.toUpperCase())}</div><div class="checkbox-grid">`;
+            html += `<label class="checkbox-item locked" data-tooltip-id="${cat}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${cat.replace(' armor', '')} 🔒</label>`;
+            html += '</div>';
+        }
+    });
+    
+    // Weapons by category - need to detect from available options
+    const weaponDescriptions = window.descriptions?.proficiencies?.weapons || {};
+    const allWeapons = profs.weapons || [];
+    // Group by category (simple, martial)
+    const simpleWeapons = allWeapons.filter(w => {
+        const desc = weaponDescriptions[w.toLowerCase()];
+        return desc && desc.toLowerCase().includes('simple');
+    });
+    const martialWeapons = allWeapons.filter(w => {
+        const desc = weaponDescriptions[w.toLowerCase()];
+        return desc && desc.toLowerCase().includes('martial');
+    });
+    const otherWeapons = allWeapons.filter(w => 
+        !simpleWeapons.includes(w) && !martialWeapons.includes(w)
+    );
+    
+    if (simpleWeapons.length > 0) {
+        html += `<div class="section-header">Simple Weapons</div><div class="checkbox-grid">`;
+        html += simpleWeapons.map(w => `<label class="checkbox-item locked" data-tooltip-id="${w}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${w} 🔒</label>`).join('');
         html += '</div>';
     }
-    if (profs.weapons?.length) {
+    if (martialWeapons.length > 0) {
+        html += `<div class="section-header">Martial Weapons</div><div class="checkbox-grid">`;
+        html += martialWeapons.map(w => `<label class="checkbox-item locked" data-tooltip-id="${w}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${w} 🔒</label>`).join('');
+        html += '</div>';
+    }
+    if (otherWeapons.length > 0) {
         html += `<div class="section-header">Weapons</div><div class="checkbox-grid">`;
-        html += `<label class="checkbox-item locked" data-tooltip-id="weapons" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${expandCategory('weapons', profs.weapons)} 🔒</label>`;
+        html += otherWeapons.map(w => `<label class="checkbox-item locked" data-tooltip-id="${w}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${w} 🔒</label>`).join('');
         html += '</div>';
     }
+    
+    // Saving Throws
     if (profs.savingThrows?.length) {
         html += `<div class="section-header">Saves</div><div class="checkbox-grid">`;
         html += profs.savingThrows.map(s => `<label class="checkbox-item locked" data-tooltip-id="${s}" data-tooltip-type="saving-throw" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${s.toUpperCase().slice(0, 3)} 🔒</label>`).join('');
