@@ -138,10 +138,14 @@ function renderProficienciesStage() {
     
     let html = '';
     
-    // Skills
+    // Skills - count only class skill options, not race-granted
     const skillOptions = classData.proficiencies?.skills?.options || [];
     const maxSkills = classData.proficiencies?.skills?.count || 2;
-    const currentSkills = userSelection.selectedSkills.length;
+    // Current user picks from class options (race-granted skills don't count toward limit)
+    const userPickedSkills = userSelection.selectedSkills.filter(s => 
+        skillOptions.some(opt => opt.name === s)
+    ).length;
+    const currentSkills = userPickedSkills;
     html += `<div class="section-header">Skills (${currentSkills}/${maxSkills})</div><div class="checkbox-grid">`;
     html += skillOptions.map(skill => {
         const isSel = userSelection.selectedSkills.includes(skill.name);
@@ -187,7 +191,7 @@ function renderProficienciesStage() {
         html += '</div>';
     }
     
-    // Proficiency choices from featureChoices (race features, ASI, etc.)
+    // Proficiency choices from featureChoices (race features, +1 proficiency choice, etc.)
     Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
         if (choice && choice.type === 'proficiency' && choice.options && choice.options.length > 0) {
             const selectedItems = choice.selected?.filter(s => s !== null) || [];
@@ -196,8 +200,11 @@ function renderProficienciesStage() {
             let title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
             title = `+1 ${choice.proficiencyType || 'proficiency'} - ${title}`;
             
+            // Filter options: exclude items already in selectedSkills (from race auto-grant)
+            const availableOptions = choice.options.filter(opt => !userSelection.selectedSkills.includes(opt));
+            
             html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
-            choice.options.forEach(opt => {
+            availableOptions.forEach(opt => {
                 const isSelected = selectedItems.includes(opt);
                 const disabled = !canSelect && !isSelected ? 'disabled' : '';
                 html += `<label class="checkbox-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''}" 
