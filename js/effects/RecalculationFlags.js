@@ -387,8 +387,14 @@ function recalcProficiencies() {
                 // Auto-add if selections.length === count (no choice needed)
                 if (selections && selections.length === effect.count) {
                     selections.forEach(item => {
-                        if (profType === 'skill' && !characterSheet.proficiencies.skills.includes(item)) {
-                            characterSheet.proficiencies.skills.push(item);
+                        if (profType === 'skill') {
+                            if (!characterSheet.proficiencies.skills.includes(item)) {
+                                characterSheet.proficiencies.skills.push(item);
+                            }
+                            // Auto-grant: add to userSelection.selectedSkills so user sees it
+                            if (!userSelection.selectedSkills.includes(item)) {
+                                userSelection.selectedSkills.push(item);
+                            }
                         } else if (profType === 'tool' && !characterSheet.proficiencies.tools.includes(item)) {
                             characterSheet.proficiencies.tools.push(item);
                         } else if (profType === 'weapon' && !characterSheet.proficiencies.weapons.includes(item)) {
