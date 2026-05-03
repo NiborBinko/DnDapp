@@ -120,10 +120,12 @@ function selectClassOption(groupName, optionId) {
 // ===== Feature Choices (Generic) =====
 
 function selectFeatureChoice(choiceKey, value) {
+    console.log('selectFeatureChoice called:', choiceKey, value);
     if (!userSelection.featureChoices) {
         userSelection.featureChoices = {};
     }
     const choice = userSelection.featureChoices[choiceKey];
+    console.log('choice:', choice);
     if (!choice) return;
 
     const existingIndex = choice.selected.indexOf(value);
@@ -145,10 +147,10 @@ function selectFeatureChoice(choiceKey, value) {
     // ALWAYS call triggerRecalc to refresh stats (not just when full)
     triggerRecalc();
     
-    // Re-render all stages with choice logic
-    renderAbilityScores();
-    renderProficienciesStage();
-    renderFeaturesFeats();
+    // Render only current stage (not all 3 stages)
+    if (typeof renderCurrentStage === 'function') {
+        renderCurrentStage();
+    }
     
     refreshDebugIfOpen();
 }

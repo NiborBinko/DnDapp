@@ -99,10 +99,13 @@ function showTooltip(target, content) {
     
     const rect = target.getBoundingClientRect();
     
-    // Position tooltip so bottom edge aligns with top edge of element
-    // Use CSS bottom to position from viewport bottom
-    t.style.top = 'auto';
-    t.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+    // First, let browser calculate tooltip height
+    const tooltipHeight = t.offsetHeight || 50;
+    const gap = 8;
+    
+    // Position tooltip ABOVE the element with gap
+    // Account for scroll position with pageYOffset
+    t.style.top = (rect.top + window.pageYOffset - tooltipHeight - gap) + 'px';
     t.style.left = rect.left + 'px';
 }
 

@@ -53,7 +53,7 @@ function getDefaultSheet() {
         expertises: [], languages: [], features: [], feats: [],
         spellcastingAbility: null, spellSaveDC: 0, spellAttackMod: 0, spellPreparationType: null,
         spellbookSpells: [], knownCantrips: [], knownSpells: [], preparedSpells: [],
-        spellSlots: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 },
+        spellSlots: window.EMPTY_SPELL_SLOTS || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 },
         maxCantripsKnown: 0, maxSpellsKnown: 0, ritualSpells: []
     };
 }

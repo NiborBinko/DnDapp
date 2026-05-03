@@ -7,6 +7,14 @@ function triggerRecalc() { recalcAll(); }
 function recalculateAll() { recalcAll(); }
 
 function recalcAll() {
+    // PRESERVE user selections BEFORE rebuilding
+    const savedStatSelections = {};
+    Object.entries(userSelection.featureChoices || {}).forEach(([k, v]) => {
+        if (v.type === 'stat' && v.selected?.some(s => s !== null)) {
+            savedStatSelections[k] = [...v.selected];
+        }
+    });
+    
     recalcRaceEffects(); recalcClassBase(); recalcFeatures();
     clearRemovedFeatureSelections();
     recalcProficiencies(); recalcKnownCantrips();
@@ -15,6 +23,20 @@ function recalcAll() {
     recalcMaxHp();  recalcVision(); recalcSpeed();
     recalcSpellcasting(); recalcSpellSlots(); recalcInnateSpells(); recalcFeats();
     recalcSavingThrows(); recalcResistances();
+    
+    // RESTORE selections AFTER rebuild
+    Object.entries(savedStatSelections).forEach(([key, saved]) => {
+        if (userSelection.featureChoices[key]) {
+            userSelection.featureChoices[key].selected = saved;
+            console.log('Restored selection for:', key, '->', saved);
+        }
+    });
+    
+    // Force re-render of Stage 3 to show newly created featureChoices like ASI
+    console.log('Forcing renderAbilityScores - featureChoices keys:', Object.keys(userSelection.featureChoices || {}));
+    if (typeof renderAbilityScores === 'function') {
+        renderAbilityScores();
+    }
 }
 
 /**
@@ -56,7 +78,8 @@ function recalcResistances() {
 function clearRemovedFeatureSelections() {
     const currentFeatureNames = characterSheet.features ? characterSheet.features.map(f => f.name.toLowerCase()) : [];
     Object.keys(userSelection.featureChoices).forEach(key => {
-        if (!currentFeatureNames.includes(key)) {
+        const featureStillExists = currentFeatureNames.some(name => key === name || key.startsWith(name + '-'));
+        if (!featureStillExists) {
             delete userSelection.featureChoices[key];
         }
     });
@@ -168,25 +191,28 @@ function getRaceEffect(featureName) { return getFeatureEffect(featureName); }
 function ensureFeatureChoice(feature, effect, availableOptions, type, extraFields = {}) {
     const baseKey = feature.name.toLowerCase();
     
-    // For class features, ALWAYS use suffix to guarantee unique keys per instance
+    // For class features, ALWAYS use level + instanceIndex to guarantee unique keys
     let key = baseKey;
     
     if (feature.source === 'class' && characterSheet?.features) {
-        const allMatches = characterSheet.features.filter(f => 
-            f.name.toLowerCase() === baseKey && f.source === 'class'
+        const level = feature.level || 0;
+        const sameLevelAndName = characterSheet.features.filter(f => 
+            f.name.toLowerCase() === baseKey && 
+            f.source === 'class' && 
+            (f.level || 0) === level
         );
         
-        if (allMatches.length > 0) {
-            // ALWAYS use suffix for class features - guarantees unique keys
-            const instanceIndex = allMatches.indexOf(feature);
-            key = `${baseKey}-${instanceIndex}`;
+        if (sameLevelAndName.length > 0) {
+            const instanceIndex = sameLevelAndName.indexOf(feature);
+            key = `${baseKey}-${level}-${instanceIndex}`;
+            console.log('Generated key for feature:', feature.name, 'level:', level, 'instance:', instanceIndex, '-> key:', key);
         }
     }
     
-    // ROBUST PRESERVATION: Check if ANY related key already exists with selections
-    // This prevents overwriting user's selections during triggerRecalc
+    // ROBUST PRESERVATION: Check if this EXACT key already exists with selections
+    // Only match exact key - don't match partial keys like "ability score improvement-4-0" vs "ability score improvement-4-1"
     const existingEntry = Object.entries(userSelection.featureChoices || {}).find(([k, v]) => 
-        k === key || k.includes(baseKey)
+        k === key
     );
     
     if (existingEntry) {
@@ -627,3 +653,4 @@ window.recalcResistances = recalcResistances;
 window.recalcSavingThrows = recalcSavingThrows;
 window.triggerRecalc = triggerRecalc;
 window.recalculateAll = recalculateAll;
+window.STAT_NAMES = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];

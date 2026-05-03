@@ -138,34 +138,21 @@ const EffectHandler = {
 };
 
 const EFFECT_DISPATCH = {
-    vision: recalcVision,
-    speed: recalcSpeed,
-    stat: () => { recalcStats(); recalcStatModifiers(); },
-    proficiency: recalcProficiencies,
+    vision: window.recalcVision || (() => {}),
+    speed: window.recalcSpeed || (() => {}),
+    stat: () => { if (window.recalcStats) window.recalcStats(); if (window.recalcStatModifiers) window.recalcStatModifiers(); },
+    proficiency: window.recalcProficiencies || (() => {}),
     cantrips: () => {},
-    mainspell: () => { recalcSpellcasting(); recalcSpellSlots(); recalcCantrips(); },
-    innate: recalcInnateSpells,
-    resistance: recalcResistances,
-    immunity: recalcResistances,
-    vulnerability: recalcResistances,
-    savingThrow: recalcSavingThrows,
-    feat: recalcFeats,
-    maxHP: recalcMaxHp,
+    mainspell: () => { if (window.recalcSpellcasting) window.recalcSpellcasting(); if (window.recalcSpellSlots) window.recalcSpellSlots(); if (window.recalcCantrips) window.recalcCantrips(); },
+    innate: window.recalcInnateSpells || (() => {}),
+    resistance: window.recalcResistances || (() => {}),
+    immunity: window.recalcResistances || (() => {}),
+    vulnerability: window.recalcResistances || (() => {}),
+    savingThrow: window.recalcSavingThrows || (() => {}),
+    feat: window.recalcFeats || (() => {}),
+    maxHP: window.recalcMaxHp || (() => {}),
     lookup: () => {},
     none: () => {}
 };
 
-async function loadJson(path) {
-    try {
-        const res = await fetch(path + '.json');
-        if (!res.ok) return {};
-        return await res.json();
-    } catch {
-        return {};
-    }
-}
-
 window.EffectHandler = EffectHandler;
-window.loadJson = loadJson;
-window.toggleChoice = (choiceKey, value) => EffectHandler.toggleChoice(choiceKey, value);
-window.makeChoiceHandler = (choiceKey) => EffectHandler.makeChoiceHandler(choiceKey);

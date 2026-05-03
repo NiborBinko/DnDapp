@@ -96,7 +96,10 @@ function renderAbilityScores() {
     }).join('');
     
     // Render stat choice features (e.g., Human bonus stat, ASI)
+    console.log('renderAbilityScores called - featureChoices:', Object.keys(userSelection.featureChoices || {}));
+    
     Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
+        console.log('Checking choice:', key, 'type:', choice.type, 'options:', choice.options?.length);
         if (choice && choice.type === 'stat' && choice.options && choice.options.length > 0) {
             const selectedItems = choice.selected?.filter(s => s !== null) || [];
             const canSelect = selectedItems.length < choice.count;
@@ -107,6 +110,7 @@ function renderAbilityScores() {
             choice.options.forEach(opt => {
                 const isSelected = selectedItems.includes(opt);
                 const disabled = !canSelect && !isSelected ? 'disabled' : '';
+                console.log('Rendering checkbox:', key, opt, 'isSelected:', isSelected, 'disabled:', disabled);
                 html += `<label class="checkbox-item ${isSelected ? 'selected' : ''}" 
                     data-tooltip-id="${opt}" 
                     data-tooltip-type="stat" 
@@ -307,7 +311,7 @@ function renderFeaturesFeats() {
                         html += '</div>';
                     }
                 } else {
-                    // For other types (feat, cantrips): show selectable as before
+                    // For other types (feat, cantrips): show selectable
                     const canSelect = filledCount < choice.count;
                     html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
                     choice.options.forEach(opt => {

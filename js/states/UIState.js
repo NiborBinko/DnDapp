@@ -5,6 +5,14 @@ let UIState = { currentStage: 0, deleteCharacterIndex: null, pointsRemaining: 27
 const STAGES = { WELCOME: 0, CHOOSE_RACE: 1, CHOOSE_CLASS: 2, ABILITY_SCORES: 3, PROFICIENCIES: 4, FEATURES_FEATS: 5, SPELLS: 6, OVERVIEW: 7 };
 const STAGE_NAMES = ['welcome', 'choose-race', 'choose-class', 'ability-scores', 'proficiencies', 'features-feats', 'spells', 'overview'];
 
+// Helper to check if a feature choice is complete
+function isChoiceComplete(choiceKey) {
+    const choice = userSelection.featureChoices?.[choiceKey];
+    if (!choice) return true; // No choice needed
+    const filledCount = choice.selected?.filter(s => s !== null).length || 0;
+    return filledCount >= choice.count;
+}
+
 function navigateToStage(stage) {
     if (stage < 0 || stage > 7) return;
     UIState.currentStage = stage;
@@ -37,13 +45,7 @@ function canProceed() {
             // All points must be spent (pointsRemaining === 0)
             // AND check if Human race has pending bonus stat choice
             if (UIState.pointsRemaining !== 0) return false;
-            if (userSelection.race === 'human') {
-                const choice = userSelection.featureChoices?.['choose-2-times-1-bonus-stat'];
-                if (choice) {
-                    const filledCount = choice.selected.filter(s => s !== null).length;
-                    if (filledCount < choice.count) return false;
-                }
-            }
+            if (userSelection.race === 'human' && !isChoiceComplete('human stat bonus')) return false;
             return true;
         }
         case 4: {
@@ -56,13 +58,7 @@ function canProceed() {
         case 5: {
             // All pending feature choices must be completed
             // Check Human bonus stat choice is complete
-            if (userSelection.race === 'human') {
-                const choice = userSelection.featureChoices?.['choose-2-times-1-bonus-stat'];
-                if (choice) {
-                    const filledCount = choice.selected.filter(s => s !== null).length;
-                    if (filledCount < choice.count) return false;
-                }
-            }
+            if (userSelection.race === 'human' && !isChoiceComplete('human stat bonus')) return false;
             // Check class options at current level are selected
             if (userSelection.class) {
                 const cls = window.classesData[userSelection.class];
