@@ -7,10 +7,10 @@ function triggerRecalc() { recalcAll(); }
 function recalculateAll() { recalcAll(); }
 
 function recalcAll() {
-    // PRESERVE user selections BEFORE rebuilding
+    // PRESERVE user selections BEFORE rebuilding (stats AND proficiency choices)
     const savedStatSelections = {};
     Object.entries(userSelection.featureChoices || {}).forEach(([k, v]) => {
-        if (v.type === 'stat' && v.selected?.some(s => s !== null)) {
+        if ((v.type === 'stat' || v.type === 'proficiency') && v.selected?.some(s => s !== null)) {
             savedStatSelections[k] = [...v.selected];
         }
     });
