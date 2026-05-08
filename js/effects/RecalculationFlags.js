@@ -633,10 +633,12 @@ function recalcStats() {
 
     recalcFeaturesByType('stat', (effect, feature) => {
         // Skip if already handled by applyChoiceBonuses (prevents double bonus)
-        const key = feature.name.toLowerCase();
-        if (userSelection.featureChoices?.[key]?.selected?.some(s => s)) {
-            return;
-        }
+        // Use prefix matching since featureChoices keys now include suffixes like "-4-0"
+        const baseKey = feature.name.toLowerCase();
+        const alreadyHandled = Object.entries(userSelection.featureChoices || {}).some(([k, v]) => 
+            (k === baseKey || k.startsWith(baseKey + '-')) && v.selected?.some(s => s !== null)
+        );
+        if (alreadyHandled) return;
         
         const selections = ensureFeatureChoice(feature, effect, effect.options, 'stat', { value: effect.value });
         if (selections) {
