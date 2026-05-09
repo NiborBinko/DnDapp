@@ -96,10 +96,7 @@ function renderAbilityScores() {
     }).join('');
     
     // Render stat choice features (e.g., Human bonus stat, ASI)
-    console.log('renderAbilityScores called - featureChoices:', Object.keys(userSelection.featureChoices || {}));
-    
     Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
-        console.log('Checking choice:', key, 'type:', choice.type, 'options:', choice.options?.length);
         if (choice && choice.type === 'stat' && choice.options && choice.options.length > 0) {
             const selectedItems = choice.selected?.filter(s => s !== null) || [];
             const canSelect = selectedItems.length < choice.count;
@@ -110,7 +107,6 @@ function renderAbilityScores() {
             choice.options.forEach(opt => {
                 const isSelected = selectedItems.includes(opt);
                 const disabled = !canSelect && !isSelected ? 'disabled' : '';
-                console.log('Rendering checkbox:', key, opt, 'isSelected:', isSelected, 'disabled:', disabled);
                 html += `<label class="checkbox-item ${isSelected ? 'selected' : ''}" 
                     data-tooltip-id="${opt}" 
                     data-tooltip-type="stat" 
@@ -138,40 +134,60 @@ function renderProficienciesStage() {
     
     let html = '';
     
-    // Skills - count only class skill options, not race-granted
+    // Skills - all in one list, auto-granted increase limit
     const skillOptions = classData.proficiencies?.skills?.options || [];
-    const maxSkills = classData.proficiencies?.skills?.count || 2;
-    // Current user picks from class options (race-granted skills don't count toward limit)
-    const userPickedSkills = userSelection.selectedSkills.filter(s => 
-        skillOptions.some(opt => opt.name === s)
-    ).length;
-    const currentSkills = userPickedSkills;
-    html += `<div class="section-header">Skills (${currentSkills}/${maxSkills})</div><div class="checkbox-grid">`;
-    html += skillOptions.map(skill => {
-        const isSel = userSelection.selectedSkills.includes(skill.name);
-        const isDis = !isSel && currentSkills >= maxSkills;
-        return `<label class="checkbox-item ${isDis ? 'disabled' : ''} ${isSel ? 'selected' : ''}" 
-            data-tooltip-id="${skill.name}" 
+    const classMaxSkills = classData.proficiencies?.skills?.count || 2;
+    const classSkillNames = skillOptions.map(opt => opt.name);
+    
+    // Get race auto-granted skills from featureChoices (auto-added when count === selections)
+    const raceAutoGrantedSkills = [];
+    Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+        if (choice?.type === 'proficiency' && choice?.proficiencyType === 'skill') {
+            const selected = choice.selected?.filter(s => s !== null) || [];
+            // Auto-grant: selections.length === count (no choice needed)
+            if (selected.length === choice.count && selected.length > 0) {
+                selected.forEach(skill => raceAutoGrantedSkills.push(skill));
+            }
+        }
+    });
+    
+    // Skills not in class options (extra from race)
+    const raceExtraSkills = raceAutoGrantedSkills.filter(s => !classSkillNames.includes(s));
+    
+    // Calculate limit: only class max + race bonus (+1 Proficiency)
+    // Auto-granted skills are locked but don't increase the max count
+    const raceSkillLimitBonus = window.raceSkillLimitBonus || 0;
+    const maxSkills = classMaxSkills + raceSkillLimitBonus;
+    const userPickedSkills = userSelection.selectedSkills.filter(s => !raceAutoGrantedSkills.includes(s));
+    const currentUserPicks = userPickedSkills.length;
+    
+    html += `<div class="section-header">Skills (${currentUserPicks}/${maxSkills})</div><div class="checkbox-grid">`;
+    
+    // Auto-granted skills (all locked at top)
+    raceAutoGrantedSkills.forEach(skill => {
+        const source = userSelection.raceAutoGrantSources[skill] || 'Race';
+        html += `<label class="checkbox-item locked" 
+            data-tooltip-id="${skill}" 
             data-tooltip-type="proficiency"
-            ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleSkill('${skill.name}')">${skill.name}</label>`;
-    }).join('');
+            data-origin="${source}"
+            ><input type="checkbox" checked disabled>${skill} 🔒</label>`;
+    });
+    
+    // Class options (user picks)
+    skillOptions.forEach(skill => {
+        const isSel = userSelection.selectedSkills.includes(skill.name);
+        const isRaceAuto = raceAutoGrantedSkills.includes(skill.name);
+        const isDis = !isSel && !isRaceAuto && currentUserPicks >= maxSkills;
+        if (!isRaceAuto) {  // Don't show race auto-granted twice
+            html += `<label class="checkbox-item ${isDis ? 'disabled' : ''} ${isSel ? 'selected' : ''}" 
+                data-tooltip-id="${skill.name}" 
+                data-tooltip-type="proficiency"
+                ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleSkill('${skill.name}')">${skill.name}</label>`;
+        }
+    });
     html += '</div>';
     
-    // Helper to expand category to individual items
-    function expandCategory(category, items) {
-        if (!items || items.length === 0) return '';
-        const profs = window.descriptions?.proficiencies;
-        
-        return items.map(item => {
-            const catData = profs?.[category]?.[item.toLowerCase()];
-            if (catData && typeof catData === 'string') {
-                // Category with description - split to show items
-                const parts = catData.split(',').map(s => s.trim().split(' - ')[0].trim());
-                return parts.slice(0, 10).join(', ') + (parts.length > 10 ? '...' : '');
-            }
-            return item;
-        }).join(', ');
-    }
+    // Note: +1 Proficiency from race just increases maxSkills above, no separate block needed
     
     // Class default proficiencies - Armor by category
     const profs = classData.proficiencies || {};
@@ -224,31 +240,10 @@ function renderProficienciesStage() {
         html += '</div>';
     }
     
-    // Proficiency choices from featureChoices (race features, +1 proficiency choice, etc.)
-    Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
-        if (choice && choice.type === 'proficiency' && choice.options && choice.options.length > 0) {
-            const selectedItems = choice.selected?.filter(s => s !== null) || [];
-            const canSelect = selectedItems.length < choice.count;
-            
-            let title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-            title = `+1 ${choice.proficiencyType || 'proficiency'} - ${title}`;
-            
-            // Filter options: exclude items already in selectedSkills (from race auto-grant)
-            const availableOptions = choice.options.filter(opt => !userSelection.selectedSkills.includes(opt));
-            
-            html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
-            availableOptions.forEach(opt => {
-                const isSelected = selectedItems.includes(opt);
-                const disabled = !canSelect && !isSelected ? 'disabled' : '';
-                html += `<label class="checkbox-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''}" 
-                    data-tooltip-id="${opt}" 
-                    data-tooltip-type="proficiency" 
-                    data-origin="${title}"
-                    ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${key}', '${opt}')">${opt}</label>`;
-            });
-            html += '</div>';
-        }
-    });
+    // Note: +1 Proficiency from race increases maxSkills, handled above
+    // No separate block needed for proficiency choices - just skill count adjustment
+    
+    // Helper to expand category to individual items (kept for Armor/Weapons if needed later)
     
     grid.innerHTML = html;
 }

@@ -6,7 +6,8 @@ let userSelection = {
     stats: { strength: 8, dexterity: 8, constitution: 8, intelligence: 8, wisdom: 8, charisma: 8 },
     selectedSkills: [], selectedWeapons: [], selectedArmor: [], selectedTools: [],
     feats: [], featureChoices: {}, ASIHistory: [],
-    selectedLanguages: [], spellbookSpells: [], selectedCantrips: [], selectedSpells: [], preparedSpells: []
+    selectedLanguages: [], spellbookSpells: [], selectedCantrips: [], selectedSpells: [], preparedSpells: [],
+    raceAutoGrantSources: {}  // { "Perception": "Race: Human - Keen Senses", ... }
 };
 
 function resetUserSelection() {
@@ -15,7 +16,8 @@ function resetUserSelection() {
         stats: { strength: 8, dexterity: 8, constitution: 8, intelligence: 8, wisdom: 8, charisma: 8 },
         selectedSkills: [], selectedWeapons: [], selectedArmor: [], selectedTools: [],
         feats: [], featureChoices: {}, selectedFeatureChoices: {}, ASIHistory: [],
-        selectedLanguages: [], spellbookSpells: [], selectedCantrips: [], selectedSpells: [], preparedSpells: []
+        selectedLanguages: [], spellbookSpells: [], selectedCantrips: [], selectedSpells: [], preparedSpells: [],
+        raceAutoGrantSources: {}
     };
 }
 
@@ -24,6 +26,10 @@ function resetUserSelection() {
 function handleRaceSelect(raceId) {
     userSelection.race = raceId;
     userSelection.subrace = null;
+    // Clear race-related selections when changing race
+    userSelection.selectedSkills = [];
+    userSelection.raceAutoGrantSources = {};
+    userSelection.featureChoices = {};  // Clear race feature choices
     triggerRecalc();
     renderChooseRace();
     refreshDebugIfOpen();
@@ -39,6 +45,8 @@ function handleSubraceSelect(subraceId) {
 function handleClassSelect(classId) {
     userSelection.class = classId;
     userSelection.subclass = null;
+    // Clear class-related selections when changing class (skills are class-dependent)
+    userSelection.selectedSkills = [];
     triggerRecalc();
     renderChooseClass();
     refreshDebugIfOpen();
@@ -74,15 +82,33 @@ function adjustStat(stat, delta) {
 // ===== Skills =====
 
 function getMaxSkillProficiencies() {
-    if (!userSelection.class) return 2;
-    return window.classesData[userSelection.class]?.proficiencies?.skills?.count || 2;
+    const classMax = userSelection.class ? (window.classesData[userSelection.class]?.proficiencies?.skills?.count || 2) : 2;
+    const raceBonus = window.raceSkillLimitBonus || 0;
+    return classMax + raceBonus;
 }
 
 function toggleSkill(skillName) {
     const idx = userSelection.selectedSkills.indexOf(skillName);
+    const maxAllowed = getMaxSkillProficiencies();
+    
+    // Get race auto-granted skills to exclude from user picks count
+    const raceAutoGrantedSkills = [];
+    Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+        if (choice?.type === 'proficiency' && choice?.proficiencyType === 'skill') {
+            const selected = choice.selected?.filter(s => s !== null) || [];
+            if (selected.length === choice.count && selected.length > 0) {
+                selected.forEach(skill => raceAutoGrantedSkills.push(skill));
+            }
+        }
+    });
+    
+    const userPickedSkills = userSelection.selectedSkills.filter(s => !raceAutoGrantedSkills.includes(s));
+    
     if (idx > -1) {
+        // Always allow removal
         userSelection.selectedSkills.splice(idx, 1);
-    } else if (userSelection.selectedSkills.length < getMaxSkillProficiencies()) {
+    } else if (userPickedSkills.length < maxAllowed) {
+        // Only add if under max (user picks, not auto-granted)
         userSelection.selectedSkills.push(skillName);
     }
     triggerRecalc();

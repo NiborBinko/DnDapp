@@ -103,7 +103,9 @@ function getFeatStatBonuses() {
 
 function getMaxSkillProficiencies() {
     if (!userSelection?.class) return 2;
-    return window.classesData[userSelection.class]?.proficiencies?.skills?.count || 2;
+    const classMax = window.classesData[userSelection.class]?.proficiencies?.skills?.count || 2;
+    const raceBonus = window.raceSkillLimitBonus || 0;
+    return classMax + raceBonus;
 }
 
 function getRaceSpeedBonus(raceId) {

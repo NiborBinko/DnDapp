@@ -10,10 +10,13 @@ function recalcAll() {
     // PRESERVE user selections BEFORE rebuilding (stats AND proficiency choices)
     const savedStatSelections = {};
     Object.entries(userSelection.featureChoices || {}).forEach(([k, v]) => {
-        if ((v.type === 'stat' || v.type === 'proficiency') && v.selected?.some(s => s !== null)) {
+        if (v.type === 'stat' && v.selected?.some(s => s !== null)) {
             savedStatSelections[k] = [...v.selected];
         }
     });
+    
+    // Reset race skill limit bonus
+    window.raceSkillLimitBonus = 0;
     
     recalcRaceEffects(); recalcClassBase(); recalcFeatures();
     clearRemovedFeatureSelections();
@@ -28,12 +31,10 @@ function recalcAll() {
     Object.entries(savedStatSelections).forEach(([key, saved]) => {
         if (userSelection.featureChoices[key]) {
             userSelection.featureChoices[key].selected = saved;
-            console.log('Restored selection for:', key, '->', saved);
         }
     });
     
     // Force re-render of Stage 3 to show newly created featureChoices like ASI
-    console.log('Forcing renderAbilityScores - featureChoices keys:', Object.keys(userSelection.featureChoices || {}));
     if (typeof renderAbilityScores === 'function') {
         renderAbilityScores();
     }
@@ -78,6 +79,11 @@ function recalcResistances() {
 function clearRemovedFeatureSelections() {
     const currentFeatureNames = characterSheet.features ? characterSheet.features.map(f => f.name.toLowerCase()) : [];
     Object.keys(userSelection.featureChoices).forEach(key => {
+        // Always delete "+1 proficiency" - handled by increasing skill limit instead
+        if (key.toLowerCase() === '+1 proficiency') {
+            delete userSelection.featureChoices[key];
+            return;
+        }
         const featureStillExists = currentFeatureNames.some(name => key === name || key.startsWith(name + '-'));
         if (!featureStillExists) {
             delete userSelection.featureChoices[key];
@@ -205,7 +211,6 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
         if (sameLevelAndName.length > 0) {
             const instanceIndex = sameLevelAndName.indexOf(feature);
             key = `${baseKey}-${level}-${instanceIndex}`;
-            console.log('Generated key for feature:', feature.name, 'level:', level, 'instance:', instanceIndex, '-> key:', key);
         }
     }
     
@@ -359,7 +364,8 @@ function recalcMaxHp() {
  */
 function recalcProficiencies() {
     characterSheet.proficiencies = { skills: [], weapons: [], armor: [], tools: [], savingThrows: [] };
-
+    window.raceSkillLimitBonus = 0;  // Reset first, then calculate
+    
     if (userSelection.class) {
         const cls = window.classesData[userSelection.class];
         if (cls?.proficiencies) {
@@ -382,6 +388,12 @@ function recalcProficiencies() {
                     ? effect.options 
                     : (profType === 'skill' ? getAllSkills() : []);
                 
+                // Special case: +1 Proficiency (based on feature name) → just increase limit, don't create featureChoice
+                if (profType === 'skill' && feature.name.toLowerCase() === '+1 proficiency') {
+                    window.raceSkillLimitBonus = (window.raceSkillLimitBonus || 0) + effect.count;
+                    return;  // Skip ensureFeatureChoice for this case
+                }
+                
                 const selections = ensureFeatureChoice(feature, effect, availableOptions, 'proficiency', { proficiencyType: profType });
 
                 // Auto-add if selections.length === count (no choice needed)
@@ -391,10 +403,13 @@ function recalcProficiencies() {
                             if (!characterSheet.proficiencies.skills.includes(item)) {
                                 characterSheet.proficiencies.skills.push(item);
                             }
-                            // Auto-grant: add to userSelection.selectedSkills so user sees it
+                            // Auto-grant: add to userSelection.selectedSkills + track source
                             if (!userSelection.selectedSkills.includes(item)) {
                                 userSelection.selectedSkills.push(item);
                             }
+                            // Track source for tooltip
+                            const raceName = window.racesData?.[userSelection.race]?.name || userSelection.race;
+                            userSelection.raceAutoGrantSources[item] = `Race: ${raceName} - ${feature.name}`;
                         } else if (profType === 'tool' && !characterSheet.proficiencies.tools.includes(item)) {
                             characterSheet.proficiencies.tools.push(item);
                         } else if (profType === 'weapon' && !characterSheet.proficiencies.weapons.includes(item)) {
@@ -406,6 +421,32 @@ function recalcProficiencies() {
                 }
             }
         });
+    }
+    
+    // Safety: cap selectedSkills to max allowed (check AFTER calculating raceSkillLimitBonus)
+    const classMax = window.classesData[userSelection.class]?.proficiencies?.skills?.count || 2;
+    const maxAllowed = classMax + (window.raceSkillLimitBonus || 0);
+    if (userSelection.selectedSkills.length > maxAllowed) {
+        // Remove skills beyond max (keep only first maxAllowed that are user-picked)
+        const raceAutoSkills = [];
+        Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+            if (choice?.type === 'proficiency' && choice?.proficiencyType === 'skill') {
+                const selected = choice.selected?.filter(s => s !== null) || [];
+                if (selected.length === choice.count && selected.length > 0) {
+                    selected.forEach(skill => raceAutoSkills.push(skill));
+                }
+            }
+        });
+        const userPicked = userSelection.selectedSkills.filter(s => !raceAutoSkills.includes(s));
+        if (userPicked.length > maxAllowed) {
+            // Remove excess user picks from the end
+            const excess = userPicked.length - maxAllowed;
+            for (let i = 0; i < excess; i++) {
+                const lastUserPick = userPicked[userPicked.length - 1 - i];
+                const idx = userSelection.selectedSkills.indexOf(lastUserPick);
+                if (idx > -1) userSelection.selectedSkills.splice(idx, 1);
+            }
+        }
     }
     
     // Process race/class features for feats (type: "feat")
