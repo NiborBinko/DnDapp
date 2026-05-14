@@ -23,31 +23,45 @@ function getTooltipDescription(id, type) {
         return window.descriptions?.stats?.[key] || null;
     }
     
-    // Proficiencies - check nested structure
+    function fromMap(map, rawId) {
+        if (!map || !rawId) return null;
+        if (map[rawId]) return map[rawId];
+        const lowerId = String(rawId).toLowerCase();
+        if (map[lowerId]) return map[lowerId];
+        const foundKey = Object.keys(map).find(k => k.toLowerCase() === lowerId);
+        return foundKey ? map[foundKey] : null;
+    }
+
+    // Proficiencies - check nested structure (case-insensitive)
     if (type === 'proficiency') {
         const profs = window.descriptions?.proficiencies;
         if (!profs) return null;
-        return profs.skills?.[id] || profs.armor?.[id] || profs.weapons?.[id] || null;
+        return (
+            fromMap(profs.skills, id) ||
+            fromMap(profs.armor, id) ||
+            fromMap(profs.weapons, id) ||
+            null
+        );
     }
     
     // Saving throws
     if (type === 'saving-throw') {
-        return window.descriptions?.proficiencies?.savingThrows?.[id] || null;
+        return fromMap(window.descriptions?.proficiencies?.savingThrows, id);
     }
     
     // Abilities from class-abilities
     if (type === 'ability') {
-        return window.descriptions?.classAbilities?.[key] || null;
+        return fromMap(window.descriptions?.classAbilities, id);
     }
     
     // Feats
     if (type === 'feat') {
-        return window.descriptions?.feats?.[key] || null;
+        return fromMap(window.descriptions?.feats, id);
     }
     
     // Race abilities (for Stage 5 race features)
     if (type === 'race-ability') {
-        return window.descriptions?.raceAbilities?.[key] || null;
+        return fromMap(window.descriptions?.raceAbilities, id);
     }
     
     return null;
@@ -66,7 +80,9 @@ function getTooltipContent(target) {
         return `${description}\n\n📍 ${origin}`;
     }
     
-    return description || null;
+    if (description) return description;
+    if (origin) return `📍 ${origin}`;
+    return null;
 }
 
 function initTooltips() {

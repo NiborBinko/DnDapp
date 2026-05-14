@@ -1,7 +1,8 @@
 {
   "Darkvision": "You can see in dim light within 60 feet as if it were bright light, and in darkness as if it were dim light.",
   "Fey Ancestry": "You have advantage on saving throws against being charmed, and magic can't put you to sleep.",
-  "Dwarven Resilience": "You have advantage on saving throws against poison.",
+  "Dwarven Resilience": "You have resistance against poison.",
+  "Dwarven Resilience Save": "You have advantage on saving throws against poison.",
   "Lucky": "When you roll a 1 on an attack roll, ability check, or saving throw, you can reroll and use the new result.",
   "Brave": "You have advantage on saving throws against being frightened.",
   "Menacing": "You gain proficiency in the Intimidation skill.",
@@ -30,5 +31,12 @@
   "Breath Weapon (Lightning)": "As an action, you can exhale lightning in a 5-foot by 30-foot line. Creatures must make DEX save or take 2d6 lightning damage (half on success).",
   "Breath Weapon (Poison)": "As an action, you can exhale poisonous gas in a 15-foot cone. Creatures must make CON save or take 2d6 poison damage (half on success).",
   "Breath Weapon (Fire)": "As an action, you can exhale fire in a 15-foot cone. Creatures must make DEX save or take 2d6 fire damage (half on success).",
-  "Breath Weapon (Cold)": "As an action, you can exhale cold in a 15-foot cone. Creatures must make CON save or take 2d6 cold damage (half on success)."
+  "Breath Weapon (Cold)": "As an action, you can exhale cold in a 15-foot cone. Creatures must make CON save or take 2d6 cold damage (half on success).",
+  "+1 Feat": "You gain one feat choice from available feats.",
+  "+1 Proficiency": "You gain one additional proficiency choice as specified by your race.",
+  "Dwarven Combat Training": "You gain proficiency with the battleaxe, handaxe, light hammer, and warhammer.",
+  "Hellfire Resistance": "You have resistance to fire damage.",
+  "Human Stat Bonus": "Increase ability scores as defined by human racial bonuses.",
+  "Infernal Legacy": "You know innate tiefling magic that expands as you level.",
+  "Stout Resilience Save": "You have advantage on saving throws against poison."
 }

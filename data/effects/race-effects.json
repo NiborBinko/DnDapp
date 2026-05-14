@@ -3,43 +3,66 @@
     "keen senses": {
       "type": "proficiency",
       "proficiencyType": "skill",
-      "options": ["Perception"],
+      "options": [
+        "Perception"
+      ],
       "count": 1
     },
     "menacing": {
       "type": "proficiency",
       "proficiencyType": "skill",
-      "options": ["Intimidation"],
+      "options": [
+        "Intimidation"
+      ],
       "count": 1
     },
     "naturally stealthy": {
       "type": "proficiency",
       "proficiencyType": "skill",
-      "options": ["Stealth"],
+      "options": [
+        "Stealth"
+      ],
       "count": 1
     },
     "dwarven armor training": {
       "type": "proficiency",
       "proficiencyType": "armor",
-      "options": ["light armor", "medium armor", "shields"],
+      "options": [
+        "light armor",
+        "medium armor",
+        "shields"
+      ],
       "count": 3
     },
     "elf weapon training": {
       "type": "proficiency",
       "proficiencyType": "weapon",
-      "options": ["longswords", "shortswords", "shortbows", "longbows"],
+      "options": [
+        "longswords",
+        "shortswords",
+        "shortbows",
+        "longbows"
+      ],
       "count": 4
     },
     "drow weapon training": {
       "type": "proficiency",
       "proficiencyType": "weapon",
-      "options": ["rapiers", "shortswords", "hand crossbows"],
+      "options": [
+        "rapiers",
+        "shortswords",
+        "hand crossbows"
+      ],
       "count": 3
     },
     "dwarven tool proficiency": {
       "type": "proficiency",
       "proficiencyType": "tool",
-      "options": ["smith's tools", "brewer's supplies", "mason's tools"],
+      "options": [
+        "smith's tools",
+        "brewer's supplies",
+        "mason's tools"
+      ],
       "count": 1
     },
     "high elf cantrip": {
@@ -53,9 +76,15 @@
     "drow magic": {
       "type": "innate",
       "spellLevels": {
-        "1": ["dancing-lights"],
-        "3": ["faerie-fire"],
-        "5": ["darkness"]
+        "1": [
+          "dancing-lights"
+        ],
+        "3": [
+          "faerie-fire"
+        ],
+        "5": [
+          "darkness"
+        ]
       },
       "ability": "charisma"
     },
@@ -65,19 +94,22 @@
     },
     "dwarven resilience": {
       "type": "resistance",
-      "damageType": "poison",
-      "description": "resistance against poison."
+      "damageType": "poison"
     },
     "dwarven resilience save": {
       "type": "savingThrow",
       "saveType": "poison",
-      "effect": "advantage",
-      "description": "Advantage on saving throws against poison."
+      "effect": "advantage"
     },
     "dwarven combat training": {
       "type": "proficiency",
       "proficiencyType": "weapon",
-      "options": ["battleaxe", "handaxe", "lighthammer", "warhammer"],
+      "options": [
+        "battleaxe",
+        "handaxe",
+        "lighthammer",
+        "warhammer"
+      ],
       "count": 4
     },
     "fleet footed": {
@@ -86,61 +118,58 @@
     },
     "darkvision": {
       "type": "vision",
-      "value": {"nightvision": 60}
+      "value": {
+        "nightvision": 60
+      }
     },
     "superior darkvision": {
       "type": "vision",
-      "value": {"nightvision": 120}
+      "value": {
+        "nightvision": 120
+      }
     },
     "trance": {
-      "type": "none",
-      "description": "Elves don't need to sleep. They can rest while doing light activity for 4 hours."
+      "type": "none"
     },
     "fey ancestry": {
       "type": "savingThrow",
       "saveType": "charmed",
-      "effect": "advantage",
-      "description": "Advantage on saving throws against being charmed."
+      "effect": "advantage"
     },
     "lucky": {
-      "type": "none",
-      "description": "When you roll a 1, reroll the die and take the new result."
+      "type": "none"
     },
     "gnome cunning": {
-      "type": "none",
-      "description": "Advantage on Intelligence, Wisdom, and Charisma saving throws against magic."
+      "type": "none"
     },
     "keen smell": {
-      "type": "none",
-      "description": "Advantage on Wisdom (Perception) checks that rely on smell."
+      "type": "none"
     },
     "brave": {
       "type": "savingThrow",
       "saveType": "frightened",
-      "effect": "advantage",
-      "description": "Advantage on saving throws against being frightened."
+      "effect": "advantage"
     },
     "stonecunning": {
-      "type": "none",
-      "description": "History check related to stonework has advantage."
+      "type": "none"
     },
     "mountain dwarf resilience": {
       "type": "proficiency",
       "proficiencyType": "armor",
-      "options": ["light armor", "medium armor"],
+      "options": [
+        "light armor",
+        "medium armor"
+      ],
       "count": 2
     },
     "sunlight sensitivity": {
-      "type": "none",
-      "description": "Disadvantage on Wisdom (Perception) checks in direct sunlight."
+      "type": "none"
     },
     "powerful build": {
-      "type": "none",
-      "description": "Carrying capacity is doubled."
+      "type": "none"
     },
     "relentless endurance": {
-      "type": "none",
-      "description": "When reduced to 0 HP, can drop to 1 HP instead once per long rest."
+      "type": "none"
     },
     "hellfire resistance": {
       "type": "resistance",
@@ -149,25 +178,31 @@
     "infernal legacy": {
       "type": "innate",
       "spellLevels": {
-        "1": ["taumaturgy"],
-        "3": ["hellish rebuke"],
-        "5": ["darkness"]
+        "1": [
+          "taumaturgy"
+        ],
+        "3": [
+          "hellish rebuke"
+        ],
+        "5": [
+          "darkness"
+        ]
       },
       "ability": "charisma"
     },
     "mask of the wild": {
-      "type": "none",
-      "description": "You can attempt to hide when only lightly obscured by foliage, heavy rain, mist, or snow."
+      "type": "none"
     },
     "natural illusionist": {
       "type": "cantrips",
-      "options": ["Minor Illusion"],
+      "options": [
+        "Minor Illusion"
+      ],
       "count": 1,
       "ability": "intelligence"
     },
     "artificer's lore": {
-      "type": "none",
-      "description": "Whenever you make an Intelligence check related to magical, alchemical, or technological items, double your proficiency bonus."
+      "type": "none"
     },
     "stout resilience": {
       "type": "resistance",
@@ -201,7 +236,14 @@
     "human stat bonus": {
       "type": "stat",
       "value": 1,
-      "options": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],
+      "options": [
+        "strength",
+        "dexterity",
+        "constitution",
+        "intelligence",
+        "wisdom",
+        "charisma"
+      ],
       "count": 2
     },
     "+1 proficiency": {

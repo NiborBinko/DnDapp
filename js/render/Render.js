@@ -133,6 +133,7 @@ function renderProficienciesStage() {
     if (!classData) { grid.innerHTML = '<p>Select a class first.</p>'; return; }
     
     let html = '';
+    const profs = classData.proficiencies || {};
     
     // Skills - all in one list, auto-granted increase limit
     const skillOptions = classData.proficiencies?.skills?.options || [];
@@ -189,49 +190,129 @@ function renderProficienciesStage() {
     
     // Note: +1 Proficiency from race just increases maxSkills above, no separate block needed
     
-    // Class default proficiencies - Armor by category
-    const profs = classData.proficiencies || {};
-    const armorCategories = ['light armor', 'medium armor', 'heavy armor', 'shields'];
-    armorCategories.forEach(cat => {
-        if (profs.armor?.includes(cat)) {
-            const isLocked = profs.armor?.includes(cat);
-            html += `<div class="section-header">${cat.replace(/^\w/, c => c.toUpperCase())}</div><div class="checkbox-grid">`;
-            html += `<label class="checkbox-item locked" data-tooltip-id="${cat}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${cat.replace(' armor', '')} 🔒</label>`;
-            html += '</div>';
+    // ===== CONSOLIDATED ARMOR BLOCK =====
+    const allArmor = [];
+    const armorSources = {};  // { "light": "Class: Fighter", "shields": "Race: Dwarf - Dwarven Armor Training" }
+    
+    // Class armor
+    if (profs.armor) {
+        profs.armor.forEach(a => {
+            if (!allArmor.includes(a)) {
+                allArmor.push(a);
+                armorSources[a] = `Class: ${classData.name}`;
+            }
+        });
+    }
+    
+    // Race armor from featureChoices (proficiencyType: "armor")
+    Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+        if (choice?.type === 'proficiency' && choice?.proficiencyType === 'armor') {
+            const selected = choice.selected?.filter(s => s !== null) || [];
+            const granted = selected.length > 0
+                ? selected
+                : (choice.count === (choice.options?.length || 0) ? (choice.options || []) : []);
+
+            granted.forEach(opt => {
+                if (!allArmor.includes(opt)) {
+                    allArmor.push(opt);
+                }
+                // Track source: use feature name for tooltip
+                const raceName = window.racesData?.[userSelection.race]?.name || userSelection.race;
+                const featureLabel = choice.featureName || key;
+                if (!armorSources[opt]) {
+                    armorSources[opt] = `Race: ${raceName} - ${featureLabel}`;
+                }
+            });
         }
     });
     
-    // Weapons by category - need to detect from available options
-    const weaponDescriptions = window.descriptions?.proficiencies?.weapons || {};
-    const allWeapons = profs.weapons || [];
-    // Group by category (simple, martial)
-    const simpleWeapons = allWeapons.filter(w => {
-        const desc = weaponDescriptions[w.toLowerCase()];
-        return desc && desc.toLowerCase().includes('simple');
-    });
-    const martialWeapons = allWeapons.filter(w => {
-        const desc = weaponDescriptions[w.toLowerCase()];
-        return desc && desc.toLowerCase().includes('martial');
-    });
-    const otherWeapons = allWeapons.filter(w => 
-        !simpleWeapons.includes(w) && !martialWeapons.includes(w)
-    );
+    if (allArmor.length > 0) {
+        html += `<div class="section-header">Armor</div><div class="checkbox-grid">`;
+        allArmor.forEach(armor => {
+            const source = armorSources[armor] || 'Unknown';
+            const isClassSource = source.startsWith('Class:');
+            html += `<label class="checkbox-item locked" 
+                data-tooltip-id="${armor}" 
+                data-tooltip-type="proficiency" 
+                data-origin="${source}"
+                ><input type="checkbox" checked disabled>${armor} ${isClassSource ? '🔒' : '🔒'}</label>`;
+        });
+        html += '</div>';
+    }
     
-    if (simpleWeapons.length > 0) {
-        html += `<div class="section-header">Simple Weapons</div><div class="checkbox-grid">`;
-        html += simpleWeapons.map(w => `<label class="checkbox-item locked" data-tooltip-id="${w}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${w} 🔒</label>`).join('');
-        html += '</div>';
+    // ===== CONSOLIDATED WEAPONS BLOCK =====
+    const allWeapons = [];
+    const weaponSources = {};
+    
+    // Class weapons
+    if (profs.weapons) {
+        profs.weapons.forEach(w => {
+            if (!allWeapons.includes(w)) {
+                allWeapons.push(w);
+                weaponSources[w] = `Class: ${classData.name}`;
+            }
+        });
     }
-    if (martialWeapons.length > 0) {
-        html += `<div class="section-header">Martial Weapons</div><div class="checkbox-grid">`;
-        html += martialWeapons.map(w => `<label class="checkbox-item locked" data-tooltip-id="${w}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${w} 🔒</label>`).join('');
-        html += '</div>';
-    }
-    if (otherWeapons.length > 0) {
+    
+    // Race weapons from featureChoices (proficiencyType: "weapon")
+    Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+        if (choice?.type === 'proficiency' && choice?.proficiencyType === 'weapon') {
+            const selected = choice.selected?.filter(s => s !== null) || [];
+            const granted = selected.length > 0
+                ? selected
+                : (choice.count === (choice.options?.length || 0) ? (choice.options || []) : []);
+
+            granted.forEach(opt => {
+                if (!allWeapons.includes(opt)) {
+                    allWeapons.push(opt);
+                }
+                const raceName = window.racesData?.[userSelection.race]?.name || userSelection.race;
+                const featureLabel = choice.featureName || key;
+                if (!weaponSources[opt]) {
+                    weaponSources[opt] = `Race: ${raceName} - ${featureLabel}`;
+                }
+            });
+        }
+    });
+    
+    if (allWeapons.length > 0) {
         html += `<div class="section-header">Weapons</div><div class="checkbox-grid">`;
-        html += otherWeapons.map(w => `<label class="checkbox-item locked" data-tooltip-id="${w}" data-tooltip-type="proficiency" data-origin="Class: ${classData.name}"><input type="checkbox" checked disabled>${w} 🔒</label>`).join('');
+        allWeapons.forEach(weapon => {
+            const source = weaponSources[weapon] || 'Unknown';
+            const isClassSource = source.startsWith('Class:');
+            html += `<label class="checkbox-item locked" 
+                data-tooltip-id="${weapon}" 
+                data-tooltip-type="proficiency" 
+                data-origin="${source}"
+                ><input type="checkbox" checked disabled>${weapon} ${isClassSource ? '🔒' : '🔒'}</label>`;
+        });
         html += '</div>';
     }
+
+    // ===== TOOLS BLOCK (race/class feature choices) =====
+    Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+        if (choice?.type !== 'proficiency' || choice?.proficiencyType !== 'tool') return;
+
+        const selectedItems = choice.selected?.filter(s => s !== null) || [];
+        const canSelect = selectedItems.length < (choice.count || 1);
+        const raceName = window.racesData?.[userSelection.race]?.name || userSelection.race;
+        const featureLabel = choice.featureName || key;
+        const source = `Race: ${raceName} - ${featureLabel}`;
+        const choiceKeyArg = JSON.stringify(key);
+
+        html += `<div class="section-header">Tools (${selectedItems.length}/${choice.count || 1})</div><div class="checkbox-grid">`;
+        (choice.options || []).forEach(tool => {
+            const isSelected = selectedItems.includes(tool);
+            const disabled = !canSelect && !isSelected ? 'disabled' : '';
+            const toolArg = JSON.stringify(tool);
+            html += `<label class="checkbox-item ${isSelected ? 'selected' : ''} ${disabled}" 
+                data-tooltip-id="${tool}" 
+                data-tooltip-type="proficiency" 
+                data-origin="${source}"
+                ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice(${choiceKeyArg}, ${toolArg})">${tool}</label>`;
+        });
+        html += '</div>';
+    });
     
     // Saving Throws
     if (profs.savingThrows?.length) {

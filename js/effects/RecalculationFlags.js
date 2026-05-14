@@ -223,6 +223,9 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
     if (existingEntry) {
         // Preserve existing selections - don't overwrite!
         const existingChoice = existingEntry[1];
+        if (!existingChoice.featureName) {
+            existingChoice.featureName = feature.name;
+        }
         return existingChoice.selected?.filter(s => s !== null) || null;
     }
     
@@ -236,6 +239,7 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
             options: availableOptions,
             type: type,
             source: feature.source,
+            featureName: feature.name,
             ...extraFields
         };
         selections = getEffectSelections(effect, availableOptions, key);
@@ -248,6 +252,7 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
             selected: selections,
             options: availableOptions,
             type: type,
+            featureName: feature.name,
             ...extraFields
         };
     }
