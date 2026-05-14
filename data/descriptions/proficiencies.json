@@ -1,10 +1,11 @@
 {
   "armor": {
-    "light armor": "Padded, Leather, Studded Leather - AC 11-12. No skill needed to wear.",
-    "medium armor": "Hide, Chain Shirt, Scale Mail, Breastplate, Half Plate - AC 13-15. DEX requirement for some.",
-    "heavy armor": "Ring Mail, Chain Mail, Splint, Plate - AC 14-18. STR requirement. Cannot use Stealth.",
+    "light": "Padded, Leather, Studded Leather - AC 11-12. No skill needed to wear.",
+    "medium": "Hide, Chain Shirt, Scale Mail, Breastplate, Half Plate - AC 13-15. DEX requirement for some.",
+    "heavy": "Ring Mail, Chain Mail, Splint, Plate - AC 14-18. STR requirement. Cannot use Stealth.",
     "shields": "+2 AC. Requires one free hand. Can be used with any armor."
   },
+
   "weapons": {
     "simple weapons": "Clubs, Daggers, Greatclubs, Handaxes, Javelins, Light hammers, Maces, Quarterstaffs, Sickles, Spears, Unarmed strikes, Shortbows, Slings, Light crossbows. Basic weapons available to all.",
     "martial weapons": "Longswords, Battleaxes, Warhammers, Greataxes, Greatswords, Longbows, Heavy crossbows, Rapiers, Scimitars, Tridents, Polearms. Better weapons requiring training.",
