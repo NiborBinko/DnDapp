@@ -370,6 +370,7 @@ function recalcMaxHp() {
 function recalcProficiencies() {
     characterSheet.proficiencies = { skills: [], weapons: [], armor: [], tools: [], savingThrows: [] };
     window.raceSkillLimitBonus = 0;  // Reset first, then calculate
+    window.raceFeatLimitBonus = 0;
     
     if (userSelection.class) {
         const cls = window.classesData[userSelection.class];
@@ -459,6 +460,12 @@ function recalcProficiencies() {
         characterSheet.features.forEach(feature => {
             const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
             if (effect?.type === 'feat') {
+                // +1 Feat style bonus: no options means increase feat capacity only
+                if (!effect.options || effect.options.length === 0) {
+                    window.raceFeatLimitBonus = (window.raceFeatLimitBonus || 0) + (effect.count || 0);
+                    return;
+                }
+
                 // If options is empty, populate with all available feats
                 const availableOptions = (effect.options && effect.options.length > 0) 
                     ? effect.options 

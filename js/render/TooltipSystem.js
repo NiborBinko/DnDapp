@@ -53,6 +53,11 @@ function getTooltipDescription(id, type) {
     if (type === 'ability') {
         return fromMap(window.descriptions?.classAbilities, id);
     }
+
+    // Class options (subclass/fighting style/etc.)
+    if (type === 'class-option') {
+        return fromMap(window.descriptions?.classOptions, id);
+    }
     
     // Feats
     if (type === 'feat') {

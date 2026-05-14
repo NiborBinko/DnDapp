@@ -87,6 +87,21 @@ function getMaxSkillProficiencies() {
     return classMax + raceBonus;
 }
 
+function getFeatCapacityBonus() {
+    const fromChoices = Object.values(userSelection.featureChoices || {}).reduce((sum, choice) => {
+        if (choice?.type !== 'feat') return sum;
+        const optionsLen = choice.options?.length || 0;
+        const count = choice.count || 0;
+        if (optionsLen === 0 && count > 0) return sum + count;
+        return sum;
+    }, 0);
+    return fromChoices + (window.raceFeatLimitBonus || 0);
+}
+
+function getMaxFeatsAllowed() {
+    return Math.floor((userSelection.lvl || 1) / 4) + getFeatCapacityBonus();
+}
+
 function toggleSkill(skillName) {
     const idx = userSelection.selectedSkills.indexOf(skillName);
     const maxAllowed = getMaxSkillProficiencies();
@@ -123,7 +138,7 @@ function toggleFeat(featName) {
     if (idx > -1) {
         userSelection.feats.splice(idx, 1);
     } else {
-        const maxFeats = Math.floor(userSelection.lvl / 4);
+        const maxFeats = getMaxFeatsAllowed();
         if (userSelection.feats.length < maxFeats) {
             userSelection.feats.push(featName);
         }
@@ -146,12 +161,10 @@ function selectClassOption(groupName, optionId) {
 // ===== Feature Choices (Generic) =====
 
 function selectFeatureChoice(choiceKey, value) {
-    console.log('selectFeatureChoice called:', choiceKey, value);
     if (!userSelection.featureChoices) {
         userSelection.featureChoices = {};
     }
     const choice = userSelection.featureChoices[choiceKey];
-    console.log('choice:', choice);
     if (!choice) return;
 
     const existingIndex = choice.selected.indexOf(value);
@@ -191,6 +204,8 @@ window.toggleSkill = toggleSkill;
 window.toggleFeat = toggleFeat;
 window.selectClassOption = selectClassOption;
 window.selectFeatureChoice = selectFeatureChoice;
+window.getFeatCapacityBonus = getFeatCapacityBonus;
+window.getMaxFeatsAllowed = getMaxFeatsAllowed;
 
 window.userSelection = userSelection;
 window.resetUserSelection = resetUserSelection;

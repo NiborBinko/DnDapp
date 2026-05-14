@@ -49,16 +49,45 @@ function canProceed() {
             return true;
         }
         case 4: {
-            // All required skills must be selected
+            // Skills: all required user-pick skills must be selected
             const classData = window.classesData[userSelection.class];
             const requiredCount = classData?.proficiencies?.skills?.count || 2;
-            if (userSelection.selectedSkills.length < requiredCount) return false;
+
+            const raceAutoSkills = [];
+            Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+                if (choice?.type === 'proficiency' && choice?.proficiencyType === 'skill') {
+                    const selected = choice.selected?.filter(s => s !== null) || [];
+                    if (selected.length === choice.count && selected.length > 0) {
+                        selected.forEach(skill => raceAutoSkills.push(skill));
+                    }
+                }
+            });
+
+            const userPickedSkills = (userSelection.selectedSkills || []).filter(s => !raceAutoSkills.includes(s));
+            if (userPickedSkills.length < requiredCount) return false;
+
+            // Proficiency choices (tool/skill/etc.) that require selection must be complete
+            const pendingProficiencyChoices = Object.entries(userSelection.featureChoices || {}).filter(([key, choice]) => {
+                if (choice?.type !== 'proficiency') return false;
+                const optionsLen = choice.options?.length || 0;
+                if (optionsLen === 0) return false;
+                // Auto-granted sets (count === options.length) are not pending user choices
+                return (choice.count || 0) < optionsLen && !isChoiceComplete(key);
+            });
+
+            if (pendingProficiencyChoices.length > 0) return false;
             return true;
         }
         case 5: {
             // All pending feature choices must be completed
             // Check Human bonus stat choice is complete
             if (userSelection.race === 'human' && !isChoiceComplete('human stat bonus')) return false;
+
+            const maxFeats = (typeof getMaxFeatsAllowed === 'function')
+                ? getMaxFeatsAllowed()
+                : Math.floor((userSelection.lvl || 1) / 4);
+            if ((userSelection.feats || []).length !== maxFeats) return false;
+
             // Check class options at current level are selected
             if (userSelection.class) {
                 const cls = window.classesData[userSelection.class];

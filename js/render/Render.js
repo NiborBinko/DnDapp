@@ -289,9 +289,15 @@ function renderProficienciesStage() {
         html += '</div>';
     }
 
-    // ===== TOOLS BLOCK (race/class feature choices) =====
+    // ===== SELECTABLE PROFICIENCY CHOICES (featureChoices) =====
     Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
-        if (choice?.type !== 'proficiency' || choice?.proficiencyType !== 'tool') return;
+        if (choice?.type !== 'proficiency') return;
+
+        const options = choice.options || [];
+        if (options.length === 0) return;
+
+        // Auto-granted sets (count === options.length) are already represented above.
+        if ((choice.count || 0) >= options.length) return;
 
         const selectedItems = choice.selected?.filter(s => s !== null) || [];
         const canSelect = selectedItems.length < (choice.count || 1);
@@ -299,17 +305,18 @@ function renderProficienciesStage() {
         const featureLabel = choice.featureName || key;
         const source = `Race: ${raceName} - ${featureLabel}`;
         const choiceKeyArg = JSON.stringify(key);
+        const profLabel = choice.proficiencyType ? `${choice.proficiencyType[0].toUpperCase()}${choice.proficiencyType.slice(1)}s` : 'Proficiencies';
 
-        html += `<div class="section-header">Tools (${selectedItems.length}/${choice.count || 1})</div><div class="checkbox-grid">`;
-        (choice.options || []).forEach(tool => {
-            const isSelected = selectedItems.includes(tool);
+        html += `<div class="section-header">${profLabel} (${selectedItems.length}/${choice.count || 1})</div><div class="checkbox-grid">`;
+        options.forEach(item => {
+            const isSelected = selectedItems.includes(item);
             const disabled = !canSelect && !isSelected ? 'disabled' : '';
-            const toolArg = JSON.stringify(tool);
+            const itemArg = JSON.stringify(item);
             html += `<label class="checkbox-item ${isSelected ? 'selected' : ''} ${disabled}" 
-                data-tooltip-id="${tool}" 
+                data-tooltip-id="${item}" 
                 data-tooltip-type="proficiency" 
                 data-origin="${source}"
-                ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice(${choiceKeyArg}, ${toolArg})">${tool}</label>`;
+                ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} data-choice-key=${choiceKeyArg} data-choice-value=${itemArg} data-choice-handler="feature-proficiency">${item}</label>`;
         });
         html += '</div>';
     });
@@ -327,6 +334,19 @@ function renderProficienciesStage() {
     // Helper to expand category to individual items (kept for Armor/Weapons if needed later)
     
     grid.innerHTML = html;
+    bindFeatureProficiencyChoiceHandlers(grid);
+}
+
+function bindFeatureProficiencyChoiceHandlers(root) {
+    if (!root) return;
+    root.querySelectorAll('input[data-choice-handler="feature-proficiency"]').forEach(input => {
+        input.addEventListener('change', function() {
+            const choiceKey = this.getAttribute('data-choice-key');
+            const value = this.getAttribute('data-choice-value');
+            if (!choiceKey || !value) return;
+            selectFeatureChoice(choiceKey, value);
+        });
+    });
 }
 
 function renderFeaturesFeats() {
@@ -403,58 +423,21 @@ function renderFeaturesFeats() {
             }
         }
         
-        // Generic choices (from featureChoices)
-        if (userSelection.featureChoices) {
-            Object.entries(userSelection.featureChoices).forEach(([key, choice]) => {
-                if (!choice || !choice.options || choice.options.length === 0) return;
-                
-                const selectedItems = choice.selected?.filter(s => s !== null) || [];
-                const filledCount = selectedItems.length;
-                
-                let title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-                if (choice.type === 'proficiency') title = `+1 ${choice.proficiencyType} (Choose ${choice.count})`;
-                else if (choice.type === 'stat') title = `+1 ${choice.count} Stat(s)`;
-                else if (choice.type === 'feat') title = `+1 Feat`;
-                else if (choice.type === 'cantrips') title = `Choose ${choice.count} Cantrip(s)`;
-                
-                // For stat and proficiency in Stage 5: show as display-only (selected items only)
-                if (choice.type === 'stat' || choice.type === 'proficiency') {
-                    if (filledCount > 0) {
-                        html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
-                        selectedItems.filter(s => s !== null).forEach(sel => {
-                            html += `<label class="checkbox-item selected" data-tooltip-id="${sel}" data-tooltip-type="${choice.type}" data-origin="${title}"><input type="checkbox" checked disabled>${sel}</label>`;
-                        });
-                        html += '</div>';
-                    }
-                } else {
-                    // For other types (feat, cantrips): show selectable
-                    const canSelect = filledCount < choice.count;
-                    html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
-                    choice.options.forEach(opt => {
-                        const isSelected = selectedItems.includes(opt);
-                        const disabled = !canSelect && !isSelected ? 'disabled' : '';
-                        const displayName = typeof opt === 'string' ? opt : opt.name || opt;
-                        html += `<label class="checkbox-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''}" 
-                            data-tooltip-id="${displayName}" 
-                            data-tooltip-type="${choice.type === 'feat' ? 'feat' : (choice.type === 'stat' ? 'stat' : 'proficiency')}" 
-                            data-origin="${title}"
-                            ><input type="checkbox" ${isSelected ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${key}', '${displayName}')">${displayName}</label>`;
-                    });
-                    html += '</div>';
-                }
-            });
-        }
-        
+        // Do not render featureChoices recap in Step 5.
+        // Step 5 intentionally shows ability/feature names only via Race Abilities and Class Features.
+
         abilitiesGrid.innerHTML = html;
     }
 
     if (featsGrid) {
         const feats = Object.keys(window.descriptions?.feats || {});
-        const maxFeats = Math.floor(userSelection.lvl / 4);
+        const maxFeats = (typeof getMaxFeatsAllowed === 'function')
+            ? getMaxFeatsAllowed()
+            : Math.floor((userSelection.lvl || 1) / 4);
         const note = document.getElementById('feats-note');
         if (note) note.textContent = maxFeats > 0 ? `Select ${maxFeats - userSelection.feats.length} feat(s)` : 'Feats at lvl 4, 8, 12, 16, 19';
 
-        let html = '<div class="feats-list">';
+        let html = `<div class="section-header">Feats (${userSelection.feats.length}/${maxFeats})</div>`;
         html += feats.map(feat => {
             const isSel = userSelection.feats.includes(feat);
             const isDis = !isSel && userSelection.feats.length >= maxFeats;
@@ -464,7 +447,6 @@ function renderFeaturesFeats() {
                 data-origin="Feat"
                 ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleFeat('${feat}')">${feat}</label>`;
         }).join('');
-        html += '</div>';
         featsGrid.innerHTML = html;
     }
 }
@@ -526,6 +508,7 @@ function updateNextButton() {
     if (stage === 1) btnId = 'btn-choose-race-next';
     else if (stage === 2) btnId = 'btn-choose-class-next';
     else if (stage === 3) btnId = 'btn-ability-scores-next';
+    else if (stage === 4) btnId = 'btn-proficiencies-next';
     else return;
     
     const btn = document.getElementById(btnId);
