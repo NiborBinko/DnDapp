@@ -1,403 +1,993 @@
 {
-  "fightingStyle": {
-    "Archery": {
-      "type": "none",
-      "target": "rangedAttack",
-      "value": 2
-    },
-    "Defense": {
-      "type": "none",
-      "value": 1,
-      "condition": "wearingArmor"
-    },
-    "Dueling": {
-      "type": "none",
-      "target": "meleeOneHanded",
-      "value": 2
-    },
-    "Great Weapon Fighting": {
-      "type": "none",
-      "target": "damageDie",
-      "minimum": 2
-    },
-    "Protection": {
-      "type": "none",
-      "effect": "disadvantage",
-      "target": "attackRoll",
-      "condition": "allyWithin5ft"
-    },
-    "Two-Weapon Fighting": {
-      "type": "none",
-      "target": "damage",
-      "includeModifier": true
-    }
-  },
-  "Bard College": {
-    "College of Lore": {
-      "type": "none",
-      "skillCount": 3
-    },
-    "College of Valor": {
-      "type": "none",
-      "weapons": [
-        "martial weapons"
-      ],
-      "combatInspiration": true
-    },
-    "College of Swords": {
-      "type": "none",
-      "weapons": [
-        "scimitars",
-        "shortswords",
-        "longswords",
-        "rapiers",
-        "hand crossbows"
-      ],
-      "bladeFlourish": true
-    },
-    "College of Whispers": {
-      "type": "none"
-    }
-  },
-  "Divine Domain": {
-    "Knowledge Domain": {
-      "type": "none",
-      "skillCount": 2,
-      "spells": [
-        "guidance",
-        "mending"
-      ]
-    },
-    "Life Domain": {
-      "type": "none",
-      "value": 2,
-      "layOnHandsMulti": 2
-    },
-    "Light Domain": {
-      "type": "none",
-      "spells": [
-        "burning-hands",
-        "flaming-sphere"
-      ],
-      "radiantRebuke": true
-    },
-    "Nature Domain": {
-      "type": "none",
-      "spells": [
-        "charm-person",
-        "speak-with-animals"
-      ],
-      "animalCompanion": true
-    },
-    "Tempest Domain": {
-      "type": "none",
-      "spells": [
-        "fog-cloud",
-        "shocking-grasp"
-      ],
-      "wrathOfTheStorm": true
-    },
-    "Trickery Domain": {
-      "type": "none",
-      "spells": [
-        "charm-person",
-        "disguise-self"
-      ],
-      "mirrorImage": true
-    },
-    "War Domain": {
-      "type": "none",
-      "warPriest": true
-    }
-  },
-  "Druid Circle": {
-    "Circle of the Land": {
-      "type": "none",
-      "spellsByTerrain": {
-        "Arctic": [
-          "hold-person",
-          "melfs-acid-arrow"
+  "options": {
+    "abjurer": {
+      "id": "abjurer",
+      "displayName": "School of Abjuration",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "abjuration-savant",
+          "arcane-ward"
         ],
-        "Coast": [
-          "mirror-image",
-          "water-walk"
+        "6": [
+          "projected-ward"
         ],
-        "Desert": [
-          "blur",
-          "silence"
+        "10": [
+          "improved-abjuration"
         ],
-        "Forest": [
-          "barkskin",
-          "shine"
-        ],
-        "Grassland": [
-          "invisibility",
-          "pass-without-trace"
-        ],
-        "Mountain": [
-          "spider-climb",
-          "wall-of-stone"
-        ],
-        "Swamp": [
-          "acid-arrow",
-          "dimension-door"
-        ],
-        "Underdark": [
-          "greater-invisibility",
-          "mass-suggestion"
+        "14": [
+          "spell-resistance"
         ]
       }
     },
-    "Circle of the Moon": {
-      "type": "none",
-      "crIncrease": 1,
-      "combatWildShape": true
+    "ancients": {
+      "id": "ancients",
+      "displayName": "Oath of the Ancients",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "oath-spells-ancients",
+          "channel-divinity-natures-wrath",
+          "channel-divinity-turn-the-faithless"
+        ],
+        "7": [
+          "aura-of-warding"
+        ],
+        "15": [
+          "undying-sentinel"
+        ],
+        "20": [
+          "elder-champion"
+        ]
+      }
     },
-    "Circle of the Shepherd": {
-      "type": "none",
-      "summonSpirit": true,
-      "beastSpeech": true
+    "arcaneTrickster": {
+      "id": "arcaneTrickster",
+      "displayName": "Arcane Trickster",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "spellcasting-arcane-trickster",
+          "mage-hand-legerdemain"
+        ],
+        "9": [
+          "magical-ambush"
+        ],
+        "13": [
+          "versatile-trickster"
+        ],
+        "17": [
+          "spell-thief"
+        ]
+      }
     },
-    "Circle of Dreams": {
+    "archery": {
+      "id": "archery",
+      "displayName": "Archery",
       "type": "none",
-      "balmOfTheGlam": true
-    }
-  },
-  "Martial Archetype": {
-    "Champion": {
-      "type": "none",
-      "remarkableAthlete": true,
-      "criticalRange": 19
+      "features": {
+        "1": [
+          "fighting-style-archery"
+        ]
+      }
     },
-    "Battle Master": {
-      "type": "none",
-      "maneuversKnown": 6,
-      "superiorityDie": "d8",
-      "diceUses": 4
+    "archfey": {
+      "id": "archfey",
+      "displayName": "The Archfey",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "fey-presence"
+        ],
+        "6": [
+          "misty-escape"
+        ],
+        "10": [
+          "beguiling-defenses"
+        ],
+        "14": [
+          "dark-delirium"
+        ]
+      }
     },
-    "Eldritch Knight": {
-      "type": "none",
-      "spellList": "wizard",
-      "bondedWeapon": true
-    }
-  },
-  "Monastic Tradition": {
-    "Way of the Open Hand": {
-      "type": "none"
+    "assassin": {
+      "id": "assassin",
+      "displayName": "Assassin",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "bonus-proficiencies-assassin",
+          "assassinate"
+        ],
+        "9": [
+          "infiltration-expertise"
+        ],
+        "13": [
+          "impostor"
+        ],
+        "17": [
+          "death-strike"
+        ]
+      }
     },
-    "Way of Shadow": {
-      "type": "none",
-      "shadowStep": true,
-      "darkness": true
+    "battleMaster": {
+      "id": "battleMaster",
+      "displayName": "Battle Master",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "combat-superiority",
+          "student-of-war"
+        ],
+        "7": [
+          "know-your-enemy"
+        ],
+        "10": [
+          "improved-combat-superiority"
+        ],
+        "15": [
+          "relentless"
+        ]
+      }
     },
-    "Way of the Four Elements": {
-      "type": "none"
+    "beastMaster": {
+      "id": "beastMaster",
+      "displayName": "Beast Master",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "rangers-companion"
+        ],
+        "7": [
+          "exceptional-training"
+        ],
+        "11": [
+          "bestial-fury"
+        ],
+        "15": [
+          "share-spells"
+        ]
+      }
     },
-    "Way of the Long Death": {
-      "type": "none",
-      "hourOfReaping": true
+    "berserker": {
+      "id": "berserker",
+      "displayName": "Path of the Berserker",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "frenzy"
+        ],
+        "6": [
+          "mindless-rage"
+        ],
+        "10": [
+          "intimidating-presence"
+        ],
+        "14": [
+          "retaliation"
+        ]
+      }
     },
-    "Way of the Drunken Master": {
+    "blade": {
+      "id": "blade",
+      "displayName": "Pact of the Blade",
       "type": "none",
-      "drunkardsFall": true
-    }
-  },
-  "Otherworldly Patron": {
-    "The Archfey": {
-      "type": "none",
-      "feyPresence": true,
-      "mistyEscape": true
+      "features": {
+        "1": [
+          "pact-boon-blade"
+        ]
+      }
     },
-    "The Fiend": {
+    "careful": {
+      "id": "careful",
+      "displayName": "Careful Spell",
       "type": "none",
-      "darksOwnBlessing": true,
-      "hurlThroughHell": true
+      "features": {
+        "1": [
+          "metamagic-careful-spell"
+        ]
+      }
     },
-    "The Great Old One": {
+    "chain": {
+      "id": "chain",
+      "displayName": "Pact of the Chain",
       "type": "none",
-      "awakenedMind": true,
-      "entropicWard": true
-    }
-  },
-  "Primal Path": {
-    "Path of the Berserker": {
-      "type": "none",
-      "frenzy": true,
-      "intimidatingPresence": true
+      "features": {
+        "1": [
+          "pact-boon-chain"
+        ]
+      }
     },
-    "Path of the Totem Warrior": {
-      "type": "none",
-      "aspectOfTheBeast": true,
-      "spiritSeeker": true
+    "champion": {
+      "id": "champion",
+      "displayName": "Champion",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "improved-critical"
+        ],
+        "7": [
+          "remarkable-athlete"
+        ],
+        "10": [
+          "additional-fighting-style"
+        ],
+        "15": [
+          "superior-critical"
+        ],
+        "18": [
+          "survivor"
+        ]
+      }
     },
-    "Path of the Storm Herald": {
-      "type": "none",
-      "stormAura": true
+    "conjurer": {
+      "id": "conjurer",
+      "displayName": "School of Conjuration",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "conjuration-savant",
+          "minor-conjuration"
+        ],
+        "6": [
+          "benign-transposition"
+        ],
+        "10": [
+          "focused-conjuration"
+        ],
+        "14": [
+          "durable-summons"
+        ]
+      }
     },
-    "Path of the Zealot": {
+    "defense": {
+      "id": "defense",
+      "displayName": "Defense",
       "type": "none",
-      "divineFury": true,
-      "rageBeyondDeath": true
-    }
-  },
-  "Ranger Archetype": {
-    "Hunter": {
-      "type": "none",
-      "colossusSlayer": true,
-      "giantKiller": true,
-      "hordeBreaker": true
+      "features": {
+        "1": [
+          "fighting-style-defense"
+        ]
+      }
     },
-    "Beast Master": {
-      "type": "none",
-      "beastName": "primal-companion"
+    "devotion": {
+      "id": "devotion",
+      "displayName": "Oath of Devotion",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "oath-spells-devotion",
+          "channel-divinity-sacred-weapon",
+          "channel-divinity-turn-the-unholy"
+        ],
+        "7": [
+          "aura-of-devotion"
+        ],
+        "15": [
+          "purity-of-spirit"
+        ],
+        "20": [
+          "holy-nimbus"
+        ]
+      }
     },
-    "Gloom Stalker": {
+    "distant": {
+      "id": "distant",
+      "displayName": "Distant Spell",
       "type": "none",
-      "stalkersFlurry": true,
-      "shadowyDodge": true
+      "features": {
+        "1": [
+          "metamagic-distant-spell"
+        ]
+      }
     },
-    "Horizon Walker": {
-      "type": "none",
-      "planarWarrior": true
+    "diviner": {
+      "id": "diviner",
+      "displayName": "School of Divination",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "divination-savant",
+          "portent"
+        ],
+        "6": [
+          "expert-divination"
+        ],
+        "10": [
+          "third-eye"
+        ],
+        "14": [
+          "greater-portent"
+        ]
+      }
     },
-    "Monster Slayer": {
-      "type": "none",
-      "slayersPrey": true,
-      "magicAwareness": true
-    }
-  },
-  "Roguish Archetype": {
-    "Thief": {
-      "type": "none",
-      "fastHands": true,
-      "secondStoryWorker": true,
-      "useMagicDevice": true
+    "draconic": {
+      "id": "draconic",
+      "displayName": "Draconic Bloodline",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "draconic-resilience"
+        ],
+        "6": [
+          "elemental-affinity"
+        ],
+        "14": [
+          "dragon-wings"
+        ],
+        "18": [
+          "draconic-presence"
+        ]
+      }
     },
-    "Assassin": {
+    "dueling": {
+      "id": "dueling",
+      "displayName": "Dueling",
       "type": "none",
-      "assassinate": true,
-      "infiltration": true
+      "features": {
+        "1": [
+          "fighting-style-dueling"
+        ]
+      }
     },
-    "Inquisitive": {
-      "type": "none",
-      "eyeForDetail": true,
-      "unerringEye": true
+    "eldritchKnight": {
+      "id": "eldritchKnight",
+      "displayName": "Eldritch Knight",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "weapon-bond",
+          "spellcasting-eldritch-knight"
+        ],
+        "7": [
+          "war-magic"
+        ],
+        "10": [
+          "eldritch-strike"
+        ],
+        "15": [
+          "arcane-charge"
+        ],
+        "18": [
+          "improved-war-magic"
+        ]
+      }
     },
-    "Mastermind": {
+    "empowered": {
+      "id": "empowered",
+      "displayName": "Empowered Spell",
       "type": "none",
-      "masterTactics": true,
-      "inspireAllies": true
+      "features": {
+        "1": [
+          "metamagic-empowered-spell"
+        ]
+      }
     },
-    "Scout": {
-      "type": "none",
-      "skirmisher": true,
-      "ambushMaster": true
+    "enchantrer": {
+      "id": "enchantrer",
+      "displayName": "School of Enchantment",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "enchantment-savant",
+          "hypnotic-gaze"
+        ],
+        "6": [
+          "instinctive-charm"
+        ],
+        "10": [
+          "split-enchantment"
+        ],
+        "14": [
+          "alter-memories"
+        ]
+      }
     },
-    "Swashbuckler": {
-      "type": "none",
-      "fancyFootwork": true,
-      "rakishAudacity": true
-    }
-  },
-  "Sacred Oath": {
-    "Oath of Devotion": {
-      "type": "none",
-      "auraOfDevotion": true,
-      "holyNimbus": true
+    "evoker": {
+      "id": "evoker",
+      "displayName": "School of Evocation",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "evocation-savant",
+          "sculpt-spells"
+        ],
+        "6": [
+          "potent-cantrip"
+        ],
+        "10": [
+          "empowered-evocation"
+        ],
+        "14": [
+          "overchannel"
+        ]
+      }
     },
-    "Oath of the Ancients": {
+    "extended": {
+      "id": "extended",
+      "displayName": "Extended Spell",
       "type": "none",
-      "auraOfWarding": true,
-      "natureWrath": true
+      "features": {
+        "1": [
+          "metamagic-extended-spell"
+        ]
+      }
     },
-    "Oath of Vengeance": {
-      "type": "none",
-      "smiteOfVengeance": true,
-      "relentlessAvenger": true
+    "fiend": {
+      "id": "fiend",
+      "displayName": "The Fiend",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "dark-ones-blessing"
+        ],
+        "6": [
+          "dark-ones-own-luck"
+        ],
+        "10": [
+          "fiendish-resilience"
+        ],
+        "14": [
+          "hurl-through-hell"
+        ]
+      }
     },
-    "Oath of Conquest": {
-      "type": "none",
-      "conqueringSmite": true,
-      "auraOfConquest": true
+    "fourElements": {
+      "id": "fourElements",
+      "displayName": "Way of the Four Elements",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "disciple-of-the-elements"
+        ],
+        "6": [
+          "elemental-attunement-6"
+        ],
+        "11": [
+          "elemental-attunement-11"
+        ],
+        "17": [
+          "elemental-attunement-17"
+        ]
+      }
     },
-    "Oath of Redemption": {
-      "type": "none",
-      "emissaryOfRedemption": true,
-      "protectiveSpirit": true
-    }
-  },
-  "Sorcerous Origin": {
-    "Wild Magic": {
-      "type": "none",
-      "wildMagicSurge": true,
-      "bendLuck": true,
-      "spell Bombardment": true
+    "greatOldOne": {
+      "id": "greatOldOne",
+      "displayName": "The Great Old One",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "awakened-mind"
+        ],
+        "6": [
+          "entropic-ward"
+        ],
+        "10": [
+          "thought-shield"
+        ],
+        "14": [
+          "create-thrall"
+        ]
+      }
     },
-    "Draconic Bloodline": {
+    "greatWeapon": {
+      "id": "greatWeapon",
+      "displayName": "Great Weapon Fighting",
       "type": "none",
-      "draconicResilience": true,
-      "elementalAffinity": true
+      "features": {
+        "1": [
+          "fighting-style-great-weapon-fighting"
+        ]
+      }
     },
-    "Storm Sorcerer": {
+    "heightened": {
+      "id": "heightened",
+      "displayName": "Heightened Spell",
       "type": "none",
-      "heartOfTheStorm": true,
-      "stormGuide": true
+      "features": {
+        "1": [
+          "metamagic-heightened-spell"
+        ]
+      }
     },
-    "Divine Soul": {
-      "type": "none",
-      "healingLight": true,
-      "enhancedFlare": true
-    }
-  },
-  "Arcane Tradition": {
-    "School of Abjuration": {
-      "type": "none",
-      "arcaneWard": true
+    "hunter": {
+      "id": "hunter",
+      "displayName": "Hunter",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "hunters-prey"
+        ],
+        "7": [
+          "defensive-tactics"
+        ],
+        "11": [
+          "multiattack"
+        ],
+        "15": [
+          "superior-hunters-defense"
+        ]
+      }
     },
-    "School of Conjuration": {
-      "type": "none",
-      "minorConjuration": true,
-      "benignTransposition": true
+    "illusionist": {
+      "id": "illusionist",
+      "displayName": "School of Illusion",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "illusion-savant",
+          "improved-minor-illusion"
+        ],
+        "6": [
+          "malleable-illusions"
+        ],
+        "10": [
+          "illusory-self"
+        ],
+        "14": [
+          "illusory-reality"
+        ]
+      }
     },
-    "School of Divination": {
-      "type": "none",
-      "portent": true
+    "knowledge": {
+      "id": "knowledge",
+      "displayName": "Knowledge Domain",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "domain-spells-knowledge",
+          "blessings-of-knowledge"
+        ],
+        "2": [
+          "channel-divinity-knowledge-of-the-ages"
+        ],
+        "6": [
+          "read-thoughts"
+        ],
+        "8": [
+          "potent-spellcasting"
+        ],
+        "17": [
+          "visions-of-the-past"
+        ]
+      }
     },
-    "School of Enchantment": {
-      "type": "none",
-      "hypnoticGaze": true,
-      "splitEnchantments": true
+    "land": {
+      "id": "land",
+      "displayName": "Circle of the Land",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "bonus-cantrip-land",
+          "natural-recovery",
+          "circle-spells-land"
+        ],
+        "6": [
+          "lands-stride"
+        ],
+        "10": [
+          "natures-ward"
+        ],
+        "14": [
+          "natures-sanctuary"
+        ]
+      }
     },
-    "School of Evocation": {
-      "type": "none",
-      "sculptSpells": true
+    "life": {
+      "id": "life",
+      "displayName": "Life Domain",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "domain-spells-life",
+          "bonus-proficiency-life",
+          "disciple-of-life"
+        ],
+        "2": [
+          "channel-divinity-preserve-life"
+        ],
+        "6": [
+          "blessed-healer"
+        ],
+        "8": [
+          "divine-strike-life"
+        ],
+        "17": [
+          "supreme-healing"
+        ]
+      }
     },
-    "School of Illusion": {
-      "type": "none",
-      "improvedMinorIllusion": true,
-      "malleableIllusions": true
+    "light": {
+      "id": "light",
+      "displayName": "Light Domain",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "domain-spells-light",
+          "bonus-cantrip-light",
+          "warding-flare"
+        ],
+        "2": [
+          "channel-divinity-radiance-of-the-dawn"
+        ],
+        "6": [
+          "improved-flare"
+        ],
+        "8": [
+          "potent-spellcasting-light"
+        ],
+        "17": [
+          "corona-of-light"
+        ]
+      }
     },
-    "School of Necromancy": {
-      "type": "none",
-      "grimHarvest": true
+    "lore": {
+      "id": "lore",
+      "displayName": "College of Lore",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "bonus-proficiencies",
+          "cutting-words"
+        ],
+        "6": [
+          "additional-magical-secrets"
+        ],
+        "14": [
+          "peerless-skill"
+        ]
+      }
     },
-    "School of Transmutation": {
-      "type": "none",
-      "transmutersStone": true
-    }
-  },
-  "Pact Boon": {
-    "Pact of the Chain": {
-      "type": "none",
-      "familiarType": "sprite"
+    "moon": {
+      "id": "moon",
+      "displayName": "Circle of the Moon",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "combat-wild-shape",
+          "circle-forms"
+        ],
+        "6": [
+          "primal-strike"
+        ],
+        "10": [
+          "elemental-wild-shape"
+        ],
+        "14": [
+          "thousand-forms"
+        ]
+      }
     },
-    "Pact of the Blade": {
-      "type": "none",
-      "weaponBond": true
+    "nature": {
+      "id": "nature",
+      "displayName": "Nature Domain",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "domain-spells-nature",
+          "acolyte-of-nature",
+          "bonus-proficiency-nature"
+        ],
+        "2": [
+          "channel-divinity-charm-animals-and-plants"
+        ],
+        "6": [
+          "dampen-elements"
+        ],
+        "8": [
+          "divine-strike-nature"
+        ],
+        "17": [
+          "master-of-nature"
+        ]
+      }
     },
-    "Pact of the Tome": {
+    "necromancer": {
+      "id": "necromancer",
+      "displayName": "School of Necromancy",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "necromancy-savant",
+          "grim-harvest"
+        ],
+        "6": [
+          "undead-thralls"
+        ],
+        "10": [
+          "inured-to-undead"
+        ],
+        "14": [
+          "command-undead"
+        ]
+      }
+    },
+    "openHand": {
+      "id": "openHand",
+      "displayName": "Way of the Open Hand",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "open-hand-technique"
+        ],
+        "6": [
+          "wholeness-of-body"
+        ],
+        "11": [
+          "tranquility"
+        ],
+        "17": [
+          "quivering-palm"
+        ]
+      }
+    },
+    "protection": {
+      "id": "protection",
+      "displayName": "Protection",
       "type": "none",
-      "bookOfShadows": true
+      "features": {
+        "1": [
+          "fighting-style-protection"
+        ]
+      }
+    },
+    "quickened": {
+      "id": "quickened",
+      "displayName": "Quickened Spell",
+      "type": "none",
+      "features": {
+        "1": [
+          "metamagic-quickened-spell"
+        ]
+      }
+    },
+    "shadow": {
+      "id": "shadow",
+      "displayName": "Way of Shadow",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "shadow-arts"
+        ],
+        "6": [
+          "shadow-step"
+        ],
+        "11": [
+          "cloak-of-shadows"
+        ],
+        "17": [
+          "opportunist"
+        ]
+      }
+    },
+    "subtle": {
+      "id": "subtle",
+      "displayName": "Subtle Spell",
+      "type": "none",
+      "features": {
+        "1": [
+          "metamagic-subtle-spell"
+        ]
+      }
+    },
+    "tempest": {
+      "id": "tempest",
+      "displayName": "Tempest Domain",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "domain-spells-tempest",
+          "bonus-proficiencies-tempest",
+          "wrath-of-the-storm"
+        ],
+        "2": [
+          "channel-divinity-destructive-wrath"
+        ],
+        "6": [
+          "thunderbolt-strike"
+        ],
+        "8": [
+          "divine-strike-tempest"
+        ],
+        "17": [
+          "stormborn"
+        ]
+      }
+    },
+    "thief": {
+      "id": "thief",
+      "displayName": "Thief",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "fast-hands",
+          "second-story-work"
+        ],
+        "9": [
+          "supreme-sneak"
+        ],
+        "13": [
+          "use-magic-device"
+        ],
+        "17": [
+          "thiefs-reflexes"
+        ]
+      }
+    },
+    "tome": {
+      "id": "tome",
+      "displayName": "Pact of the Tome",
+      "type": "none",
+      "features": {
+        "1": [
+          "pact-boon-tome"
+        ]
+      }
+    },
+    "totem": {
+      "id": "totem",
+      "displayName": "Path of the Totem Warrior",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "spirit-seeker",
+          "totem-spirit"
+        ],
+        "6": [
+          "aspect-of-the-beast"
+        ],
+        "10": [
+          "spirit-walker"
+        ],
+        "14": [
+          "totemic-attunement"
+        ]
+      }
+    },
+    "transmuter": {
+      "id": "transmuter",
+      "displayName": "School of Transmutation",
+      "type": "progressive",
+      "features": {
+        "2": [
+          "transmutation-savant",
+          "minor-alchemy"
+        ],
+        "6": [
+          "transmuters-stone"
+        ],
+        "10": [
+          "shapechanger"
+        ],
+        "14": [
+          "master-transmuter"
+        ]
+      }
+    },
+    "trickery": {
+      "id": "trickery",
+      "displayName": "Trickery Domain",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "domain-spells-trickery",
+          "blessing-of-the-trickster"
+        ],
+        "2": [
+          "channel-divinity-invoke-duplicity"
+        ],
+        "6": [
+          "channel-divinity-cloak-of-shadows"
+        ],
+        "8": [
+          "divine-strike-trickery"
+        ],
+        "17": [
+          "improved-duplicity"
+        ]
+      }
+    },
+    "twin": {
+      "id": "twin",
+      "displayName": "Twinned Spell",
+      "type": "none",
+      "features": {
+        "1": [
+          "metamagic-twinned-spell"
+        ]
+      }
+    },
+    "twoWeapon": {
+      "id": "twoWeapon",
+      "displayName": "Two-Weapon Fighting",
+      "type": "none",
+      "features": {
+        "1": [
+          "fighting-style-two-weapon-fighting"
+        ]
+      }
+    },
+    "valor": {
+      "id": "valor",
+      "displayName": "College of Valor",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "bonus-proficiencies",
+          "combat-inspiration"
+        ],
+        "6": [
+          "extra-attack-valor"
+        ],
+        "14": [
+          "battle-magic"
+        ]
+      }
+    },
+    "vengeance": {
+      "id": "vengeance",
+      "displayName": "Oath of Vengeance",
+      "type": "progressive",
+      "features": {
+        "3": [
+          "oath-spells-vengeance",
+          "channel-divinity-abjure-enemy",
+          "channel-divinity-vow-of-enmity"
+        ],
+        "7": [
+          "relenless-avenger"
+        ],
+        "15": [
+          "soul-of-vengeance"
+        ],
+        "20": [
+          "avenging-angel"
+        ]
+      }
+    },
+    "war": {
+      "id": "war",
+      "displayName": "War Domain",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "domain-spells-war",
+          "bonus-proficiencies-war",
+          "war-priest"
+        ],
+        "2": [
+          "channel-divinity-guided-strike"
+        ],
+        "6": [
+          "channel-divinity-war-gods-blessing"
+        ],
+        "8": [
+          "divine-strike-war"
+        ],
+        "17": [
+          "avatar-of-battle"
+        ]
+      }
+    },
+    "wildMagic": {
+      "id": "wildMagic",
+      "displayName": "Wild Magic",
+      "type": "progressive",
+      "features": {
+        "1": [
+          "wild-magic-surge",
+          "tides-of-chaos"
+        ],
+        "6": [
+          "bend-luck"
+        ],
+        "14": [
+          "controlled-chaos"
+        ],
+        "18": [
+          "spell-bombardment"
+        ]
+      }
     }
   }
 }

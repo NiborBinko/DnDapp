@@ -1,0 +1,667 @@
+{
+  "effects": {
+    "abjuration-savant": {
+      "type": "none"
+    },
+    "acolyte-of-nature": {
+      "type": "none"
+    },
+    "additional-fighting-style": {
+      "type": "none"
+    },
+    "additional-magical-secrets": {
+      "type": "none"
+    },
+    "alter-memories": {
+      "type": "none"
+    },
+    "arcane-charge": {
+      "type": "none"
+    },
+    "arcane-ward": {
+      "type": "none"
+    },
+    "aspect-of-the-beast": {
+      "type": "none"
+    },
+    "assassinate": {
+      "type": "none"
+    },
+    "aura-of-devotion": {
+      "type": "none"
+    },
+    "aura-of-warding": {
+      "type": "none"
+    },
+    "avatar-of-battle": {
+      "type": "none"
+    },
+    "avenging-angel": {
+      "type": "none"
+    },
+    "awakened-mind": {
+      "type": "none"
+    },
+    "battle-magic": {
+      "type": "none"
+    },
+    "beguiling-defenses": {
+      "type": "none"
+    },
+    "bend-luck": {
+      "type": "none"
+    },
+    "benign-transposition": {
+      "type": "none"
+    },
+    "bestial-fury": {
+      "type": "none"
+    },
+    "blessed-healer": {
+      "type": "none"
+    },
+    "blessing-of-the-trickster": {
+      "type": "none"
+    },
+    "blessings-of-knowledge": {
+      "type": "none"
+    },
+    "bonus-cantrip-land": {
+      "type": "none"
+    },
+    "bonus-cantrip-light": {
+      "type": "none"
+    },
+    "bonus-proficiencies": {
+      "type": "none"
+    },
+    "bonus-proficiencies-assassin": {
+      "type": "none"
+    },
+    "bonus-proficiencies-tempest": {
+      "type": "none"
+    },
+    "bonus-proficiencies-war": {
+      "type": "none"
+    },
+    "bonus-proficiency-life": {
+      "type": "none"
+    },
+    "bonus-proficiency-nature": {
+      "type": "none"
+    },
+    "channel-divinity-abjure-enemy": {
+      "type": "none"
+    },
+    "channel-divinity-charm-animals-and-plants": {
+      "type": "none"
+    },
+    "channel-divinity-cloak-of-shadows": {
+      "type": "none"
+    },
+    "channel-divinity-destructive-wrath": {
+      "type": "none"
+    },
+    "channel-divinity-guided-strike": {
+      "type": "none"
+    },
+    "channel-divinity-invoke-duplicity": {
+      "type": "none"
+    },
+    "channel-divinity-knowledge-of-the-ages": {
+      "type": "none"
+    },
+    "channel-divinity-natures-wrath": {
+      "type": "none"
+    },
+    "channel-divinity-preserve-life": {
+      "type": "none"
+    },
+    "channel-divinity-radiance-of-the-dawn": {
+      "type": "none"
+    },
+    "channel-divinity-sacred-weapon": {
+      "type": "none"
+    },
+    "channel-divinity-turn-the-faithless": {
+      "type": "none"
+    },
+    "channel-divinity-turn-the-unholy": {
+      "type": "none"
+    },
+    "channel-divinity-vow-of-enmity": {
+      "type": "none"
+    },
+    "channel-divinity-war-gods-blessing": {
+      "type": "none"
+    },
+    "circle-forms": {
+      "type": "none"
+    },
+    "circle-spells-land": {
+      "type": "none"
+    },
+    "cloak-of-shadows": {
+      "type": "none"
+    },
+    "combat-inspiration": {
+      "type": "none"
+    },
+    "combat-superiority": {
+      "type": "none"
+    },
+    "combat-wild-shape": {
+      "type": "none"
+    },
+    "command-undead": {
+      "type": "none"
+    },
+    "conjuration-savant": {
+      "type": "none"
+    },
+    "controlled-chaos": {
+      "type": "none"
+    },
+    "corona-of-light": {
+      "type": "none"
+    },
+    "create-thrall": {
+      "type": "none"
+    },
+    "cutting-words": {
+      "type": "none"
+    },
+    "dampen-elements": {
+      "type": "none"
+    },
+    "dark-delirium": {
+      "type": "none"
+    },
+    "dark-ones-blessing": {
+      "type": "none"
+    },
+    "dark-ones-own-luck": {
+      "type": "none"
+    },
+    "death-strike": {
+      "type": "none"
+    },
+    "defensive-tactics": {
+      "type": "none"
+    },
+    "disciple-of-life": {
+      "type": "none"
+    },
+    "disciple-of-the-elements": {
+      "type": "none"
+    },
+    "divination-savant": {
+      "type": "none"
+    },
+    "divine-strike-life": {
+      "type": "none"
+    },
+    "divine-strike-nature": {
+      "type": "none"
+    },
+    "divine-strike-tempest": {
+      "type": "none"
+    },
+    "divine-strike-trickery": {
+      "type": "none"
+    },
+    "divine-strike-war": {
+      "type": "none"
+    },
+    "domain-spells-knowledge": {
+      "type": "none"
+    },
+    "domain-spells-life": {
+      "type": "none"
+    },
+    "domain-spells-light": {
+      "type": "none"
+    },
+    "domain-spells-nature": {
+      "type": "none"
+    },
+    "domain-spells-tempest": {
+      "type": "none"
+    },
+    "domain-spells-trickery": {
+      "type": "none"
+    },
+    "domain-spells-war": {
+      "type": "none"
+    },
+    "draconic-presence": {
+      "type": "none"
+    },
+    "draconic-resilience": {
+      "type": "none"
+    },
+    "dragon-wings": {
+      "type": "none"
+    },
+    "durable-summons": {
+      "type": "none"
+    },
+    "elder-champion": {
+      "type": "none"
+    },
+    "eldritch-strike": {
+      "type": "none"
+    },
+    "elemental-affinity": {
+      "type": "none"
+    },
+    "elemental-attunement-11": {
+      "type": "none"
+    },
+    "elemental-attunement-17": {
+      "type": "none"
+    },
+    "elemental-attunement-6": {
+      "type": "none"
+    },
+    "elemental-wild-shape": {
+      "type": "none"
+    },
+    "empowered-evocation": {
+      "type": "none"
+    },
+    "enchantment-savant": {
+      "type": "none"
+    },
+    "entropic-ward": {
+      "type": "none"
+    },
+    "evocation-savant": {
+      "type": "none"
+    },
+    "exceptional-training": {
+      "type": "none"
+    },
+    "expert-divination": {
+      "type": "none"
+    },
+    "extra-attack-valor": {
+      "type": "none"
+    },
+    "fast-hands": {
+      "type": "none"
+    },
+    "fey-presence": {
+      "type": "none"
+    },
+    "fiendish-resilience": {
+      "type": "none"
+    },
+    "fighting-style-archery": {
+      "type": "none"
+    },
+    "fighting-style-defense": {
+      "type": "none"
+    },
+    "fighting-style-dueling": {
+      "type": "none"
+    },
+    "fighting-style-great-weapon-fighting": {
+      "type": "none"
+    },
+    "fighting-style-protection": {
+      "type": "none"
+    },
+    "fighting-style-two-weapon-fighting": {
+      "type": "none"
+    },
+    "focused-conjuration": {
+      "type": "none"
+    },
+    "frenzy": {
+      "type": "none"
+    },
+    "greater-portent": {
+      "type": "none"
+    },
+    "grim-harvest": {
+      "type": "none"
+    },
+    "holy-nimbus": {
+      "type": "none"
+    },
+    "hunters-prey": {
+      "type": "none"
+    },
+    "hurl-through-hell": {
+      "type": "none"
+    },
+    "hypnotic-gaze": {
+      "type": "none"
+    },
+    "illusion-savant": {
+      "type": "none"
+    },
+    "illusory-reality": {
+      "type": "none"
+    },
+    "illusory-self": {
+      "type": "none"
+    },
+    "impostor": {
+      "type": "none"
+    },
+    "improved-abjuration": {
+      "type": "none"
+    },
+    "improved-combat-superiority": {
+      "type": "none"
+    },
+    "improved-critical": {
+      "type": "none"
+    },
+    "improved-duplicity": {
+      "type": "none"
+    },
+    "improved-flare": {
+      "type": "none"
+    },
+    "improved-minor-illusion": {
+      "type": "none"
+    },
+    "improved-war-magic": {
+      "type": "none"
+    },
+    "infiltration-expertise": {
+      "type": "none"
+    },
+    "instinctive-charm": {
+      "type": "none"
+    },
+    "intimidating-presence": {
+      "type": "none"
+    },
+    "inured-to-undead": {
+      "type": "none"
+    },
+    "know-your-enemy": {
+      "type": "none"
+    },
+    "lands-stride": {
+      "type": "none"
+    },
+    "mage-hand-legerdemain": {
+      "type": "none"
+    },
+    "magical-ambush": {
+      "type": "none"
+    },
+    "malleable-illusions": {
+      "type": "none"
+    },
+    "master-of-nature": {
+      "type": "none"
+    },
+    "master-transmuter": {
+      "type": "none"
+    },
+    "metamagic-careful-spell": {
+      "type": "none"
+    },
+    "metamagic-distant-spell": {
+      "type": "none"
+    },
+    "metamagic-empowered-spell": {
+      "type": "none"
+    },
+    "metamagic-extended-spell": {
+      "type": "none"
+    },
+    "metamagic-heightened-spell": {
+      "type": "none"
+    },
+    "metamagic-quickened-spell": {
+      "type": "none"
+    },
+    "metamagic-subtle-spell": {
+      "type": "none"
+    },
+    "metamagic-twinned-spell": {
+      "type": "none"
+    },
+    "mindless-rage": {
+      "type": "none"
+    },
+    "minor-alchemy": {
+      "type": "none"
+    },
+    "minor-conjuration": {
+      "type": "none"
+    },
+    "misty-escape": {
+      "type": "none"
+    },
+    "multiattack": {
+      "type": "none"
+    },
+    "natural-recovery": {
+      "type": "none"
+    },
+    "natures-sanctuary": {
+      "type": "none"
+    },
+    "natures-ward": {
+      "type": "none"
+    },
+    "necromancy-savant": {
+      "type": "none"
+    },
+    "oath-spells-ancients": {
+      "type": "none"
+    },
+    "oath-spells-devotion": {
+      "type": "none"
+    },
+    "oath-spells-vengeance": {
+      "type": "none"
+    },
+    "open-hand-technique": {
+      "type": "none"
+    },
+    "opportunist": {
+      "type": "none"
+    },
+    "overchannel": {
+      "type": "none"
+    },
+    "pact-boon-blade": {
+      "type": "none"
+    },
+    "pact-boon-chain": {
+      "type": "none"
+    },
+    "pact-boon-tome": {
+      "type": "none"
+    },
+    "peerless-skill": {
+      "type": "none"
+    },
+    "portent": {
+      "type": "none"
+    },
+    "potent-cantrip": {
+      "type": "none"
+    },
+    "potent-spellcasting": {
+      "type": "none"
+    },
+    "potent-spellcasting-light": {
+      "type": "none"
+    },
+    "primal-strike": {
+      "type": "none"
+    },
+    "projected-ward": {
+      "type": "none"
+    },
+    "purity-of-spirit": {
+      "type": "none"
+    },
+    "quivering-palm": {
+      "type": "none"
+    },
+    "rangers-companion": {
+      "type": "none"
+    },
+    "read-thoughts": {
+      "type": "none"
+    },
+    "relenless-avenger": {
+      "type": "none"
+    },
+    "relentless": {
+      "type": "none"
+    },
+    "remarkable-athlete": {
+      "type": "none"
+    },
+    "retaliation": {
+      "type": "none"
+    },
+    "sculpt-spells": {
+      "type": "none"
+    },
+    "second-story-work": {
+      "type": "none"
+    },
+    "shadow-arts": {
+      "type": "none"
+    },
+    "shadow-step": {
+      "type": "none"
+    },
+    "shapechanger": {
+      "type": "none"
+    },
+    "share-spells": {
+      "type": "none"
+    },
+    "soul-of-vengeance": {
+      "type": "none"
+    },
+    "spell-bombardment": {
+      "type": "none"
+    },
+    "spell-resistance": {
+      "type": "none"
+    },
+    "spell-thief": {
+      "type": "none"
+    },
+    "spellcasting-arcane-trickster": {
+      "type": "none"
+    },
+    "spellcasting-eldritch-knight": {
+      "type": "none"
+    },
+    "spirit-seeker": {
+      "type": "none"
+    },
+    "spirit-walker": {
+      "type": "none"
+    },
+    "split-enchantment": {
+      "type": "none"
+    },
+    "stormborn": {
+      "type": "none"
+    },
+    "student-of-war": {
+      "type": "none"
+    },
+    "superior-critical": {
+      "type": "none"
+    },
+    "superior-hunters-defense": {
+      "type": "none"
+    },
+    "supreme-healing": {
+      "type": "none"
+    },
+    "supreme-sneak": {
+      "type": "none"
+    },
+    "survivor": {
+      "type": "none"
+    },
+    "thiefs-reflexes": {
+      "type": "none"
+    },
+    "third-eye": {
+      "type": "none"
+    },
+    "thought-shield": {
+      "type": "none"
+    },
+    "thousand-forms": {
+      "type": "none"
+    },
+    "thunderbolt-strike": {
+      "type": "none"
+    },
+    "tides-of-chaos": {
+      "type": "none"
+    },
+    "totem-spirit": {
+      "type": "none"
+    },
+    "totemic-attunement": {
+      "type": "none"
+    },
+    "tranquility": {
+      "type": "none"
+    },
+    "transmutation-savant": {
+      "type": "none"
+    },
+    "transmuters-stone": {
+      "type": "none"
+    },
+    "undead-thralls": {
+      "type": "none"
+    },
+    "undying-sentinel": {
+      "type": "none"
+    },
+    "use-magic-device": {
+      "type": "none"
+    },
+    "versatile-trickster": {
+      "type": "none"
+    },
+    "visions-of-the-past": {
+      "type": "none"
+    },
+    "war-magic": {
+      "type": "none"
+    },
+    "war-priest": {
+      "type": "none"
+    },
+    "warding-flare": {
+      "type": "none"
+    },
+    "weapon-bond": {
+      "type": "none"
+    },
+    "wholeness-of-body": {
+      "type": "none"
+    },
+    "wild-magic-surge": {
+      "type": "none"
+    },
+    "wrath-of-the-storm": {
+      "type": "none"
+    }
+  }
+}
