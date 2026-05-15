@@ -114,7 +114,13 @@ function recalcSavingThrows() {
 function getFeatureEffect(name, source) {
     const key = name?.toLowerCase();
     if (!key) return null;
-    const effects = window[source + 'EffectsData'];
+    const sourceMap = {
+        race: window.raceEffectsData,
+        class: window.classEffectsData,
+        feat: window.featEffectsData,
+        subclass: window.subclassEffectsData
+    };
+    const effects = sourceMap[source] || window[source + 'EffectsData'];
     return effects?.effects?.[key] || null;
 }
 
@@ -252,6 +258,7 @@ function ensureFeatureChoice(feature, effect, availableOptions, type, extraField
             selected: selections,
             options: availableOptions,
             type: type,
+            source: feature.source,
             featureName: feature.name,
             ...extraFields
         };
@@ -527,6 +534,27 @@ function recalcFeatures() {
                 }));
             }
         }
+
+        // Add selected class-option derived features (progressive by level)
+        const optionDefs = window.classOptionEffectsData?.options || {};
+        const selected = userSelection.selectedFeatureChoices || {};
+        Object.values(selected).forEach(optionId => {
+            const def = optionDefs[optionId];
+            if (!def?.features) return;
+
+            Object.entries(def.features).forEach(([lvlStr, featureIds]) => {
+                const lvl = parseInt(lvlStr, 10);
+                if (Number.isNaN(lvl) || userSelection.lvl < lvl) return;
+                (featureIds || []).forEach(fid => {
+                    characterSheet.features.push({
+                        name: fid,
+                        source: 'subclass',
+                        sourceId: optionId,
+                        level: lvl
+                    });
+                });
+            });
+        });
     }
     
     // Process features using EffectHandler

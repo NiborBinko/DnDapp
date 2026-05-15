@@ -390,6 +390,20 @@ function renderFeaturesFeats() {
                 }).join('');
                 html += '</div>';
             }
+
+            // Subclass features gained from selected class options (progressive by level)
+            const subclassFeatures = (characterSheet.features || [])
+                .filter(f => f.source === 'subclass' && (f.level || 0) <= currentLvl)
+                .sort((a, b) => (a.level || 0) - (b.level || 0));
+
+            if (subclassFeatures.length > 0) {
+                html += `<div class="section-header">Subclass Features</div><div class="checkbox-grid">`;
+                html += subclassFeatures.map(f => {
+                    const displayName = (f.name || '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    return `<label class="checkbox-item locked" data-tooltip-id="${displayName}" data-tooltip-type="subclass-ability" data-origin="Class Option: ${f.sourceId} (L${f.level})"><input type="checkbox" checked disabled>${displayName} (L${f.level}) 🔒</label>`;
+                }).join('');
+                html += '</div>';
+            }
             
             // Collect options from ALL levels (not just current)
             let allOptions = [];

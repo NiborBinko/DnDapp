@@ -12,8 +12,10 @@ async function loadAllGameData() {
     const classPromises = classIds.map(id => loadJson('data/classes/' + id));
     const otherPromises = [
         loadJson('data/effects/race-effects'), loadJson('data/effects/class-effects'), loadJson('data/effects/feat-effects'),
+        loadJson('data/effects/class-option-effects'), loadJson('data/effects/subclass-effects'),
         loadJson('data/descriptions/stats'), loadJson('data/descriptions/feats'), loadJson('data/descriptions/race-abilities'), loadJson('data/descriptions/proficiencies'),
-        loadJson('data/descriptions/class-abilities'), loadJson('data/descriptions/class-options'), loadJson('data/descriptions/exclusive-groups')
+        loadJson('data/descriptions/class-abilities'), loadJson('data/descriptions/class-options'), loadJson('data/descriptions/exclusive-groups'),
+        loadJson('data/descriptions/subclass-abilities')
     ];
     
     const results = await Promise.all([...racePromises, ...classPromises, ...otherPromises]);
@@ -25,14 +27,17 @@ async function loadAllGameData() {
     window.raceEffectsData = results[rCount + cCount] || {};
     window.classEffectsData = results[rCount + cCount + 1] || {};
     window.featEffectsData = results[rCount + cCount + 2] || {};
+    window.classOptionEffectsData = results[rCount + cCount + 3] || {};
+    window.subclassEffectsData = results[rCount + cCount + 4] || {};
     window.descriptions = {
-        stats: results[rCount + cCount + 3] || {},
-        feats: results[rCount + cCount + 4] || {},
-        raceAbilities: results[rCount + cCount + 5] || {},
-        proficiencies: results[rCount + cCount + 6] || {},
-        classAbilities: results[rCount + cCount + 7] || {},
-        classOptions: results[rCount + cCount + 8] || {},
-        exclusiveGroups: results[rCount + cCount + 9] || {}
+        stats: results[rCount + cCount + 5] || {},
+        feats: results[rCount + cCount + 6] || {},
+        raceAbilities: results[rCount + cCount + 7] || {},
+        proficiencies: results[rCount + cCount + 8] || {},
+        classAbilities: results[rCount + cCount + 9] || {},
+        classOptions: results[rCount + cCount + 10] || {},
+        exclusiveGroups: results[rCount + cCount + 11] || {},
+        subclassAbilities: results[rCount + cCount + 12] || {}
     };
     
     window.racesData = racesData;

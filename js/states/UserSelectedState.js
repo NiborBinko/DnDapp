@@ -29,7 +29,16 @@ function handleRaceSelect(raceId) {
     // Clear race-related selections when changing race
     userSelection.selectedSkills = [];
     userSelection.raceAutoGrantSources = {};
-    userSelection.featureChoices = {};  // Clear race feature choices
+    
+    // Remove race-related feature choices
+    if (userSelection.featureChoices) {
+        Object.keys(userSelection.featureChoices).forEach(key => {
+            if (userSelection.featureChoices[key].source === 'race') {
+                delete userSelection.featureChoices[key];
+            }
+        });
+    }
+    
     triggerRecalc();
     renderChooseRace();
     refreshDebugIfOpen();
@@ -47,6 +56,17 @@ function handleClassSelect(classId) {
     userSelection.subclass = null;
     // Clear class-related selections when changing class (skills are class-dependent)
     userSelection.selectedSkills = [];
+    userSelection.selectedFeatureChoices = {};
+    
+    // Remove class-related feature choices
+    if (userSelection.featureChoices) {
+        Object.keys(userSelection.featureChoices).forEach(key => {
+            if (userSelection.featureChoices[key].source === 'class') {
+                delete userSelection.featureChoices[key];
+            }
+        });
+    }
+    
     triggerRecalc();
     renderChooseClass();
     refreshDebugIfOpen();

@@ -68,6 +68,11 @@ function getTooltipDescription(id, type) {
     if (type === 'race-ability') {
         return fromMap(window.descriptions?.raceAbilities, id);
     }
+
+    // Subclass abilities/features unlocked from class options
+    if (type === 'subclass-ability') {
+        return fromMap(window.descriptions?.subclassAbilities, id);
+    }
     
     return null;
 }
