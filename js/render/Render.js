@@ -1,6 +1,76 @@
 /**
  * Main render module - renders each stage
  */
+
+/**
+ * Returns a kebab-case school-specific feature id (e.g. "projected-ward")
+ * if the chosen subclass option provides one for (class, level, index).
+ * Used to override generic class-JSON placeholders like "Tradition Feature".
+ */
+function getSubclassFeatureOverride(classId, level, index) {
+    const cls = window.classesData?.[classId];
+    if (!cls?.options) return null;
+    const selected = userSelection.selectedFeatureChoices || {};
+    for (const opt of cls.options) {
+        const optionId = selected[opt.exclusiveGroup];
+        if (!optionId) continue;
+        const def = window.classOptionEffectsData?.options?.[optionId];
+        if (!def?.features) continue;
+        const kebabId = def.features[String(level)]?.[index];
+        if (kebabId) return kebabId;
+    }
+    return null;
+}
+
+function kebabToTitle(s) {
+    return (s || '').split('-').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : '').join(' ');
+}
+
+function statLabel(stat) {
+    if (!stat) return '';
+    const map = { strength: 'STR', dexterity: 'DEX', constitution: 'CON', intelligence: 'INT', wisdom: 'WIS', charisma: 'CHA' };
+    return map[stat.toLowerCase()] || stat;
+}
+
+function renderFeatStatChoice(featName, effect, isSelected) {
+    if (!isSelected || !effect) return '';
+    const slots = [];
+    if (effect.type === 'stat' && effect.stat === 'any' && Array.isArray(effect.options)) {
+        slots.push({ key: '', options: effect.options });
+    }
+    if (effect.secondaryStat?.stat === 'any' && Array.isArray(effect.secondaryStat.options)) {
+        slots.push({ key: '__secondary', options: effect.secondaryStat.options });
+    }
+    if (effect.secondary?.type === 'savingThrow' && effect.secondary.ability === 'any' && Array.isArray(effect.secondary.options)) {
+        slots.push({ key: '__secondary-save', options: effect.secondary.options });
+    }
+    if (effect.type === 'savingThrow' && effect.ability === 'any' && Array.isArray(effect.options)) {
+        slots.push({ key: '__save', options: effect.options });
+    }
+    if (!slots.length) return '';
+    const selects = slots.map(slot => {
+        const current = userSelection.featChoices?.[`${featName.toLowerCase()}${slot.key}`]?.stat;
+        const opts = slot.options.map(o => `<option value="${o}" ${current === o ? 'selected' : ''}>${statLabel(o)}</option>`).join('');
+        return `<select data-feat="${featName}" data-slot="${slot.key}" onchange="event.stopPropagation();">${opts}</select>`;
+    }).join(' ');
+    return ` <span class="feat-choice">${selects}</span>`;
+}
+
+function bindFeatStatChoiceHandlers(root) {
+    if (!root) return;
+    root.querySelectorAll('select[data-feat]').forEach(sel => {
+        sel.addEventListener('change', function() {
+            const feat = this.getAttribute('data-feat');
+            const slot = this.getAttribute('data-slot') || '';
+            const key = slot ? `${feat.toLowerCase()}-${slot}` : feat.toLowerCase();
+            if (!userSelection.featChoices) userSelection.featChoices = {};
+            userSelection.featChoices[key] = { stat: this.value };
+            recalculateAll();
+            renderAbilityScores();
+        });
+    });
+}
+
 function renderWelcome() { renderSavedCharactersList(); }
 
 function renderChooseRace() {
@@ -29,7 +99,11 @@ function renderSubraces(subraces) {
     if (!grid) return;
     grid.innerHTML = Object.keys(subraces).map(name => {
         const bonuses = subraces[name].bonuses ? Object.entries(subraces[name].bonuses).map(([s, v]) => `+${v} ${s.slice(0, 3)}`).join(', ') : '';
-        return `<div class="card ${userSelection.subrace === name ? 'selected' : ''}" onclick="handleSubraceSelect('${name}')"><h3>${name}</h3><p>${bonuses}</p></div>`;
+        return `<div class="card ${userSelection.subrace === name ? 'selected' : ''}" 
+            onclick="handleSubraceSelect('${name}')"
+            data-tooltip-id="${name}"
+            data-tooltip-type="race-ability"
+            data-origin="Race: ${userSelection.race}"><h3>${name}</h3><p>${bonuses}</p></div>`;
     }).join('');
 }
 
@@ -106,7 +180,8 @@ function renderAbilityScores() {
             html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
             choice.options.forEach(opt => {
                 const isSelected = selectedItems.includes(opt);
-                const disabled = !canSelect && !isSelected ? 'disabled' : '';
+                const atCap = (characterSheet.stats?.[opt] || 0) >= 20;
+                const disabled = (!canSelect && !isSelected) || atCap ? 'disabled' : '';
                 html += `<label class="checkbox-item ${isSelected ? 'selected' : ''}" 
                     data-tooltip-id="${opt}" 
                     data-tooltip-type="stat" 
@@ -335,6 +410,7 @@ function renderProficienciesStage() {
     
     grid.innerHTML = html;
     bindFeatureProficiencyChoiceHandlers(grid);
+    updateNextButton();
 }
 
 function bindFeatureProficiencyChoiceHandlers(root) {
@@ -372,12 +448,17 @@ function renderFeaturesFeats() {
             // Collect ALL features from levels 1 to currentLevel
             let allFeatures = [];
             let levelsWithFeatures = [];
-            
             for (let lvl = 1; lvl <= currentLvl; lvl++) {
                 const lvlFeatures = cls?.features?.[lvl];
-                if (lvlFeatures?.features?.length) {
-                    lvlFeatures.features.forEach(f => {
-                        allFeatures.push({ name: f, level: lvl });
+                if (lvlFeatures?.features) {
+                    lvlFeatures.features.forEach((f, idx) => {
+                        const override = getSubclassFeatureOverride(userSelection.class, lvl, idx);
+                        if (override) {
+                            const composite = `${kebabToTitle(override)} (${f})`;
+                            allFeatures.push({ name: composite, tooltipId: kebabToTitle(override), level: lvl });
+                        } else {
+                            allFeatures.push({ name: f, level: lvl });
+                        }
                     });
                     levelsWithFeatures.push(lvl);
                 }
@@ -386,7 +467,8 @@ function renderFeaturesFeats() {
             if (allFeatures.length > 0) {
                 html += `<div class="section-header">Class Features (L${levelsWithFeatures.join(', ')})</div><div class="checkbox-grid">`;
                 html += allFeatures.map(f => {
-                    return `<label class="checkbox-item locked" data-tooltip-id="${f.name}" data-tooltip-type="ability" data-origin="Class: ${cls.name} (L${f.level})"><input type="checkbox" checked disabled>${f.name} (L${f.level}) 🔒</label>`;
+                    const tooltipId = f.tooltipId || f.name;
+                    return `<label class="checkbox-item locked" data-tooltip-id="${tooltipId}" data-tooltip-type="ability" data-origin="Class: ${cls.name} (L${f.level})"><input type="checkbox" checked disabled>${f.name} (L${f.level}) 🔒</label>`;
                 }).join('');
                 html += '</div>';
             }
@@ -437,8 +519,20 @@ function renderFeaturesFeats() {
             }
         }
         
-        // Do not render featureChoices recap in Step 5.
-        // Step 5 intentionally shows ability/feature names only via Race Abilities and Class Features.
+            // Render terrain choices (e.g., Circle of the Land)
+            Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+                if (choice?.type !== 'terrain') return;
+                const terrainNames = choice.optionNames || {};
+                const selectedVal = choice.selected?.filter(s => s !== null)?.[0];
+                const title = choice.featureName || 'Choose Terrain';
+                html += `<div class="section-header">${title}</div><div class="checkbox-grid">`;
+                html += choice.options.map(opt => {
+                    const displayName = terrainNames[opt] || opt;
+                    const isSel = selectedVal === opt;
+                    return `<label class="checkbox-item ${isSel ? 'selected' : ''}" data-tooltip-id="Circle Spells Land" data-tooltip-type="subclass-ability"><input type="checkbox" ${isSel ? 'checked' : ''} onchange="selectFeatureChoice('${key}', '${opt}')">${displayName}</label>`;
+                }).join('');
+                html += '</div>';
+            });
 
         abilitiesGrid.innerHTML = html;
     }
@@ -455,14 +549,18 @@ function renderFeaturesFeats() {
         html += feats.map(feat => {
             const isSel = userSelection.feats.includes(feat);
             const isDis = !isSel && userSelection.feats.length >= maxFeats;
-            return `<label class="checkbox-item ${isSel ? 'selected' : ''} ${isDis ? 'disabled' : ''}" 
-                data-tooltip-id="${feat}" 
-                data-tooltip-type="feat" 
+            const effect = window.featEffectsData?.effects?.[feat.toLowerCase()];
+            const choiceUI = renderFeatStatChoice(feat, effect, isSel);
+            return `<label class="checkbox-item ${isSel ? 'selected' : ''} ${isDis ? 'disabled' : ''}"
+                data-tooltip-id="${feat}"
+                data-tooltip-type="feat"
                 data-origin="Feat"
-                ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleFeat('${feat}')">${feat}</label>`;
+                ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleFeat('${feat}')">${feat}${choiceUI}</label>`;
         }).join('');
         featsGrid.innerHTML = html;
+        bindFeatStatChoiceHandlers(featsGrid);
     }
+    updateNextButton();
 }
 
 function renderSpellsStage() {
@@ -470,32 +568,185 @@ function renderSpellsStage() {
     const msg = document.getElementById('spellcaster-message');
     const info = document.getElementById('spell-selection-info');
     if (!grid) return;
+    
+    const prepType = characterSheet.spellPreparationType;
+    const spellListClass = characterSheet.spellListClass || userSelection.class;
+    
+    let html = '';
+    
+    // Innate Spells (render for ALL characters, including non-casters)
+    if (characterSheet.innateSpells?.length > 0) {
+        html += `<div class="section-header">Innate Spells</div><div class="checkbox-grid">`;
+        characterSheet.innateSpells.forEach(spell => {
+            html += `<label class="checkbox-item locked" data-tooltip-id="${spell.name}" data-tooltip-type="spell"><input type="checkbox" checked disabled>${spell.name} 🔒</label>`;
+        });
+        html += '</div>';
+    }
+    
+    // Racial Cantrip Choices (render for ALL characters)
+    Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+        if (choice?.type !== 'cantrips') return;
+        if (!choice.options?.length) return;
+        const selectedItems = (choice.selected || []).filter(s => s !== null);
+        const title = choice.featureName || 'Racial Cantrip';
+        const sourceRace = userSelection.race ? (window.racesData?.[userSelection.race]?.name || userSelection.race) : 'Race';
+        html += `<div class="section-header">${title} (${selectedItems.length}/${choice.count})</div><div class="checkbox-grid">`;
+        choice.options.forEach(cantrip => {
+            const isSel = selectedItems.includes(cantrip);
+            const isDis = !isSel && selectedItems.length >= (choice.count || 1);
+            html += `<label class="checkbox-item ${isSel ? 'selected' : ''} ${isDis ? 'disabled' : ''}"
+                data-tooltip-id="${cantrip}" data-tooltip-type="spell"
+                data-origin="${title} - ${sourceRace}"
+                ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} data-racial-cantrip-key="${key}" data-racial-cantrip-value="${cantrip.replace(/"/g, '&quot;')}">${cantrip}</label>`;
+        });
+        html += '</div>';
+    });
+    
+    // Early return for non-casters — spells grid is done (innate/cantrip already rendered)
     if (!characterSheet.spellcastingAbility) {
         if (msg) { msg.textContent = 'Your class has no spellcasting.'; msg.style.display = 'block'; }
         if (info) info.style.display = 'none';
-        grid.innerHTML = '';
+        grid.innerHTML = html;
+        updateNextButton();
         return;
     }
     if (msg) msg.style.display = 'none';
-    if (info) { info.style.display = 'block'; info.innerHTML = `<p><strong>Spellcasting:</strong> ${characterSheet.spellcastingAbility}</p>`; }
-    grid.innerHTML = '<p>Spell selection coming soon...</p>';
     
+    // Spell Slots
+    const slots = characterSheet.spellSlots || {};
+    const activeSlots = Object.entries(slots).filter(([_, count]) => count > 0);
+    if (activeSlots.length > 0) {
+        html += `<div class="section-header">Spell Slots</div><div class="spell-slots-row">`;
+        activeSlots.forEach(([level, count]) => {
+            html += `<div class="slot-group"><span class="slot-level">L${level}</span>`;
+            for (let i = 0; i < count; i++) {
+                html += `<span class="slot-pip"></span>`;
+            }
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    
+    const innateCount = characterSheet.innateSpells?.length || 0;
+    
+    // Info line
+    if (info) {
+        info.style.display = 'block';
+        let infoHtml = `<p><strong>Spellcasting:</strong> ${characterSheet.spellcastingAbility}`;
+        if (prepType === 'known') infoHtml += ` | <strong>Spells Known:</strong> ${userSelection.selectedSpells.length}/${characterSheet.maxSpellsKnown}`;
+        else if (prepType === 'spellbook') infoHtml += ` | <strong>Spellbook:</strong> ${userSelection.spellbookSpells.length} spells`;
+        else if (prepType === 'prepare') {
+            const castingMod = characterSheet.statModifiers?.[characterSheet.spellcastingAbility] || 0;
+            const clsLevel = userSelection.lvl;
+            const maxPrep = Math.max(0, clsLevel + castingMod);
+            const prepCount = userSelection.preparedSpells.length;
+            const displayText = innateCount > 0 ? `${prepCount}/${maxPrep} (+${innateCount} always prepared)` : `${prepCount}/${maxPrep}`;
+            infoHtml += ` | <strong>Prepared:</strong> ${displayText}`;
+        }
+        infoHtml += ` | <strong>Save DC:</strong> ${characterSheet.spellSaveDC} | <strong>Attack:</strong> +${characterSheet.spellAttackMod}</p>`;
+        info.innerHTML = infoHtml;
+    }
+
+    // Cantrip Selection
+    const maxCantrips = characterSheet.maxCantripsKnown || 0;
+    if (maxCantrips > 0) {
+        const cantrips = getClassSpellList(spellListClass, 0);
+        const selectedCount = userSelection.selectedCantrips.length;
+
+        html += `<div class="section-header">Cantrips (${selectedCount}/${maxCantrips})</div><div class="checkbox-grid">`;
+        cantrips.forEach(cantrip => {
+            const isSel = userSelection.selectedCantrips.includes(cantrip);
+            const isDis = !isSel && selectedCount >= maxCantrips;
+            html += `<label class="checkbox-item ${isSel ? 'selected' : ''} ${isDis ? 'disabled' : ''}"
+                data-tooltip-id="${cantrip}" data-tooltip-type="spell"
+                ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleCantrip('${cantrip.replace(/'/g, "\\'")}')">${cantrip}</label>`;
+        });
+        html += '</div>';
+    }
+    
+    // Spell Selection
+    const maxSpellLevel = Math.max(0, ...Object.entries(slots).filter(([_, c]) => c > 0).map(([l]) => parseInt(l)));
+    if (maxSpellLevel > 0 || prepType === 'spellbook') {
+        const allSpells = [];
+        for (let lvl = 1; lvl <= maxSpellLevel; lvl++) {
+            const spells = getClassSpellList(spellListClass, lvl);
+            spells.forEach(s => allSpells.push({ name: s, level: lvl }));
+        }
+        
+        if (prepType === 'spellbook') {
+            const selectedCount = userSelection.spellbookSpells.length;
+            html += `<div class="section-header">Spellbook Spells (${selectedCount} spells)</div>`;
+            
+            for (let lvl = 1; lvl <= 9; lvl++) {
+                const levelSpells = allSpells.filter(s => s.level === lvl);
+                if (levelSpells.length === 0) continue;
+                
+                html += `<div class="subsection-header">Level ${lvl}</div><div class="checkbox-grid">`;
+                levelSpells.forEach(spell => {
+                    const isSel = userSelection.spellbookSpells.includes(spell.name);
+                    html += `<label class="checkbox-item ${isSel ? 'selected' : ''}" 
+                        data-tooltip-id="${spell.name}" data-tooltip-type="spell"
+                        ><input type="checkbox" ${isSel ? 'checked' : ''} onchange="toggleSpell('${spell.name.replace(/'/g, "\\'")}')">${spell.name}</label>`;
+                });
+                html += '</div>';
+            }
+        } else if (prepType === 'known') {
+            const maxSpells = characterSheet.maxSpellsKnown || 0;
+            const selectedCount = userSelection.selectedSpells.length;
+            html += `<div class="section-header">Spells Known (${selectedCount}/${maxSpells})</div>`;
+            
+            for (let lvl = 1; lvl <= maxSpellLevel; lvl++) {
+                const levelSpells = allSpells.filter(s => s.level === lvl);
+                if (levelSpells.length === 0) continue;
+                
+                html += `<div class="subsection-header">Level ${lvl}</div><div class="checkbox-grid">`;
+                levelSpells.forEach(spell => {
+                    const isSel = userSelection.selectedSpells.includes(spell.name);
+                    const isDis = !isSel && selectedCount >= maxSpells;
+                    html += `<label class="checkbox-item ${isSel ? 'selected' : ''} ${isDis ? 'disabled' : ''}" 
+                        data-tooltip-id="${spell.name}" data-tooltip-type="spell"
+                        ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleSpell('${spell.name.replace(/'/g, "\\'")}')">${spell.name}</label>`;
+                });
+                html += '</div>';
+            }
+        } else if (prepType === 'prepare') {
+            const castingMod = characterSheet.statModifiers?.[characterSheet.spellcastingAbility] || 0;
+            const clsLevel = userSelection.lvl;
+            const maxPrep = Math.max(0, clsLevel + castingMod);
+            const selectedCount = userSelection.preparedSpells.length;
+            html += `<div class="section-header">Prepared Spells (${selectedCount}/${maxPrep})</div>`;
+            
+            for (let lvl = 1; lvl <= maxSpellLevel; lvl++) {
+                const levelSpells = allSpells.filter(s => s.level === lvl);
+                if (levelSpells.length === 0) continue;
+                
+                html += `<div class="subsection-header">Level ${lvl}</div><div class="checkbox-grid">`;
+                levelSpells.forEach(spell => {
+                    const isSel = userSelection.preparedSpells.includes(spell.name);
+                    html += `<label class="checkbox-item ${isSel ? 'selected' : ''}" 
+                        data-tooltip-id="${spell.name}" data-tooltip-type="spell"
+                        ><input type="checkbox" ${isSel ? 'checked' : ''} onchange="toggleSpell('${spell.name.replace(/'/g, "\\'")}')">${spell.name}</label>`;
+                });
+                html += '</div>';
+            }
+        }
+    }
+    
+    grid.innerHTML = html;
+    bindRacialCantripHandlers(grid);
+    updateNextButton();
 }
 
-function renderOverview() {
-    const content = document.getElementById('summary-content');
-    if (!content) return;
-    const race = window.racesData[userSelection.race];
-    const cls = window.classesData[userSelection.class];
-    let html = `<div class="summary-row"><span>Race:</span><span>${race?.name || '-'}</span></div>`;
-    html += `<div class="summary-row"><span>Subrace:</span><span>${userSelection.subrace || '-'}</span></div>`;
-    html += `<div class="summary-row"><span>Class:</span><span>${cls?.name || '-'}</span></div>`;
-    html += `<div class="summary-row"><span>Level:</span><span>${userSelection.lvl}</span></div>`;
-    html += `<div class="summary-row"><strong>Stats</strong></div>`;
-    Object.entries(characterSheet.stats).forEach(([s, v]) => { html += `<div class="summary-row"><span>${s.toUpperCase().slice(0, 3)}</span><span>${v} (${characterSheet.statModifiers[s] >= 0 ? '+' : ''}${characterSheet.statModifiers[s]})</span></div>`; });
-    html += `<div class="summary-row"><strong>HP</strong></div><div class="summary-row"><span>HP:</span><span>${characterSheet.maxHp}</span></div>`;
-    html += `<div class="summary-row"><span>AC:</span><span>${characterSheet.armorClass}</span></div>`;
-    content.innerHTML = html;
+function bindRacialCantripHandlers(root) {
+    if (!root) return;
+    root.querySelectorAll('input[data-racial-cantrip-key]').forEach(input => {
+        input.addEventListener('change', function() {
+            const key = this.getAttribute('data-racial-cantrip-key');
+            const value = this.getAttribute('data-racial-cantrip-value');
+            if (!key || !value) return;
+            selectFeatureChoice(key, value);
+        });
+    });
 }
 
 function renderSavedCharactersList() {
@@ -503,26 +754,32 @@ function renderSavedCharactersList() {
     if (!list) return;
     const saved = getAllSaved();
     if (saved.length === 0) { list.innerHTML = '<p>No saved characters yet.</p>'; return; }
-    list.innerHTML = saved.map((c, i) => `
+    list.innerHTML = saved.map((c, i) => {
+        const raceName = window.racesData?.[c.race]?.name || c.race || 'Unknown';
+        const className = window.classesData?.[c.class]?.name || c.class || 'Unknown';
+        const safeName = String(c.name || 'Unnamed').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        const safeRace = String(raceName).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        const safeClass = String(className).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        return `
         <div class="character-item" data-index="${i}">
-            <div><strong>${c.name || 'Unnamed'}</strong> <span>- Lvl ${c.lvl} ${c.race}</span> <span>[${c.class}]</span></div>
+            <div><strong>${safeName}</strong> <span>- Lvl ${c.lvl} ${safeRace}</span> <span>[${safeClass}]</span></div>
             <div style="display:flex;gap:8px;">
                 <button class="view-btn" onclick="viewCharacter(${i})">View</button>
                 <button class="delete-btn" onclick="confirmDelete(${i})">Delete</button>
             </div>
         </div>
-    `).join('');
+    `;}).join('');
 }
 
 function updateNextButton() {
     const stage = UIState.currentStage;
     let btnId = '';
     
-    // Map stage to correct button ID (stage 0 = welcome, 1 = race, 2 = class, 3 = abilities, etc)
     if (stage === 1) btnId = 'btn-choose-race-next';
     else if (stage === 2) btnId = 'btn-choose-class-next';
     else if (stage === 3) btnId = 'btn-ability-scores-next';
     else if (stage === 4) btnId = 'btn-proficiencies-next';
+    else if (stage === 5) btnId = 'btn-features-feats-next';
     else return;
     
     const btn = document.getElementById(btnId);
@@ -537,6 +794,5 @@ window.renderAbilityScores = renderAbilityScores;
 window.renderProficienciesStage = renderProficienciesStage;
 window.renderFeaturesFeats = renderFeaturesFeats;
 window.renderSpellsStage = renderSpellsStage;
-window.renderOverview = renderOverview;
 window.renderSavedCharactersList = renderSavedCharactersList;
 window.updateNextButton = updateNextButton;

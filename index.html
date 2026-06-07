@@ -93,7 +93,7 @@
             
             <div class="nav">
                 <button class="btn-secondary" onclick="prevStage()">Back</button>
-                <button class="btn-primary" onclick="nextStage()">Next</button>
+                <button class="btn-primary" onclick="nextStage()" id="btn-features-feats-next">Next</button>
             </div>
         </div>
         
@@ -103,20 +103,23 @@
             <p id="spellcaster-message" style="color: var(--text-muted); display: none;"></p>
             <div id="spell-selection-info" style="margin-bottom: 15px; padding: 10px; background: var(--card-bg); border-radius: 8px; display: none;"></div>
             <div id="spells-grid"></div>
-            <div class="nav">
-                <button class="btn-secondary" onclick="prevStage()">Back</button>
-                <button class="btn-primary" onclick="nextStage()">Next</button>
+            <div style="margin-top: 20px;">
+                <input type="text" id="char-name" placeholder="Character Name" style="max-width: 300px; padding: 8px;">
             </div>
-        </div>
-        
-        <!-- Step 7: Overview -->
-        <div class="step" id="step-overview">
-            <h2 class="step-title">Step 7: Character Summary</h2>
-            <input type="text" id="char-name" placeholder="Character Name" style="max-width: 300px;">
-            <div class="summary" id="summary-content"></div>
             <div class="nav">
                 <button class="btn-secondary" onclick="prevStage()">Back</button>
                 <button class="btn-primary" onclick="saveCharacter()">Save Character</button>
+            </div>
+        </div>
+        
+        <!-- View Character Modal (read-only) -->
+        <div class="modal" id="view-character-modal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2>Character Sheet</h2>
+                    <button class="modal-close" onclick="closeViewModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="view-character-content"></div>
             </div>
         </div>
         
@@ -150,9 +153,9 @@
     <!-- Render System -->
     <script src="js/render/TooltipSystem.js"></script>
     <script src="js/render/Render.js"></script>
+    <script src="js/render/ViewCharacterSheet.js"></script>
     
     <!-- Debug -->
-    <script src="js/debug.js"></script>
     <script src="js/renderdebug.js"></script>
     
     <!-- Main App -->

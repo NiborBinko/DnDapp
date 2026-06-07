@@ -2,7 +2,7 @@
  "id": "paladin",
  "name": "Paladin",
  "primaryStat": "strength",
- "spellcastingAbility": "wisdom",
+ "spellcastingAbility": "charisma",
  "desc": "Holy warriors",
  "hitDie": 10,
  "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},
@@ -84,5 +84,5 @@
     "4": ["Aura of Life", "Aura of Purity", "Banishment", "Death Ward", "Locate Creature", "Staggering Smite"],
     "5": ["Banishing Smite", "Circle of Power", "Destructive Smite", "Dispel Evil and Good", "Geas", "Raise Dead"]
   },
- "spells prepared": "WIS + paladin level"
+ "spells prepared": "CHA + paladin level"
 }

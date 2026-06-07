@@ -139,7 +139,71 @@
       "type": "none"
     },
     "circle-spells-land": {
-      "type": "none"
+      "type": "innate",
+      "choiceType": "terrain",
+      "featureName": "Circle of the Land Spells",
+      "count": 1,
+      "options": ["arctic","coast","desert","forest","grassland","mountain","swamp","underdark"],
+      "optionNames": {
+        "arctic": "Arctic",
+        "coast": "Coast",
+        "desert": "Desert",
+        "forest": "Forest",
+        "grassland": "Grassland",
+        "mountain": "Mountain",
+        "swamp": "Swamp",
+        "underdark": "Underdark"
+      },
+      "terrainSpells": {
+        "arctic": {
+          "3": ["Hold Person", "Spike Growth"],
+          "5": ["Sleet Storm", "Slow"],
+          "7": ["Freedom of Movement", "Ice Storm"],
+          "9": ["Commune with Nature", "Cone of Cold"]
+        },
+        "coast": {
+          "3": ["Mirror Image", "Misty Step"],
+          "5": ["Water Breathing", "Water Walk"],
+          "7": ["Control Water", "Freedom of Movement"],
+          "9": ["Conjure Elemental", "Scrying"]
+        },
+        "desert": {
+          "3": ["Blur", "Silence"],
+          "5": ["Create Food and Water", "Protection from Energy"],
+          "7": ["Blight", "Hallucinatory Terrain"],
+          "9": ["Insect Plague", "Wall of Stone"]
+        },
+        "forest": {
+          "3": ["Barkskin", "Spider Climb"],
+          "5": ["Call Lightning", "Plant Growth"],
+          "7": ["Divination", "Freedom of Movement"],
+          "9": ["Commune with Nature", "Tree Stride"]
+        },
+        "grassland": {
+          "3": ["Invisibility", "Pass without Trace"],
+          "5": ["Daylight", "Haste"],
+          "7": ["Divination", "Freedom of Movement"],
+          "9": ["Dream", "Insect Plague"]
+        },
+        "mountain": {
+          "3": ["Spider Climb", "Spike Growth"],
+          "5": ["Lightning Bolt", "Meld into Stone"],
+          "7": ["Stone Shape", "Stoneskin"],
+          "9": ["Passwall", "Wall of Stone"]
+        },
+        "swamp": {
+          "3": ["Darkness", "Melf's Acid Arrow"],
+          "5": ["Water Walk", "Stinking Cloud"],
+          "7": ["Freedom of Movement", "Locate Creature"],
+          "9": ["Insect Plague", "Scrying"]
+        },
+        "underdark": {
+          "3": ["Spider Climb", "Web"],
+          "5": ["Gaseous Form", "Stinking Cloud"],
+          "7": ["Greater Invisibility", "Stone Shape"],
+          "9": ["Cloudkill", "Insect Plague"]
+        }
+      }
     },
     "cloak-of-shadows": {
       "type": "none"
@@ -214,25 +278,186 @@
       "type": "none"
     },
     "domain-spells-knowledge": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Command",
+          "Identify"
+        ],
+        "3": [
+          "Augury",
+          "Suggestion"
+        ],
+        "5": [
+          "Nondetection",
+          "Speak with Dead"
+        ],
+        "7": [
+          "Arcane Eye",
+          "Confusion"
+        ],
+        "9": [
+          "Legend Lore",
+          "Scrying"
+        ]
+      },
+      "ability": "wisdom"
     },
     "domain-spells-life": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Bless",
+          "Cure Wounds"
+        ],
+        "3": [
+          "Lesser Restoration",
+          "Spiritual Weapon"
+        ],
+        "5": [
+          "Beacon of Hope",
+          "Revivify"
+        ],
+        "7": [
+          "Death Ward",
+          "Guardian of Faith"
+        ],
+        "9": [
+          "Mass Cure Wounds",
+          "Raise Dead"
+        ]
+      },
+      "ability": "wisdom"
     },
     "domain-spells-light": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Burning Hands",
+          "Faerie Fire"
+        ],
+        "3": [
+          "Flaming Sphere",
+          "Scorching Ray"
+        ],
+        "5": [
+          "Daylight",
+          "Fireball"
+        ],
+        "7": [
+          "Guardian of Faith",
+          "Wall of Fire"
+        ],
+        "9": [
+          "Flame Strike",
+          "Scrying"
+        ]
+      },
+      "ability": "wisdom"
     },
     "domain-spells-nature": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Animal Friendship",
+          "Speak with Animals"
+        ],
+        "3": [
+          "Barkskin",
+          "Spike Growth"
+        ],
+        "5": [
+          "Plant Growth",
+          "Wind Wall"
+        ],
+        "7": [
+          "Dominate Beast",
+          "Grasping Vine"
+        ],
+        "9": [
+          "Insect Plague",
+          "Tree Stride"
+        ]
+      },
+      "ability": "wisdom"
     },
     "domain-spells-tempest": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Fog Cloud",
+          "Thunderwave"
+        ],
+        "3": [
+          "Gust of Wind",
+          "Shatter"
+        ],
+        "5": [
+          "Call Lightning",
+          "Sleet Storm"
+        ],
+        "7": [
+          "Control Water",
+          "Ice Storm"
+        ],
+        "9": [
+          "Destructive Wave",
+          "Insect Plague"
+        ]
+      },
+      "ability": "wisdom"
     },
     "domain-spells-trickery": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Charm Person",
+          "Disguise Self"
+        ],
+        "3": [
+          "Mirror Image",
+          "Pass without Trace"
+        ],
+        "5": [
+          "Blink",
+          "Dispel Magic"
+        ],
+        "7": [
+          "Dimension Door",
+          "Polymorph"
+        ],
+        "9": [
+          "Dominate Person",
+          "Modify Memory"
+        ]
+      },
+      "ability": "wisdom"
     },
     "domain-spells-war": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Divine Favor",
+          "Shield of Faith"
+        ],
+        "3": [
+          "Magic Weapon",
+          "Spiritual Weapon"
+        ],
+        "5": [
+          "Crusader's Mantle",
+          "Spirit Guardians"
+        ],
+        "7": [
+          "Freedom of Movement",
+          "Stoneskin"
+        ],
+        "9": [
+          "Flame Strike",
+          "Hold Monster"
+        ]
+      },
+      "ability": "wisdom"
     },
     "draconic-presence": {
       "type": "none"
@@ -457,13 +682,82 @@
       "type": "none"
     },
     "oath-spells-ancients": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Ensnaring Strike",
+          "Speak with Animals"
+        ],
+        "3": [
+          "Moonbeam",
+          "Misty Step"
+        ],
+        "5": [
+          "Plant Growth",
+          "Protection from Energy"
+        ],
+        "7": [
+          "Ice Storm",
+          "Stoneskin"
+        ],
+        "9": [
+          "Commune with Nature",
+          "Tree Stride"
+        ]
+      },
+      "ability": "charisma"
     },
     "oath-spells-devotion": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Protection from Evil and Good",
+          "Sanctuary"
+        ],
+        "3": [
+          "Lesser Restoration",
+          "Zone of Truth"
+        ],
+        "5": [
+          "Beacon of Hope",
+          "Dispel Magic"
+        ],
+        "7": [
+          "Freedom of Movement",
+          "Guardian of Faith"
+        ],
+        "9": [
+          "Commune",
+          "Flame Strike"
+        ]
+      },
+      "ability": "charisma"
     },
     "oath-spells-vengeance": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": [
+          "Bane",
+          "Hunter's Mark"
+        ],
+        "3": [
+          "Hold Person",
+          "Misty Step"
+        ],
+        "5": [
+          "Haste",
+          "Protection from Energy"
+        ],
+        "7": [
+          "Banishment",
+          "Dimension Door"
+        ],
+        "9": [
+          "Hold Monster",
+          "Scrying"
+        ]
+      },
+      "ability": "charisma"
     },
     "open-hand-technique": {
       "type": "none"
@@ -662,6 +956,238 @@
     },
     "wrath-of-the-storm": {
       "type": "none"
+    },
+    "eldritchKnight": {
+      "spellcasting": {
+        "ability": "intelligence",
+        "progression": "third",
+        "cantripsKnown": {
+          "3": 2,
+          "4": 2,
+          "7": 3,
+          "10": 4,
+          "13": 4,
+          "16": 4,
+          "19": 5
+        },
+        "spellsKnown": {
+          "3": 3,
+          "4": 4,
+          "5": 4,
+          "6": 4,
+          "7": 5,
+          "8": 6,
+          "9": 6,
+          "10": 7,
+          "11": 8,
+          "12": 8,
+          "13": 9,
+          "14": 10,
+          "15": 10,
+          "16": 11,
+          "17": 11,
+          "18": 11,
+          "19": 12,
+          "20": 13
+        },
+        "spellList": "wizard",
+        "spellSlotTable": {
+          "3": {
+            "1": 2
+          },
+          "4": {
+            "1": 3
+          },
+          "5": {
+            "1": 3
+          },
+          "6": {
+            "1": 3
+          },
+          "7": {
+            "1": 4,
+            "2": 2
+          },
+          "8": {
+            "1": 4,
+            "2": 2
+          },
+          "9": {
+            "1": 4,
+            "2": 2
+          },
+          "10": {
+            "1": 4,
+            "2": 3
+          },
+          "11": {
+            "1": 4,
+            "2": 3
+          },
+          "12": {
+            "1": 4,
+            "2": 3
+          },
+          "13": {
+            "1": 4,
+            "2": 3,
+            "3": 2
+          },
+          "14": {
+            "1": 4,
+            "2": 3,
+            "3": 2
+          },
+          "15": {
+            "1": 4,
+            "2": 3,
+            "3": 2
+          },
+          "16": {
+            "1": 4,
+            "2": 3,
+            "3": 3
+          },
+          "17": {
+            "1": 4,
+            "2": 3,
+            "3": 3
+          },
+          "18": {
+            "1": 4,
+            "2": 3,
+            "3": 3
+          },
+          "19": {
+            "1": 4,
+            "2": 3,
+            "3": 3,
+            "4": 1
+          },
+          "20": {
+            "1": 4,
+            "2": 3,
+            "3": 3,
+            "4": 1
+          }
+        }
+      }
+    },
+    "arcaneTrickster": {
+      "spellcasting": {
+        "ability": "intelligence",
+        "progression": "third",
+        "cantripsKnown": {
+          "3": 2,
+          "4": 2,
+          "7": 3,
+          "10": 4,
+          "13": 4,
+          "16": 4,
+          "19": 5
+        },
+        "spellsKnown": {
+          "3": 3,
+          "4": 4,
+          "5": 4,
+          "6": 4,
+          "7": 5,
+          "8": 6,
+          "9": 6,
+          "10": 7,
+          "11": 8,
+          "12": 8,
+          "13": 9,
+          "14": 10,
+          "15": 10,
+          "16": 11,
+          "17": 11,
+          "18": 11,
+          "19": 12,
+          "20": 13
+        },
+        "spellList": "wizard",
+        "spellSlotTable": {
+          "3": {
+            "1": 2
+          },
+          "4": {
+            "1": 3
+          },
+          "5": {
+            "1": 3
+          },
+          "6": {
+            "1": 3
+          },
+          "7": {
+            "1": 4,
+            "2": 2
+          },
+          "8": {
+            "1": 4,
+            "2": 2
+          },
+          "9": {
+            "1": 4,
+            "2": 2
+          },
+          "10": {
+            "1": 4,
+            "2": 3
+          },
+          "11": {
+            "1": 4,
+            "2": 3
+          },
+          "12": {
+            "1": 4,
+            "2": 3
+          },
+          "13": {
+            "1": 4,
+            "2": 3,
+            "3": 2
+          },
+          "14": {
+            "1": 4,
+            "2": 3,
+            "3": 2
+          },
+          "15": {
+            "1": 4,
+            "2": 3,
+            "3": 2
+          },
+          "16": {
+            "1": 4,
+            "2": 3,
+            "3": 3
+          },
+          "17": {
+            "1": 4,
+            "2": 3,
+            "3": 3
+          },
+          "18": {
+            "1": 4,
+            "2": 3,
+            "3": 3
+          },
+          "19": {
+            "1": 4,
+            "2": 3,
+            "3": 3,
+            "4": 1
+          },
+          "20": {
+            "1": 4,
+            "2": 3,
+            "3": 3,
+            "4": 1
+          }
+        }
+      }
     }
   }
 }

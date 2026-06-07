@@ -214,6 +214,53 @@ function selectFeatureChoice(choiceKey, value) {
     refreshDebugIfOpen();
 }
 
+// ===== Spell Selection =====
+
+function toggleCantrip(cantripName) {
+    const idx = userSelection.selectedCantrips.indexOf(cantripName);
+    const maxCantrips = characterSheet.maxCantripsKnown || 0;
+    
+    if (idx > -1) {
+        userSelection.selectedCantrips.splice(idx, 1);
+    } else if (userSelection.selectedCantrips.length < maxCantrips) {
+        userSelection.selectedCantrips.push(cantripName);
+    }
+    triggerRecalc();
+    renderSpellsStage();
+    refreshDebugIfOpen();
+}
+
+function toggleSpell(spellName) {
+    const prepType = characterSheet.spellPreparationType;
+    
+    if (prepType === 'spellbook') {
+        const idx = userSelection.spellbookSpells.indexOf(spellName);
+        if (idx > -1) {
+            userSelection.spellbookSpells.splice(idx, 1);
+        } else {
+            userSelection.spellbookSpells.push(spellName);
+        }
+    } else if (prepType === 'known') {
+        const idx = userSelection.selectedSpells.indexOf(spellName);
+        const maxSpells = characterSheet.maxSpellsKnown || 0;
+        if (idx > -1) {
+            userSelection.selectedSpells.splice(idx, 1);
+        } else if (userSelection.selectedSpells.length < maxSpells) {
+            userSelection.selectedSpells.push(spellName);
+        }
+    } else if (prepType === 'prepare') {
+        const idx = userSelection.preparedSpells.indexOf(spellName);
+        if (idx > -1) {
+            userSelection.preparedSpells.splice(idx, 1);
+        } else {
+            userSelection.preparedSpells.push(spellName);
+        }
+    }
+    triggerRecalc();
+    renderSpellsStage();
+    refreshDebugIfOpen();
+}
+
 // Expose functions to window
 window.handleRaceSelect = handleRaceSelect;
 window.handleSubraceSelect = handleSubraceSelect;
@@ -224,6 +271,8 @@ window.toggleSkill = toggleSkill;
 window.toggleFeat = toggleFeat;
 window.selectClassOption = selectClassOption;
 window.selectFeatureChoice = selectFeatureChoice;
+window.toggleCantrip = toggleCantrip;
+window.toggleSpell = toggleSpell;
 window.getFeatCapacityBonus = getFeatCapacityBonus;
 window.getMaxFeatsAllowed = getMaxFeatsAllowed;
 

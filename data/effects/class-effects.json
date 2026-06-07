@@ -72,6 +72,7 @@
     "song of rest (d10)": { "type": "lookup" },
     "song of rest (d12)": { "type": "lookup" },
     "bard college": { "type": "lookup" },
+    "bard college feature": { "type": "lookup" },
     "countercharm": { "type": "lookup" },
     "font of inspiration": { "type": "lookup" },
     "magical secrets": { "type": "lookup" },

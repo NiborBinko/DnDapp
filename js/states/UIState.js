@@ -2,8 +2,7 @@
  * UI Navigation State - Tracks current stage
  */
 let UIState = { currentStage: 0, deleteCharacterIndex: null, pointsRemaining: 27 };
-const STAGES = { WELCOME: 0, CHOOSE_RACE: 1, CHOOSE_CLASS: 2, ABILITY_SCORES: 3, PROFICIENCIES: 4, FEATURES_FEATS: 5, SPELLS: 6, OVERVIEW: 7 };
-const STAGE_NAMES = ['welcome', 'choose-race', 'choose-class', 'ability-scores', 'proficiencies', 'features-feats', 'spells', 'overview'];
+const STAGE_NAMES = ['welcome', 'choose-race', 'choose-class', 'ability-scores', 'proficiencies', 'features-feats', 'spells'];
 
 // Helper to check if a feature choice is complete
 function isChoiceComplete(choiceKey) {
@@ -14,7 +13,7 @@ function isChoiceComplete(choiceKey) {
 }
 
 function navigateToStage(stage) {
-    if (stage < 0 || stage > 7) return;
+    if (stage < 0 || stage > 6) return;
     UIState.currentStage = stage;
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     const el = document.getElementById('step-' + STAGE_NAMES[stage]);
@@ -100,7 +99,20 @@ function canProceed() {
             }
             return true;
         }
-        case 6: return true; // Spell selection (future)
+        case 6: {
+            if (!characterSheet.spellcastingAbility) return true;
+            
+            const maxCantrips = characterSheet.maxCantripsKnown || 0;
+            if (maxCantrips > 0 && (userSelection.selectedCantrips || []).length < maxCantrips) return false;
+            
+            const prepType = characterSheet.spellPreparationType;
+            if (prepType === 'known') {
+                const maxSpells = characterSheet.maxSpellsKnown || 0;
+                if (maxSpells > 0 && (userSelection.selectedSpells || []).length < maxSpells) return false;
+            }
+            
+            return true;
+        }
         case 7: return true; // Overview (future: name required)
         default: return false;
     }
@@ -115,7 +127,6 @@ function renderCurrentStage() {
         case 4: renderProficienciesStage(); break;
         case 5: renderFeaturesFeats(); break;
         case 6: renderSpellsStage(); break;
-        case 7: renderOverview(); break;
     }
 }
 

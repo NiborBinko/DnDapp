@@ -363,8 +363,8 @@
         ]
       }
     },
-    "enchantrer": {
-      "id": "enchantrer",
+    "enchanter": {
+      "id": "enchanter",
       "displayName": "School of Enchantment",
       "type": "progressive",
       "features": {

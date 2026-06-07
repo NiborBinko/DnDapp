@@ -2,6 +2,7 @@
  "id": "warlock",
  "name": "Warlock",
  "primaryStat": "charisma",
+ "spellcastingAbility": "charisma",
  "desc": "Pact-bound casters",
  "hitDie": 8,
  "hitPoints": {"1": "hitDie + CON", "perLevel": "1d HitDie + CON"},
@@ -92,7 +93,7 @@
     "5": ["Contact Other Plane", "Dream", "Hold Monster", "Scrying"],
     "6": ["Arcane Gate", "Circle of Death", "Conjure Fey", "Create Undead", "Eyebite", "Flesh to Stone", "Mass Suggestion", "True Seeing"],
     "7": ["Etherealness", "Finger of Death", "Forcecage", "Plane Shift"],
-    "8": ["Derniplane", "Dominate Monster", "Feeblemind", "Glibness", "Power Word Stun"],
+    "8": ["Demiplane", "Dominate Monster", "Feeblemind", "Glibness", "Power Word Stun"],
     "9": ["Astral Projection", "Foresight", "Imprisonment", "Power Word Kill", "True Polymorph"]
   }
 }

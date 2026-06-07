@@ -11,6 +11,9 @@ function saveCharacter() {
     const data = { name, lvl: userSelection.lvl, race: userSelection.race, subrace: userSelection.subrace, class: userSelection.class, selection: userSelection, sheet: characterSheet };
     if (idx >= 0) chars[idx] = data; else chars.push(data);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(chars));
+    navigateToStage(0);
+    renderSavedCharactersList();
+    viewCharacter(chars.findIndex(c => c.name === name));
     return true;
 }
 
@@ -36,12 +39,14 @@ function getSavedCharacter(index) { const chars = getAllSaved(); return chars[in
 // ===== View/Delete Saved Characters =====
 
 function viewCharacter(index) {
-    const c = loadCharacter(index);
-    if (c) {
-        navigateToStage(0);
-        renderSavedCharactersList();
-        refreshDebugIfOpen();
-    }
+    const c = getSavedCharacter(index);
+    if (!c) return;
+    document.getElementById('view-character-content').innerHTML = renderCharacterSheet(c);
+    document.getElementById('view-character-modal').classList.add('active');
+}
+
+function closeViewModal() {
+    document.getElementById('view-character-modal').classList.remove('active');
 }
 
 function confirmDelete(index) {
@@ -50,13 +55,13 @@ function confirmDelete(index) {
     const charName = document.getElementById('delete-char-name');
     const c = getSavedCharacter(index);
     if (charName && c) charName.textContent = c.name;
-    if (modal) modal.style.display = 'block';
+    if (modal) modal.classList.add('active');
 }
 
 function closeDeleteModal() {
     UIState.deleteCharacterIndex = null;
     const modal = document.getElementById('delete-confirm-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) modal.classList.remove('active');
     renderSavedCharactersList();
 }
 
@@ -66,5 +71,6 @@ window.loadCharacter = loadCharacter;
 window.deleteCharacter = deleteCharacter;
 window.getSavedCharacter = getSavedCharacter;
 window.viewCharacter = viewCharacter;
+window.closeViewModal = closeViewModal;
 window.confirmDelete = confirmDelete;
 window.closeDeleteModal = closeDeleteModal;

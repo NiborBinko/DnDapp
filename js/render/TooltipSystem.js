@@ -73,7 +73,21 @@ function getTooltipDescription(id, type) {
     if (type === 'subclass-ability') {
         return fromMap(window.descriptions?.subclassAbilities, id);
     }
-    
+
+    // Spells - look up in allSpells (keyed by exact TitleCase name)
+    if (type === 'spell') {
+        const spell = window.allSpells?.[id];
+        if (!spell) return null;
+        const meta = [
+            spell.ritual ? 'Ritual' : null,
+            spell.casttime ? `Cast: ${spell.casttime}` : null,
+            spell.range ? `Range: ${spell.range}` : null,
+            spell.components ? `Components: ${spell.components}` : null,
+            spell.duration ? `Duration: ${spell.duration}` : null,
+        ].filter(Boolean).join(' | ');
+        return (meta ? meta + '\n\n' : '') + (spell.description || '');
+    }
+
     return null;
 }
 

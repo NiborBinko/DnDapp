@@ -10,6 +10,8 @@ async function loadAllGameData() {
     
     const racePromises = raceIds.map(id => loadJson('data/races/' + id));
     const classPromises = classIds.map(id => loadJson('data/classes/' + id));
+    const spellSchools = ['abjuration', 'conjuration', 'divination', 'enchantment', 'evocation', 'illusion', 'necromancy', 'transmutation'];
+    const spellPromises = spellSchools.map(s => loadJson('data/spells/' + s));
     const otherPromises = [
         loadJson('data/effects/race-effects'), loadJson('data/effects/class-effects'), loadJson('data/effects/feat-effects'),
         loadJson('data/effects/class-option-effects'), loadJson('data/effects/subclass-effects'),
@@ -18,26 +20,52 @@ async function loadAllGameData() {
         loadJson('data/descriptions/subclass-abilities')
     ];
     
-    const results = await Promise.all([...racePromises, ...classPromises, ...otherPromises]);
+    const results = await Promise.all([...racePromises, ...classPromises, ...spellPromises, ...otherPromises]);
     
-    const rCount = raceIds.length, cCount = classIds.length;
+    const rCount = raceIds.length, cCount = classIds.length, sCount = spellSchools.length;
     for (let i = 0; i < rCount; i++) { if (results[i]?.id) racesData[results[i].id] = results[i]; }
     for (let i = 0; i < cCount; i++) { const idx = rCount + i; if (results[idx]?.id) classesData[results[idx].id] = results[idx]; }
     
-    window.raceEffectsData = results[rCount + cCount] || {};
-    window.classEffectsData = results[rCount + cCount + 1] || {};
-    window.featEffectsData = results[rCount + cCount + 2] || {};
-    window.classOptionEffectsData = results[rCount + cCount + 3] || {};
-    window.subclassEffectsData = results[rCount + cCount + 4] || {};
+    // Build window.allSpells from spell school files and class spellLists
+    window.allSpells = {};
+    window.spellLevelByClass = {};
+    
+    // First pass: load spells from school files (base data)
+    for (let i = 0; i < sCount; i++) {
+        const schoolData = results[rCount + cCount + i] || {};
+        const schoolKey = Object.keys(schoolData)[0];
+        if (schoolKey && schoolData[schoolKey]) {
+            schoolData[schoolKey].forEach(spell => {
+                window.allSpells[spell.name] = { ...spell, school: schoolKey };
+            });
+        }
+    }
+    
+    // Second pass: build spell level lookup from class spellLists
+    Object.entries(classesData).forEach(([classId, cls]) => {
+        if (!cls.spellList) return;
+        window.spellLevelByClass[classId] = {};
+        Object.entries(cls.spellList).forEach(([level, spells]) => {
+            spells.forEach(spellName => {
+                window.spellLevelByClass[classId][spellName] = parseInt(level, 10);
+            });
+        });
+    });
+    
+    window.raceEffectsData = results[rCount + cCount + sCount] || {};
+    window.classEffectsData = results[rCount + cCount + sCount + 1] || {};
+    window.featEffectsData = results[rCount + cCount + sCount + 2] || {};
+    window.classOptionEffectsData = results[rCount + cCount + sCount + 3] || {};
+    window.subclassEffectsData = results[rCount + cCount + sCount + 4] || {};
     window.descriptions = {
-        stats: results[rCount + cCount + 5] || {},
-        feats: results[rCount + cCount + 6] || {},
-        raceAbilities: results[rCount + cCount + 7] || {},
-        proficiencies: results[rCount + cCount + 8] || {},
-        classAbilities: results[rCount + cCount + 9] || {},
-        classOptions: results[rCount + cCount + 10] || {},
-        exclusiveGroups: results[rCount + cCount + 11] || {},
-        subclassAbilities: results[rCount + cCount + 12] || {}
+        stats: results[rCount + cCount + sCount + 5] || {},
+        feats: results[rCount + cCount + sCount + 6] || {},
+        raceAbilities: results[rCount + cCount + sCount + 7] || {},
+        proficiencies: results[rCount + cCount + sCount + 8] || {},
+        classAbilities: results[rCount + cCount + sCount + 9] || {},
+        classOptions: results[rCount + cCount + sCount + 10] || {},
+        exclusiveGroups: results[rCount + cCount + sCount + 11] || {},
+        subclassAbilities: results[rCount + cCount + sCount + 12] || {}
     };
     
     window.racesData = racesData;
@@ -53,7 +81,8 @@ async function loadJson(path) {
 }
 
 async function loadAllDescriptions() {
-    window.descriptions = window.descriptions || {};
+    // Deprecated no-op: window.descriptions is populated by loadAllGameData.
+    // Kept for backward compatibility with existing app.js calls.
 }
 
 function getRaceData(id) { return racesData[id] || null; }
@@ -101,9 +130,61 @@ function getFeatStatBonuses() {
     const bonuses = {};
     userSelection?.feats?.forEach(feat => {
         const effect = window.featEffectsData?.effects?.[feat.toLowerCase()];
-        if (effect?.type === 'stat' && effect.value) bonuses[effect.value.stat] = (bonuses[effect.value.stat] || 0) + effect.value.amount;
+        if (effect?.type !== 'stat' || !effect.stat) return;
+        const stat = resolveFeatStatChoice(feat, effect);
+        if (stat) bonuses[stat] = (bonuses[stat] || 0) + (effect.amount || 1);
+        if (effect.secondaryStat) {
+            const s2 = resolveFeatStatChoice(feat, effect.secondaryStat, '__secondary');
+            if (s2) bonuses[s2] = (bonuses[s2] || 0) + (effect.secondaryStat.amount || 1);
+        }
     });
     return bonuses;
+}
+
+function resolveFeatStatChoice(featName, effect, choiceSlot) {
+    const key = `${featName.toLowerCase()}${choiceSlot ? '-' + choiceSlot : ''}`;
+    const chosen = userSelection?.featChoices?.[key]?.stat;
+    if (chosen) return chosen;
+    if (effect.stat && effect.stat !== 'any') return effect.stat;
+    if (Array.isArray(effect.options) && effect.options.length) return effect.options[0];
+    return null;
+}
+
+function getFeatMaxHpBonus() {
+    let perLevel = 0;
+    userSelection?.feats?.forEach(feat => {
+        const effect = window.featEffectsData?.effects?.[feat.toLowerCase()];
+        if (effect?.type === 'maxHP') perLevel += (effect.perLevel || 0);
+    });
+    return perLevel;
+}
+
+function getFeatProficiencies() {
+    const profs = { armor: [], weapons: [], skills: [], tools: [] };
+    userSelection?.feats?.forEach(feat => {
+        const effect = window.featEffectsData?.effects?.[feat.toLowerCase()];
+        if (effect?.type !== 'proficiency') return;
+        if (effect.armor) profs.armor.push(effect.armor);
+        if (Array.isArray(effect.weapons)) profs.weapons.push(...effect.weapons);
+    });
+    return profs;
+}
+
+function getFeatSavingThrowProfs() {
+    const profs = [];
+    userSelection?.feats?.forEach(feat => {
+        const effect = window.featEffectsData?.effects?.[feat.toLowerCase()];
+        if (!effect) return;
+        if (effect.type === 'savingThrow' && effect.ability) {
+            const ab = resolveFeatStatChoice(feat, effect, '__save');
+            if (ab) profs.push(ab);
+        }
+        if (effect.secondary?.type === 'savingThrow' && effect.secondary.ability) {
+            const ab = resolveFeatStatChoice(feat, effect.secondary, '__secondary-save');
+            if (ab) profs.push(ab);
+        }
+    });
+    return profs;
 }
 
 function getMaxSkillProficiencies() {
@@ -118,12 +199,41 @@ function getRaceSpeedBonus(raceId) {
     return race?.speed || 30;
 }
 
+function getSpellData(name) {
+    return window.allSpells?.[name] || null;
+}
+
+function getSpellLevelForClass(spellName, classId) {
+    return window.spellLevelByClass?.[classId]?.[spellName] ?? -1;
+}
+
+function getClassSpellList(classId, level) {
+    const cls = window.classesData?.[classId];
+    if (!cls?.spellList) return [];
+    return cls.spellList[String(level)] || [];
+}
+
+function getInnateSpellNames() {
+    const innate = new Set();
+    characterSheet?.innateSpells?.forEach(s => innate.add(s.name));
+    characterSheet?.knownCantrips?.forEach(s => innate.add(s.name));
+    return innate;
+}
+
+window.getSpellData = getSpellData;
+window.getSpellLevelForClass = getSpellLevelForClass;
+window.getClassSpellList = getClassSpellList;
+window.getInnateSpellNames = getInnateSpellNames;
 window.loadAllGameData = loadAllGameData;
 window.getRaceData = getRaceData;
 window.getClassData = getClassData;
 window.getStatDescription = getStatDescription;
 window.getFeatDescription = getFeatDescription;
 window.getRaceAbilityDescription = getRaceAbilityDescription;
+window.getFeatMaxHpBonus = getFeatMaxHpBonus;
+window.getFeatProficiencies = getFeatProficiencies;
+window.getFeatSavingThrowProfs = getFeatSavingThrowProfs;
+window.resolveFeatStatChoice = resolveFeatStatChoice;
 window.getRaceStatBonuses = getRaceStatBonuses;
 window.getRaceVision = getRaceVision;
 window.getFeatStatBonuses = getFeatStatBonuses;

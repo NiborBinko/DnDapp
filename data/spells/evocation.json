@@ -487,13 +487,31 @@
       "description": "Brilliant sunlight flashes in a 60-foot-radius Sphere centered on a point you choose within range. Each creature in the Sphere makes a Constitution saving throw. On a failed save, a creature takes 12d6 Radiant damage and has the Blinded condition for 1 minute. On a successful save, it takes half as much damage only.\n\nA creature Blinded by this spell makes another Constitution saving throw at the end of each of its turns, ending the effect on itself on a success. \n\nThis spell dispels Darkness in its area that was created by any spell."
     },
     {
-      "name": "Meteor Swarm",
+      "name": "Magic Stone",
+      "ritual": false,
+      "casttime": "bonusAction",
+      "range": "Touch",
+      "components": "V, S",
+      "duration": "1 minute",
+      "description": "You touch three small pebbles and imbue them with magic. You or someone else can make a ranged spell attack with one of the pebbles by throwing it or hurling it with a sling. If thrown, its range is 60 feet. On a hit, the target takes 1d6 Bludgeoning damage. After you make the attack, the pebble's magic is expended."
+    },
+    {
+      "name": "Crusader's Mantle",
       "ritual": false,
       "casttime": "action",
-      "range": "1 mile",
-      "components": "V, S",
+      "range": "Self",
+      "components": "V",
+      "duration": "up to 1 minute",
+      "description": "Divine power radiates from you, inspiring your allies. Until the spell ends, each non-Hostile creature of your choice in a 30-foot Emanation originating from you deals an extra 1d4 Radiant damage when it hits with a weapon attack."
+    },
+    {
+      "name": "Destructive Wave",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V",
       "duration": "Instantaneous",
-      "description": "Blazing orbs of fire plummet to the ground at four different points you can see within range. Each creature in a 40-foot-radius Sphere centered on each of those points makes a Dexterity saving throw. A creature takes 20d6 Fire damage and 20d6 Bludgeoning damage on a failed save or half as much damage on a successful one. A creature in the area of more than one fiery Sphere is affected only once. \n\nA nonmagical object that isn't being worn or carried also takes the damage if it's in the spell's area, and the object starts burning if it's flammable."
+      "description": "You unleash a wave of divine energy in a 30-foot-radius Sphere originating from you. Each creature of your choice in the area makes a Constitution saving throw. On a failed save, a creature takes 5d6 Thunder damage and 5d6 Radiant or Necrotic damage (your choice) and has the Prone condition. On a successful save, a creature takes half as much damage and isn't knocked Prone."
     }
   ]
 }

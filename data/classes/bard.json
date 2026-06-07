@@ -98,7 +98,7 @@
     "5": ["Animate Objects", "Awaken", "Bigby's Hand", "Contact Other Plane", "Creation", "Dominate Person", "Dream", "Geas", "Greater Restoration", "Hold Monster", "Legend Lore", "Mass Suggestion", "Mislead", "Modify Memory", "Nondetection", "Planar Binding", "Raise Dead", "Scrying", "Seeming", "Sending", "Telekinesis", "Teleportation Circle", "True Seeing"],
     "6": ["Eyebite", "Find the Path", "Globe of Invulnerability", "Guards and Wards", "Heroes' Feast", "Mass Suggestion", "Move Earth", "Otto's Irresistible Dance", "Programmed Illusion", "True Seeing"],
     "7": ["Etherealness", "Forcecage", "Magnificent Mansion", "Mordenkainen's Sword", "Plane Shift", "Prismatic Spray", "Project Image", "Sequester", "Symbol", "Teleport"],
-    "8": ["Antimagic Field", "Derniplane", "Dominate Monster", "Feeblemind", "Glibness", "Incendiary Cloud", "Mind Blank", "Power Word Stun"],
+    "8": ["Antimagic Field", "Demiplane", "Dominate Monster", "Feeblemind", "Glibness", "Incendiary Cloud", "Mind Blank", "Power Word Stun"],
     "9": ["Astral Projection", "Foresight", "Gate", "Imprisonment", "Mass Heal", "Power Word Kill", "True Polymorph"]
   }
 }

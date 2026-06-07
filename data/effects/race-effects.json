@@ -77,13 +77,13 @@
       "type": "innate",
       "spellLevels": {
         "1": [
-          "dancing-lights"
+          "Dancing Lights"
         ],
         "3": [
-          "faerie-fire"
+          "Faerie Fire"
         ],
         "5": [
-          "darkness"
+          "Darkness"
         ]
       },
       "ability": "charisma"
@@ -179,13 +179,13 @@
       "type": "innate",
       "spellLevels": {
         "1": [
-          "taumaturgy"
+          "Thaumaturgy"
         ],
         "3": [
-          "hellish rebuke"
+          "Hellish Rebuke"
         ],
         "5": [
-          "darkness"
+          "Darkness"
         ]
       },
       "ability": "charisma"

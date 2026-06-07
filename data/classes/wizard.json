@@ -30,7 +30,7 @@
         {"id": "abjurer", "name": "School of Abjuration", "exclusiveGroup": "Arcane Tradition"},
         {"id": "conjurer", "name": "School of Conjuration", "exclusiveGroup": "Arcane Tradition"},
         {"id": "diviner", "name": "School of Divination", "exclusiveGroup": "Arcane Tradition"},
-        {"id": "enchantrer", "name": "School of Enchantment", "exclusiveGroup": "Arcane Tradition"},
+        {"id": "enchanter", "name": "School of Enchantment", "exclusiveGroup": "Arcane Tradition"},
         {"id": "evoker", "name": "School of Evocation", "exclusiveGroup": "Arcane Tradition"},
         {"id": "illusionist", "name": "School of Illusion", "exclusiveGroup": "Arcane Tradition"},
         {"id": "necromancer", "name": "School of Necromancy", "exclusiveGroup": "Arcane Tradition"},
@@ -89,7 +89,7 @@
     "5": ["Animate Objects", "Bigby's Hand", "Cloudkill", "Cone of Cold", "Conjure Elemental", "Contact Other Plane", "Creation", "Dominate Person", "Dream", "Geas", "Greater Restoration", "Hold Monster", "Legend Lore", "Mislead", "Modify Memory", "Passwall", "Planar Binding", "Rary's Telepathic Bond", "Scrying", "Seeming", "Telekinesis", "Teleportation Circle", "Wall of Force", "Wall of Stone"],
     "6": ["Arcane Gate", "Chain Lightning", "Circle of Death", "Contingency", "Create Undead", "Disintegrate", "Eyebite", "Globe of Invulnerability", "Mass Suggestion", "Move Earth", "Sunbeam", "True Seeing"],
     "7": ["Delayed Blast Fireball", "Etherealness", "Finger of Death", "Fire Storm", "Forcecage", "Mirage Arcane", "Mordenkainen's Magnificent Mansion", "Mordenkainen's Sword", "Plane Shift", "Prismatic Spray", "Project Image", "Sequester", "Symbol", "Teleport"],
-    "8": ["Antimagic Field", "Clone", "Derniplane", "Dominate Monster", "Feeblemind", "Incendiary Cloud", "Maze", "Mind Blank", "Power Word Stun", "Sunburst"],
+    "8": ["Antimagic Field", "Clone", "Demiplane", "Dominate Monster", "Feeblemind", "Incendiary Cloud", "Maze", "Mind Blank", "Power Word Stun", "Sunburst"],
     "9": ["Astral Projection", "Chain Lightning", "Gate", "Imprisonment", "Meteor Swarm", "Power Word Kill", "Shapechange", "Time Stop", "True Polymorph", "Wish"]
   },
 "spells known": "Spellbook",

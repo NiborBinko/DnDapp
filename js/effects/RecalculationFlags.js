@@ -25,6 +25,7 @@ function recalcAll() {
     recalcStatModifiers();
     recalcMaxHp();  recalcVision(); recalcSpeed();
     recalcSpellcasting(); recalcSpellSlots(); recalcInnateSpells(); recalcFeats();
+    recalcCantrips(); recalcMaxSpells();
     recalcSavingThrows(); recalcResistances();
     
     // RESTORE selections AFTER rebuild
@@ -98,6 +99,15 @@ function clearRemovedFeatureSelections() {
  */
 function recalcSavingThrows() {
     characterSheet.savingThrowAdvantages = [];
+
+    // Feat contributions to saving throw proficiencies (e.g., Resilient)
+    if (typeof window.getFeatSavingThrowProfs === 'function') {
+        window.getFeatSavingThrowProfs().forEach(ab => {
+            if (!characterSheet.proficiencies.savingThrows.includes(ab)) {
+                characterSheet.proficiencies.savingThrows.push(ab);
+            }
+        });
+    }
 
     recalcFeaturesByType('savingThrow', (effect, feature) => {
         if (effect.effect === 'advantage') {
@@ -185,7 +195,7 @@ function getEffectSelections(effect, defaultOptions, choiceKey) {
 function getFeatureEffect(name) {
     const key = name?.toLowerCase();
     if (!key) return null;
-    return window.classEffectsData?.effects?.[key] || window.raceEffectsData?.effects?.[key] || null;
+    return window.classEffectsData?.effects?.[key] || window.raceEffectsData?.effects?.[key] || window.subclassEffectsData?.effects?.[key] || null;
 }
 
 function getClassEffect(featureName) { return getFeatureEffect(featureName); }
@@ -365,6 +375,12 @@ function recalcMaxHp() {
         }
     });
 
+    // Feat contributions to max HP (e.g., Tough: +2 per character level)
+    const featHpPerLevel = (typeof window.getFeatMaxHpBonus === 'function')
+        ? window.getFeatMaxHpBonus()
+        : 0;
+    baseHp += (userSelection.lvl || 0) * featHpPerLevel;
+
     characterSheet.maxHp = baseHp;
     characterSheet.currentHp = characterSheet.maxHp;
 }
@@ -388,6 +404,13 @@ function recalcProficiencies() {
         }
     }
     userSelection.selectedSkills.forEach(s => { if (!characterSheet.proficiencies.skills.includes(s)) characterSheet.proficiencies.skills.push(s); });
+
+    // Feat contributions to proficiencies (e.g., Lightly Armored → light armor)
+    if (typeof window.getFeatProficiencies === 'function') {
+        const featProfs = window.getFeatProficiencies();
+        featProfs.armor.forEach(a => { if (!characterSheet.proficiencies.armor.includes(a)) characterSheet.proficiencies.armor.push(a); });
+        featProfs.weapons.forEach(w => { if (!characterSheet.proficiencies.weapons.includes(w)) characterSheet.proficiencies.weapons.push(w); });
+    }
 
     // Process race features for proficiencies (type: "proficiency")
     if (characterSheet.features) {
@@ -496,6 +519,21 @@ function recalcProficiencies() {
             }
         });
     }
+    
+    // Process features for terrain choices (e.g., Circle of the Land)
+    if (characterSheet.features) {
+        characterSheet.features.forEach(feature => {
+            const effect = window.EffectHandler.getEffectByName(feature.name, feature.source);
+            if (effect?.choiceType === 'terrain') {
+                const availableOptions = (effect.options && effect.options.length > 0) ? effect.options : [];
+                if (availableOptions.length > 0) {
+                    ensureFeatureChoice(feature, effect, availableOptions, 'terrain', { 
+                        optionNames: effect.optionNames 
+                    });
+                }
+            }
+        });
+    }
 }
 
 /**
@@ -579,23 +617,39 @@ function recalcFeatures() {
 function recalcSpellcasting() {
     if (!userSelection.class) { characterSheet.spellcastingAbility = null; characterSheet.spellPreparationType = null; return; }
 
-    // Check if character has Spellcasting or Pact Magic feature
     const hasSpellcasting = characterSheet.features?.some(f => f.name === 'Spellcasting');
     const hasPactMagic = characterSheet.features?.some(f => f.name === 'Pact Magic');
 
-    if (!hasSpellcasting && !hasPactMagic) {
+    // Check for subclass spellcasting (Eldritch Knight, Arcane Trickster)
+    let subclassSpellcasting = null;
+    const selectedOptionId = userSelection.selectedFeatureChoices?.['Arcane Tradition'] || userSelection.selectedFeatureChoices?.['Roguish Archetype'] || userSelection.selectedFeatureChoices?.['Martial Archetype'];
+    if (selectedOptionId && window.subclassEffectsData?.effects?.[selectedOptionId]?.spellcasting) {
+        subclassSpellcasting = window.subclassEffectsData.effects[selectedOptionId].spellcasting;
+    }
+
+    if (!hasSpellcasting && !hasPactMagic && !subclassSpellcasting) {
         characterSheet.spellcastingAbility = null;
         characterSheet.spellPreparationType = null;
+        characterSheet.spellProgression = null;
         recalcSpellStats();
         return;
     }
 
-    const cls = window.classesData[userSelection.class];
-    characterSheet.spellcastingAbility = cls?.spellcastingAbility || null;
-    if (cls?.['spells prepared']) characterSheet.spellPreparationType = 'prepare';
-    else if (cls?.['spells known'] === 'Spellbook') characterSheet.spellPreparationType = 'spellbook';
-    else if (cls?.['spells known']) characterSheet.spellPreparationType = 'known';
-    else { characterSheet.spellPreparationType = null; }
+    if (subclassSpellcasting) {
+        characterSheet.spellcastingAbility = subclassSpellcasting.ability;
+        characterSheet.spellPreparationType = 'known';
+        characterSheet.spellProgression = subclassSpellcasting.progression;
+        characterSheet.spellListClass = subclassSpellcasting.spellList;
+    } else {
+        const cls = window.classesData[userSelection.class];
+        characterSheet.spellcastingAbility = cls?.spellcastingAbility || null;
+        characterSheet.spellProgression = 'full';
+        characterSheet.spellListClass = userSelection.class;
+        if (cls?.['spells known'] === 'Spellbook') characterSheet.spellPreparationType = 'spellbook';
+        else if (cls?.['spells prepared']) characterSheet.spellPreparationType = 'prepare';
+        else if (cls?.['spells known']) characterSheet.spellPreparationType = 'known';
+        else { characterSheet.spellPreparationType = null; }
+    }
     recalcSpellStats();
 }
 
@@ -611,14 +665,30 @@ function recalcInnateSpells() {
     characterSheet.features?.forEach(feature => {
         const effect = getFeatureEffect(feature.name);
         if (effect?.type === 'innate') {
-            const ability = effect.ability || null;
-            Object.keys(effect.spellLevels || {}).forEach(lvl => {
-                if (userSelection.lvl >= parseInt(lvl)) {
-                    effect.spellLevels[lvl].forEach(spell => {
-                        characterSheet.innateSpells.push({ name: spell, ability: ability });
+            if (effect.choiceType === 'terrain') {
+                const featureKey = feature.name.toLowerCase();
+                const choiceEntry = userSelection.featureChoices?.[featureKey];
+                const selectedTerrain = choiceEntry?.selected?.filter(s => s !== null)?.[0];
+                if (selectedTerrain && effect.terrainSpells?.[selectedTerrain]) {
+                    const ability = effect.ability || null;
+                    Object.keys(effect.terrainSpells[selectedTerrain]).forEach(lvl => {
+                        if (userSelection.lvl >= parseInt(lvl)) {
+                            effect.terrainSpells[selectedTerrain][lvl].forEach(spell => {
+                                characterSheet.innateSpells.push({ name: spell, ability: ability });
+                            });
+                        }
                     });
                 }
-            });
+            } else {
+                const ability = effect.ability || null;
+                Object.keys(effect.spellLevels || {}).forEach(lvl => {
+                    if (userSelection.lvl >= parseInt(lvl)) {
+                        effect.spellLevels[lvl].forEach(spell => {
+                            characterSheet.innateSpells.push({ name: spell, ability: ability });
+                        });
+                    }
+                });
+            }
         }
     });
 }
@@ -631,9 +701,21 @@ function recalcInnateSpells() {
 function recalcSpellSlots() {
     characterSheet.spellSlots = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
     if (!userSelection.class) return;
+    
+    const progression = characterSheet.spellProgression;
     const cls = window.classesData[userSelection.class];
-    const slots = cls?.spellSlotTable?.[userSelection.lvl];
-    if (slots) Object.keys(slots).forEach(lvl => characterSheet.spellSlots[lvl] = slots[lvl]);
+    const lvl = userSelection.lvl;
+    
+    if (progression === 'third') {
+        const selectedOptionId = userSelection.selectedFeatureChoices?.['Arcane Tradition'] || userSelection.selectedFeatureChoices?.['Roguish Archetype'] || userSelection.selectedFeatureChoices?.['Martial Archetype'];
+        const sc = window.subclassEffectsData?.effects?.[selectedOptionId]?.spellcasting;
+        if (!sc?.spellSlotTable) return;
+        const slots = sc.spellSlotTable[String(lvl)];
+        if (slots) Object.keys(slots).forEach(l => characterSheet.spellSlots[l] = slots[l]);
+    } else {
+        const slots = cls?.spellSlotTable?.[lvl];
+        if (slots) Object.keys(slots).forEach(l => characterSheet.spellSlots[l] = slots[l]);
+    }
 }
 
 /**
@@ -643,12 +725,57 @@ function recalcSpellSlots() {
  */
 function recalcCantrips() {
     if (!userSelection.class) { characterSheet.maxCantripsKnown = 0; return; }
+    
+    const progression = characterSheet.spellProgression;
+    const lvl = userSelection.lvl;
+    
+    if (progression === 'third') {
+        const selectedOptionId = userSelection.selectedFeatureChoices?.['Arcane Tradition'] || userSelection.selectedFeatureChoices?.['Roguish Archetype'] || userSelection.selectedFeatureChoices?.['Martial Archetype'];
+        const sc = window.subclassEffectsData?.effects?.[selectedOptionId]?.spellcasting;
+        if (!sc?.cantripsKnown) { characterSheet.maxCantripsKnown = 0; return; }
+        let maxCantrips = 0;
+        Object.entries(sc.cantripsKnown).forEach(([reqLvl, count]) => {
+            if (lvl >= parseInt(reqLvl, 10)) maxCantrips = count;
+        });
+        characterSheet.maxCantripsKnown = maxCantrips;
+        return;
+    }
+    
     const cls = window.classesData[userSelection.class];
     const cantrips = cls?.['cantrips known'];
     if (!cantrips) { characterSheet.maxCantripsKnown = 0; return; }
     if (typeof cantrips === 'object') {
         characterSheet.maxCantripsKnown = cantrips[userSelection.lvl] || 0;
     } else { characterSheet.maxCantripsKnown = cantrips || 0; }
+}
+
+function recalcMaxSpells() {
+    characterSheet.maxSpellsKnown = 0;
+    if (!userSelection.class) return;
+    
+    const progression = characterSheet.spellProgression;
+    const lvl = userSelection.lvl;
+    
+    if (progression === 'third') {
+        const selectedOptionId = userSelection.selectedFeatureChoices?.['Arcane Tradition'] || userSelection.selectedFeatureChoices?.['Roguish Archetype'] || userSelection.selectedFeatureChoices?.['Martial Archetype'];
+        const sc = window.subclassEffectsData?.effects?.[selectedOptionId]?.spellcasting;
+        if (!sc?.spellsKnown) return;
+        let maxSpells = 0;
+        Object.entries(sc.spellsKnown).forEach(([reqLvl, count]) => {
+            if (lvl >= parseInt(reqLvl, 10)) maxSpells = count;
+        });
+        characterSheet.maxSpellsKnown = maxSpells;
+        return;
+    }
+    
+    const cls = window.classesData[userSelection.class];
+    if (cls?.['spells known'] === 'Spellbook') {
+        characterSheet.maxSpellsKnown = -1;
+    } else if (typeof cls?.['spells known'] === 'object') {
+        characterSheet.maxSpellsKnown = cls['spells known'][lvl] || 0;
+    } else {
+        characterSheet.maxSpellsKnown = 0;
+    }
 }
 
 /**
@@ -708,8 +835,10 @@ function recalcStats() {
     const raceBonuses = window.raceStatBonuses || {};
     const choiceBonuses = window.featureChoiceBonuses || {};
 
+    const statCap = window.statCap || {};
     window.STAT_NAMES.forEach(stat => {
-        characterSheet.stats[stat] = (userSelection.stats[stat] || 8) + (raceBonuses[stat] || 0) + (choiceBonuses[stat] || 0) + (featBonuses[stat] || 0);
+        const cap = statCap[stat] || 20;
+        characterSheet.stats[stat] = Math.min(cap, (userSelection.stats[stat] || 8) + (raceBonuses[stat] || 0) + (choiceBonuses[stat] || 0) + (featBonuses[stat] || 0));
     });
 
     recalcFeaturesByType('stat', (effect, feature) => {
@@ -725,7 +854,8 @@ function recalcStats() {
         if (selections) {
             selections.forEach(stat => {
                 if (window.STAT_NAMES.includes(stat.toLowerCase())) {
-                    characterSheet.stats[stat.toLowerCase()] = (characterSheet.stats[stat.toLowerCase()] || 8) + (effect.value || 1);
+                    const cap = (window.statCap?.[stat.toLowerCase()]) || 20;
+                    characterSheet.stats[stat.toLowerCase()] = Math.min(cap, (characterSheet.stats[stat.toLowerCase()] || 8) + (effect.value || 1));
                 }
             });
         }
