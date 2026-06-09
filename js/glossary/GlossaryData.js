@@ -190,7 +190,7 @@ function getSubraceDetail(raceId, srName) {
         name: a,
         desc: window.descriptions?.raceAbilities?.[a] || 'No description available.'
     }));
-    return { name: srName, raceName: race.name, bonuses: bonusStr, languages: sr.languages || [], abilities };
+    return { name: srName, raceName: race.name, desc: window.descriptions?.raceAbilities?.[srName] || '', bonuses: bonusStr, languages: sr.languages || [], abilities };
 }
 
 function getClassDetail(clsId) {

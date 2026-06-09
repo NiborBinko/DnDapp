@@ -288,6 +288,7 @@ function showSubracePage(raceId, srName) {
     ).join(', ');
     const html = `
         <h3>${sr.name} <span style="font-weight:normal;color:#888">(${sr.raceName})</span></h3>
+        ${sr.desc ? `<p><em>${sr.desc}</em></p>` : ''}
         <div class="glossary-detail-grid">
             <div><strong>Stat Bonuses:</strong> ${sr.bonuses || 'None'}</div>
             ${sr.languages.length > 0 ? `<div><strong>Languages:</strong> ${sr.languages.join(', ')}</div>` : ''}
