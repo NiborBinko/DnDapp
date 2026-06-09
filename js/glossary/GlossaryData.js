@@ -114,7 +114,11 @@ function getSpellsByLevel() {
 
 function getAllRaceFeatures() {
     const desc = window.descriptions?.raceAbilities || {};
-    return Object.keys(desc).sort().map(name => ({ name, desc: desc[name] }));
+    const subraceNames = new Set();
+    Object.values(window.racesData || {}).forEach(race => {
+        if (race.subraces) Object.keys(race.subraces).forEach(sr => subraceNames.add(sr));
+    });
+    return Object.keys(desc).filter(n => !subraceNames.has(n)).sort().map(name => ({ name, desc: desc[name] }));
 }
 
 function getAllClassFeatures() {

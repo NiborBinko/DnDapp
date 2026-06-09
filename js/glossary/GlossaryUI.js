@@ -75,7 +75,7 @@ function renderLeftPanel() {
     const categories = [
         { id: 'tree-races', label: 'Races', type: 'folder' },
         { id: 'tree-classes', label: 'Classes', type: 'folder' },
-        { id: 'tree-race-features', label: 'Race Features', type: 'leaf', action: 'showRaceFeatures' },
+        { id: 'tree-race-features', label: 'Racial Abilities', type: 'leaf', action: 'showRaceFeatures' },
         { id: 'tree-class-features', label: 'Class Features', type: 'leaf', action: 'showClassFeatures' },
         { id: 'tree-feats', label: 'Feats', type: 'leaf', action: 'showFeats' },
         { id: 'tree-proficiencies', label: 'Proficiencies', type: 'folder' },
