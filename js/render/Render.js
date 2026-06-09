@@ -754,6 +754,7 @@ function renderSavedCharactersList() {
     if (!list) return;
     const saved = getAllSaved();
     if (saved.length === 0) { list.innerHTML = '<p>No saved characters yet.</p>'; return; }
+    if (saved.length === 0) { list.innerHTML = '<p>No saved characters yet.</p><div style="margin-top:12px"><button class="btn-secondary" onclick="openGlossary()">Glossary</button></div>'; return; }
     list.innerHTML = saved.map((c, i) => {
         const raceName = window.racesData?.[c.race]?.name || c.race || 'Unknown';
         const className = window.classesData?.[c.class]?.name || c.class || 'Unknown';
@@ -769,6 +770,7 @@ function renderSavedCharactersList() {
             </div>
         </div>
     `;}).join('');
+    list.innerHTML += '<div style="margin-top:12px"><button class="btn-secondary" onclick="openGlossary()">Glossary</button></div>';
 }
 
 function updateNextButton() {
