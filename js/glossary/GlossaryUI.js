@@ -234,6 +234,14 @@ function pushPage(renderFn) {
     glossaryHistory.push(renderFn);
 }
 
+function formatGroupLabel(key) {
+    return key
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .replace(/\d+$/, '')
+        .replace(/^./, c => c.toUpperCase())
+        .trim();
+}
+
 function openTreePage(renderFn) {
     glossaryHistory = [renderFn];
     renderFn();
@@ -306,7 +314,7 @@ function showClassPage(clsId) {
         html += `<h4>Level ${lvlData.level}</h4><ul>`;
         lvlData.features.forEach(f => {
             if (f.isSubclass) {
-                const groupLabel = window.descriptions?.exclusiveGroups?.[f.exclusiveGroup] || f.exclusiveGroup;
+                const groupLabel = formatGroupLabel(f.exclusiveGroup);
                 html += `<li><span class="glossary-link" onclick="glossaryPushOption('${f.optionId}')">${f.name}</span> <span style="color:#888">(${groupLabel})</span></li>`;
             } else {
                 html += `<li><span class="glossary-link" onclick="glossaryPushFeature('class', '${f.name.replace(/'/g, "\\'")}')">${f.name}</span></li>`;
