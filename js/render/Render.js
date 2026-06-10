@@ -623,6 +623,15 @@ function renderSpellsStage() {
         html += '</div>';
     }
     
+    // Track all selected cantrips across ALL sources for cross-choice dedup
+    const allSelectedCantrips = new Set();
+    Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+        if (choice?.type === 'cantrips') {
+            (choice.selected || []).filter(s => s !== null).forEach(c => allSelectedCantrips.add(c));
+        }
+    });
+    (userSelection.selectedCantrips || []).forEach(c => allSelectedCantrips.add(c));
+
     // Cantrip Choices (race, subclass, class)
     Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
         if (choice?.type !== 'cantrips') return;
@@ -641,7 +650,7 @@ function renderSpellsStage() {
         html += `<div class="section-header">${title} (${selectedItems.length}/${choice.count})</div><div class="checkbox-grid">`;
         choice.options.forEach(cantrip => {
             const isSel = selectedItems.includes(cantrip);
-            const isDis = !isSel && selectedItems.length >= (choice.count || 1);
+            const isDis = (!isSel && selectedItems.length >= (choice.count || 1)) || (!isSel && allSelectedCantrips.has(cantrip));
             html += `<label class="checkbox-item ${isSel ? 'selected' : ''} ${isDis ? 'disabled' : ''}"
                 data-tooltip-id="${cantrip}" data-tooltip-type="spell"
                 data-origin="${originText}"
@@ -704,7 +713,7 @@ function renderSpellsStage() {
         html += `<div class="section-header">Cantrips (${selectedCount}/${maxCantrips})</div><div class="checkbox-grid">`;
         cantrips.forEach(cantrip => {
             const isSel = userSelection.selectedCantrips.includes(cantrip);
-            const isDis = !isSel && selectedCount >= maxCantrips;
+            const isDis = (!isSel && selectedCount >= maxCantrips) || (!isSel && allSelectedCantrips.has(cantrip));
             html += `<label class="checkbox-item ${isSel ? 'selected' : ''} ${isDis ? 'disabled' : ''}"
                 data-tooltip-id="${cantrip}" data-tooltip-type="spell"
                 ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} onchange="toggleCantrip('${cantrip.replace(/'/g, "\\'")}')">${cantrip}</label>`;
@@ -801,7 +810,6 @@ function renderSavedCharactersList() {
     const list = document.getElementById('character-list');
     if (!list) return;
     const saved = getAllSaved();
-    if (saved.length === 0) { list.innerHTML = '<p>No saved characters yet.</p>'; return; }
     if (saved.length === 0) { list.innerHTML = '<p>No saved characters yet.</p><div style="margin-top:12px"><button class="btn-secondary" onclick="openGlossary()">Glossary</button></div>'; return; }
     list.innerHTML = saved.map((c, i) => {
         const raceName = window.racesData?.[c.race]?.name || c.race || 'Unknown';
