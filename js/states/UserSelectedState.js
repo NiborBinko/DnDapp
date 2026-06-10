@@ -187,6 +187,9 @@ function selectFeatureChoice(choiceKey, value) {
     const choice = userSelection.featureChoices[choiceKey];
     if (!choice) return;
 
+    const minLvl = choice.levelPrereqs?.[value] || 0;
+    if (minLvl > 0 && (userSelection.lvl || 1) < minLvl) return;
+
     const existingIndex = choice.selected.indexOf(value);
     if (existingIndex > -1) {
         choice.selected[existingIndex] = null;

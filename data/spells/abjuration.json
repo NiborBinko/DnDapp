@@ -1,6 +1,15 @@
 {
   "abjuration": [
     {
+      "name": "Blade Ward",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "V, S",
+      "duration": "1 round",
+      "description": "You extend your hand and trace a sigil of warding in the air. Until the end of your next turn, you have resistance against bludgeoning, piercing, and slashing damage dealt by weapon attacks."
+    },
+    {
       "name": "Resistance",
       "ritual": false,
       "casttime": "action",

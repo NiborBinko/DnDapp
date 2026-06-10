@@ -82,6 +82,13 @@ function canProceed() {
             // Check Human bonus stat choice is complete
             if (userSelection.race === 'human' && !isChoiceComplete('human stat bonus')) return false;
 
+            // Check all choice-type feature choices are complete
+            const pendingChoiceFeatures = Object.entries(userSelection.featureChoices || {}).filter(([key, choice]) => {
+                if (choice?.type !== 'choice') return false;
+                return !isChoiceComplete(key);
+            });
+            if (pendingChoiceFeatures.length > 0) return false;
+
             const maxFeats = (typeof getMaxFeatsAllowed === 'function')
                 ? getMaxFeatsAllowed()
                 : Math.floor((userSelection.lvl || 1) / 4);

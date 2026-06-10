@@ -74,6 +74,21 @@ function getTooltipDescription(id, type) {
         return fromMap(window.descriptions?.subclassAbilities, id);
     }
 
+    // Battle Master maneuvers
+    if (type === 'maneuver') {
+        return fromMap(window.descriptions?.maneuvers, id);
+    }
+
+    // Four Elements disciplines
+    if (type === 'discipline') {
+        return fromMap(window.descriptions?.disciplines, id);
+    }
+
+    // Warlock invocations
+    if (type === 'invocation') {
+        return fromMap(window.descriptions?.invocations, id);
+    }
+
     // Spells - look up in allSpells (keyed by exact TitleCase name)
     if (type === 'spell') {
         const spell = window.allSpells?.[id];

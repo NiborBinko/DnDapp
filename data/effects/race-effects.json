@@ -129,7 +129,7 @@
       }
     },
     "trance": {
-      "type": "none"
+      "type": "lookup"
     },
     "fey ancestry": {
       "type": "savingThrow",
@@ -137,13 +137,13 @@
       "effect": "advantage"
     },
     "lucky": {
-      "type": "none"
+      "type": "lookup"
     },
     "gnome cunning": {
-      "type": "none"
+      "type": "lookup"
     },
     "keen smell": {
-      "type": "none"
+      "type": "lookup"
     },
     "brave": {
       "type": "savingThrow",
@@ -151,7 +151,7 @@
       "effect": "advantage"
     },
     "stonecunning": {
-      "type": "none"
+      "type": "lookup"
     },
     "mountain dwarf resilience": {
       "type": "proficiency",
@@ -163,13 +163,13 @@
       "count": 2
     },
     "sunlight sensitivity": {
-      "type": "none"
+      "type": "lookup"
     },
     "powerful build": {
-      "type": "none"
+      "type": "lookup"
     },
     "relentless endurance": {
-      "type": "none"
+      "type": "lookup"
     },
     "hellfire resistance": {
       "type": "resistance",
@@ -191,7 +191,7 @@
       "ability": "charisma"
     },
     "mask of the wild": {
-      "type": "none"
+      "type": "lookup"
     },
     "natural illusionist": {
       "type": "cantrips",
@@ -202,7 +202,7 @@
       "ability": "intelligence"
     },
     "artificer's lore": {
-      "type": "none"
+      "type": "lookup"
     },
     "stout resilience": {
       "type": "resistance",

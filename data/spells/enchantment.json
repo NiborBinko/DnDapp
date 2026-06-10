@@ -1,6 +1,15 @@
 {
   "enchantment": [
     {
+      "name": "Friends",
+      "ritual": false,
+      "casttime": "action",
+      "range": "Self",
+      "components": "S, M",
+      "duration": "1 minute",
+      "description": "For the duration, you have advantage on all Charisma checks directed at one creature of your choice that isn't hostile toward you. When the spell ends, the creature realizes that you used magic to influence its mood and becomes hostile toward you."
+    },
+    {
       "name": "Vicious Mockery",
       "ritual": false,
       "casttime": "action",

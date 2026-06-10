@@ -124,11 +124,25 @@ function getAllRaceFeatures() {
 function getAllClassFeatures() {
     const classDesc = window.descriptions?.classAbilities || {};
     const subclassDesc = window.descriptions?.subclassAbilities || {};
+    const maneuverDesc = window.descriptions?.maneuvers || {};
+    const invocationDesc = window.descriptions?.invocations || {};
+    const disciplineDesc = window.descriptions?.disciplines || {};
     const result = [];
     Object.entries(classDesc).forEach(([name, desc]) => result.push({ name, desc, source: 'Class Feature' }));
     Object.entries(subclassDesc).forEach(([name, desc]) => result.push({ name, desc, source: 'Subclass Ability' }));
+    Object.entries(maneuverDesc).forEach(([name, desc]) => result.push({ name, desc, source: 'Maneuver' }));
+    Object.entries(invocationDesc).forEach(([name, desc]) => result.push({ name, desc, source: 'Invocation' }));
+    Object.entries(disciplineDesc).forEach(([name, desc]) => result.push({ name, desc, source: 'Discipline' }));
     result.sort((a, b) => a.name.localeCompare(b.name));
     return result;
+}
+
+function getAllClassOptions() {
+    const options = window.classOptionEffectsData?.options || {};
+    return Object.entries(options).map(([id, def]) => ({
+        id,
+        name: def.displayName || id
+    })).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function getGlossaryFeats() {
@@ -138,9 +152,17 @@ function getGlossaryFeats() {
         const ef = effects[name.toLowerCase()];
         let effectText = '';
         if (ef) {
-            if (ef.type === 'stat' && ef.value) effectText = `Stat Bonus: +${ef.value} to selected stat`;
-            else if (ef.proficiencyType) effectText = `Grants proficiency: ${ef.proficiencyType}`;
-            else if (ef.type === 'maxHP') effectText = 'Increases max HP';
+            const statVal = ef.amount || ef.value || 0;
+            if (ef.type === 'stat' && statVal) effectText = `Stat Bonus: +${statVal} to selected stat`;
+            else if (ef.type === 'proficiency') {
+                const profs = [];
+                if (ef.armor) profs.push(Array.isArray(ef.armor) ? ef.armor.join(', ') : ef.armor + ' armor');
+                if (ef.weapons) profs.push(Array.isArray(ef.weapons) ? ef.weapons.join(', ') : ef.weapons);
+                if (ef.proficiencyType) profs.push(ef.proficiencyType);
+                effectText = profs.length > 0 ? `Grants: ${profs.join(', ')}` : 'Grants proficiency';
+            } else if (ef.type === 'skill') {
+                effectText = `Grants ${ef.count || 1} skill proficiencies`;
+            } else if (ef.type === 'maxHP') effectText = 'Increases max HP';
         }
         return { name, desc: desc[name], effectText };
     });
@@ -246,6 +268,7 @@ function getOptionDetail(optionId) {
     return {
         name: def.displayName,
         desc: window.descriptions?.classOptions?.[def.displayName] || 'No description available.',
+        type: def.type,
         features
     };
 }
@@ -274,13 +297,19 @@ function getFeatDetail(featName) {
     const ef = window.featEffectsData?.effects?.[featName.toLowerCase()];
     let effectText = '';
     if (ef) {
+        const statVal = ef.amount || ef.value || 0;
         if (ef.type === 'stat') {
-            if (ef.options?.length) effectText = `Choose one stat to increase by ${ef.value || 1}. Options: ${ef.options.join(', ')}`;
-            else effectText = `Stat Bonus: +${ef.value || 1}`;
+            if (ef.options?.length) effectText = `Choose one stat to increase by ${statVal}. Options: ${ef.options.join(', ')}`;
+            else effectText = `Stat Bonus: +${statVal}`;
         } else if (ef.type === 'proficiency') {
-            effectText = `Grants proficiency: ${ef.proficiencyType} — ${ef.options?.join(', ') || ''}`;
+            const profs = [];
+            if (ef.armor) profs.push(Array.isArray(ef.armor) ? ef.armor.join(', ') : ef.armor + ' armor');
+            if (ef.weapons) profs.push(Array.isArray(ef.weapons) ? ef.weapons.join(', ') : ef.weapons);
+            if (ef.proficiencyType) profs.push(ef.proficiencyType);
+            if (ef.options) profs.push(ef.options.join(', '));
+            effectText = profs.length > 0 ? `Grants: ${profs.join(', ')}` : 'Grants proficiency';
         } else if (ef.type === 'skill') {
-            effectText = `Grants skill proficiency: ${ef.options?.join(', ') || ''}`;
+            effectText = `Grants skill proficiency: ${ef.options?.join(', ') || ef.count + ' skills'}`;
         } else if (ef.type === 'maxHP') {
             effectText = 'Increases maximum hit points';
         }

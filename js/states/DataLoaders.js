@@ -17,7 +17,10 @@ async function loadAllGameData() {
         loadJson('data/effects/class-option-effects'), loadJson('data/effects/subclass-effects'),
         loadJson('data/descriptions/stats'), loadJson('data/descriptions/feats'), loadJson('data/descriptions/race-abilities'), loadJson('data/descriptions/proficiencies'),
         loadJson('data/descriptions/class-abilities'), loadJson('data/descriptions/class-options'), loadJson('data/descriptions/exclusive-groups'),
-        loadJson('data/descriptions/subclass-abilities')
+        loadJson('data/descriptions/subclass-abilities'),
+        loadJson('data/descriptions/maneuvers'),
+        loadJson('data/descriptions/invocations'),
+        loadJson('data/descriptions/disciplines')
     ];
     
     const results = await Promise.all([...racePromises, ...classPromises, ...spellPromises, ...otherPromises]);
@@ -65,7 +68,10 @@ async function loadAllGameData() {
         classAbilities: results[rCount + cCount + sCount + 9] || {},
         classOptions: results[rCount + cCount + sCount + 10] || {},
         exclusiveGroups: results[rCount + cCount + sCount + 11] || {},
-        subclassAbilities: results[rCount + cCount + sCount + 12] || {}
+        subclassAbilities: results[rCount + cCount + sCount + 12] || {},
+        maneuvers: results[rCount + cCount + sCount + 13] || {},
+        invocations: results[rCount + cCount + sCount + 14] || {},
+        disciplines: results[rCount + cCount + sCount + 15] || {}
     };
     
     window.racesData = racesData;

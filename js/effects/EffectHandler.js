@@ -18,8 +18,15 @@ const EffectHandler = {
     getEffectByName(name, source) {
         if (!name) return null;
         const effects = window[source + 'EffectsData'] || this.effectsData[source] || null;
-        if (!effects?.effects) return null;
-        return effects.effects[name.toLowerCase()] || null;
+        if (effects?.effects?.[name.toLowerCase()]) return effects.effects[name.toLowerCase()];
+        // Fallback: search all known sources for unrecognized source values
+        if (source !== 'class' && source !== 'race' && source !== 'feat' && source !== 'subclass') {
+            return window.classEffectsData?.effects?.[name.toLowerCase()] ||
+                   window.subclassEffectsData?.effects?.[name.toLowerCase()] ||
+                   window.raceEffectsData?.effects?.[name.toLowerCase()] ||
+                   null;
+        }
+        return null;
     },
     
     processFeature(feature) {
@@ -28,6 +35,12 @@ const EffectHandler = {
         const type = effect.type || 'none';
         const handler = EFFECT_DISPATCH[type];
         if (handler) handler();
+        if (effect.secondaryEffects) {
+            effect.secondaryEffects.forEach(se => {
+                const seHandler = EFFECT_DISPATCH[se.type];
+                if (seHandler) seHandler();
+            });
+        }
     },
     
     handleChoice(effect, userSelection, feature) {
@@ -152,7 +165,8 @@ const EFFECT_DISPATCH = {
     feat: window.recalcFeats || (() => {}),
     maxHP: window.recalcMaxHp || (() => {}),
     lookup: () => {},
-    none: () => {}
+    none: () => {},
+    choice: () => { if (window.recalcChoices) window.recalcChoices(true); }
 };
 
 window.EffectHandler = EffectHandler;

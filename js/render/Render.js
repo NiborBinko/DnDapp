@@ -534,6 +534,45 @@ function renderFeaturesFeats() {
                 html += '</div>';
             });
 
+            // Render general choice features (maneuvers, disciplines, invocations, etc.)
+            Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
+                if (choice?.type !== 'choice') return;
+                if (!choice.options?.length) return;
+                const selectedItems = (choice.selected || []).filter(s => s !== null);
+                const canSelect = selectedItems.length < (choice.count || 1);
+                const title = choice.featureName || 'Make a Selection';
+                const choiceTypeLabels = {
+                    'maneuver': 'Maneuvers',
+                    'discipline': 'Elemental Disciplines',
+                    'invocation': 'Eldritch Invocations',
+                    'hunter-prey': 'Hunter\'s Prey',
+                    'hunter-defense': 'Defensive Tactics',
+                    'hunter-attack': 'Multiattack',
+                    'hunter-superior': 'Superior Hunter\'s Defense',
+                    'totem-spirit': 'Totem Spirit',
+                    'totem-attunement': 'Totemic Attunement',
+                    'resistance-type': 'Fiendish Resilience'
+                };
+                const sectionLabel = choiceTypeLabels[choice.choiceType] || title;
+                html += `<div class="section-header">${sectionLabel} (${selectedItems.length}/${choice.count})</div><div class="checkbox-grid">`;
+                choice.options.forEach(opt => {
+                    const isSel = selectedItems.includes(opt);
+                    const minLvl = choice.levelPrereqs?.[opt] || 0;
+                    const meetsLvlReq = (userSelection.lvl || 1) >= minLvl;
+                    const disabled = (!canSelect && !isSel) || !meetsLvlReq ? 'disabled' : '';
+                    const tooltipType = choice.choiceType === 'maneuver' ? 'maneuver' : choice.choiceType === 'discipline' ? 'discipline' : choice.choiceType === 'invocation' ? 'invocation' : '';
+                    const originText = !meetsLvlReq && minLvl > 0 ? `Requires level ${minLvl}` : sectionLabel;
+                    const escKey = key.replace(/'/g, "\\'");
+                    const escOpt = opt.replace(/'/g, "\\'");
+                    html += `<label class="checkbox-item ${isSel ? 'selected' : ''} ${disabled}" 
+                        data-tooltip-id="${opt.replace(/'/g, '&apos;')}" 
+                        data-tooltip-type="${tooltipType}"
+                        data-origin="${originText}"
+                        ><input type="checkbox" ${isSel ? 'checked' : ''} ${disabled} onchange="selectFeatureChoice('${escKey}', '${escOpt}')">${opt}</label>`;
+                });
+                html += '</div>';
+            });
+
         abilitiesGrid.innerHTML = html;
     }
 
@@ -578,25 +617,34 @@ function renderSpellsStage() {
     if (characterSheet.innateSpells?.length > 0) {
         html += `<div class="section-header">Innate Spells</div><div class="checkbox-grid">`;
         characterSheet.innateSpells.forEach(spell => {
-            html += `<label class="checkbox-item locked" data-tooltip-id="${spell.name}" data-tooltip-type="spell"><input type="checkbox" checked disabled>${spell.name} 🔒</label>`;
+            const originAttr = spell.origin ? ` data-origin="${spell.origin}"` : '';
+            html += `<label class="checkbox-item locked" data-tooltip-id="${spell.name}" data-tooltip-type="spell"${originAttr}><input type="checkbox" checked disabled>${spell.name} 🔒</label>`;
         });
         html += '</div>';
     }
     
-    // Racial Cantrip Choices (render for ALL characters)
+    // Cantrip Choices (race, subclass, class)
     Object.entries(userSelection.featureChoices || {}).forEach(([key, choice]) => {
         if (choice?.type !== 'cantrips') return;
         if (!choice.options?.length) return;
         const selectedItems = (choice.selected || []).filter(s => s !== null);
-        const title = choice.featureName || 'Racial Cantrip';
-        const sourceRace = userSelection.race ? (window.racesData?.[userSelection.race]?.name || userSelection.race) : 'Race';
+        const title = choice.featureName || 'Cantrip';
+        let originText;
+        if (choice.source === 'race') {
+            const raceName = userSelection.race ? (window.racesData?.[userSelection.race]?.name || userSelection.race) : 'Race';
+            originText = `${title} - ${raceName}`;
+        } else if (choice.source === 'subclass' || choice.source === 'class') {
+            originText = `${title} (${choice.source})`;
+        } else {
+            originText = title;
+        }
         html += `<div class="section-header">${title} (${selectedItems.length}/${choice.count})</div><div class="checkbox-grid">`;
         choice.options.forEach(cantrip => {
             const isSel = selectedItems.includes(cantrip);
             const isDis = !isSel && selectedItems.length >= (choice.count || 1);
             html += `<label class="checkbox-item ${isSel ? 'selected' : ''} ${isDis ? 'disabled' : ''}"
                 data-tooltip-id="${cantrip}" data-tooltip-type="spell"
-                data-origin="${title} - ${sourceRace}"
+                data-origin="${originText}"
                 ><input type="checkbox" ${isSel ? 'checked' : ''} ${isDis ? 'disabled' : ''} data-racial-cantrip-key="${key}" data-racial-cantrip-value="${cantrip.replace(/"/g, '&quot;')}">${cantrip}</label>`;
         });
         html += '</div>';

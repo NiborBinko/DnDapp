@@ -777,7 +777,8 @@
       "features": {
         "1": [
           "domain-spells-tempest",
-          "bonus-proficiencies-tempest",
+          "bonus-proficiencies-tempest-weapons",
+          "bonus-proficiencies-tempest-armor",
           "wrath-of-the-storm"
         ],
         "2": [
@@ -935,7 +936,7 @@
           "channel-divinity-vow-of-enmity"
         ],
         "7": [
-          "relenless-avenger"
+          "relentless-avenger"
         ],
         "15": [
           "soul-of-vengeance"
@@ -952,7 +953,8 @@
       "features": {
         "1": [
           "domain-spells-war",
-          "bonus-proficiencies-war",
+          "bonus-proficiencies-war-weapons",
+          "bonus-proficiencies-war-armor",
           "war-priest"
         ],
         "2": [

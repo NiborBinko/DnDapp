@@ -28,6 +28,15 @@
       "description": "Choose a creature within range that has 0 Hit Points and isn't dead. The creature becomes Stable."
     },
     {
+      "name": "Toll the Dead",
+      "ritual": false,
+      "casttime": "action",
+      "range": "60 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "You point at one creature you can see within range, and the sound of a dolorous bell fills the air around it for a moment. The target must succeed on a Wisdom saving throw or take 1d8 Necrotic damage. If the target is missing any of its Hit Points, it instead takes 1d12 Necrotic damage."
+    },
+    {
       "name": "False Life",
       "ritual": false,
       "casttime": "action",

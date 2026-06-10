@@ -1,142 +1,194 @@
 {
   "effects": {
     "abjuration-savant": {
-      "type": "none"
+      "type": "lookup"
     },
     "acolyte-of-nature": {
-      "type": "none"
+      "type": "cantrips",
+      "class": "druid",
+      "spellList": "all",
+      "count": 1,
+      "ability": "wisdom",
+      "secondaryEffects": [
+        {
+          "type": "proficiency",
+          "proficiencyType": "skill",
+          "options": ["Animal Handling", "Nature", "Survival"],
+          "count": 1
+        }
+      ]
     },
     "additional-fighting-style": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "fighting-style",
+      "count": 1,
+      "options": ["Archery", "Defense", "Dueling", "Great Weapon Fighting", "Protection", "Two-Weapon Fighting"]
     },
     "additional-magical-secrets": {
-      "type": "none"
+      "type": "lookup"
     },
     "alter-memories": {
-      "type": "none"
+      "type": "lookup"
     },
     "arcane-charge": {
-      "type": "none"
+      "type": "lookup"
     },
     "arcane-ward": {
-      "type": "none"
+      "type": "lookup"
     },
     "aspect-of-the-beast": {
-      "type": "none"
+      "type": "lookup"
     },
     "assassinate": {
-      "type": "none"
+      "type": "lookup"
     },
     "aura-of-devotion": {
-      "type": "none"
+      "type": "lookup"
     },
     "aura-of-warding": {
-      "type": "none"
+      "type": "lookup"
     },
     "avatar-of-battle": {
-      "type": "none"
+      "type": "lookup"
     },
     "avenging-angel": {
-      "type": "none"
+      "type": "lookup"
     },
     "awakened-mind": {
-      "type": "none"
+      "type": "lookup"
     },
     "battle-magic": {
-      "type": "none"
+      "type": "lookup"
     },
     "beguiling-defenses": {
-      "type": "none"
+      "type": "lookup"
     },
     "bend-luck": {
-      "type": "none"
+      "type": "lookup"
     },
     "benign-transposition": {
-      "type": "none"
+      "type": "lookup"
     },
     "bestial-fury": {
-      "type": "none"
+      "type": "lookup"
     },
     "blessed-healer": {
-      "type": "none"
+      "type": "lookup"
     },
     "blessing-of-the-trickster": {
-      "type": "none"
+      "type": "lookup"
     },
     "blessings-of-knowledge": {
-      "type": "none"
+      "type": "proficiency",
+      "proficiencyType": "skill",
+      "options": ["Arcana", "History", "Nature", "Religion"],
+      "count": 2
     },
     "bonus-cantrip-land": {
-      "type": "none"
+      "type": "cantrips",
+      "class": "druid",
+      "spellList": "all",
+      "count": 1,
+      "ability": "wisdom"
     },
     "bonus-cantrip-light": {
-      "type": "none"
+      "type": "cantrips",
+      "options": ["Light"],
+      "count": 1,
+      "ability": "wisdom"
     },
     "bonus-proficiencies": {
-      "type": "none"
+      "type": "lookup"
     },
     "bonus-proficiencies-assassin": {
-      "type": "none"
+      "type": "proficiency",
+      "proficiencyType": "tool",
+      "options": ["disguise kit", "poisoner's kit"],
+      "count": 2
     },
-    "bonus-proficiencies-tempest": {
-      "type": "none"
+    "bonus-proficiencies-tempest-weapons": {
+      "type": "proficiency",
+      "proficiencyType": "weapon",
+      "options": ["all martial weapons"],
+      "count": 1
     },
-    "bonus-proficiencies-war": {
-      "type": "none"
+    "bonus-proficiencies-tempest-armor": {
+      "type": "proficiency",
+      "proficiencyType": "armor",
+      "options": ["heavy armor"],
+      "count": 1
+    },
+    "bonus-proficiencies-war-weapons": {
+      "type": "proficiency",
+      "proficiencyType": "weapon",
+      "options": ["all martial weapons"],
+      "count": 1
+    },
+    "bonus-proficiencies-war-armor": {
+      "type": "proficiency",
+      "proficiencyType": "armor",
+      "options": ["heavy armor"],
+      "count": 1
     },
     "bonus-proficiency-life": {
-      "type": "none"
+      "type": "proficiency",
+      "proficiencyType": "armor",
+      "options": ["heavy armor"],
+      "count": 1
     },
     "bonus-proficiency-nature": {
-      "type": "none"
+      "type": "proficiency",
+      "proficiencyType": "armor",
+      "options": ["heavy armor"],
+      "count": 1
     },
     "channel-divinity-abjure-enemy": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-charm-animals-and-plants": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-cloak-of-shadows": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-destructive-wrath": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-guided-strike": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-invoke-duplicity": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-knowledge-of-the-ages": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-natures-wrath": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-preserve-life": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-radiance-of-the-dawn": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-sacred-weapon": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-turn-the-faithless": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-turn-the-unholy": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-vow-of-enmity": {
-      "type": "none"
+      "type": "lookup"
     },
     "channel-divinity-war-gods-blessing": {
-      "type": "none"
+      "type": "lookup"
     },
     "circle-forms": {
-      "type": "none"
+      "type": "lookup"
     },
     "circle-spells-land": {
       "type": "innate",
@@ -206,76 +258,125 @@
       }
     },
     "cloak-of-shadows": {
-      "type": "none"
+      "type": "lookup"
     },
     "combat-inspiration": {
-      "type": "none"
+      "type": "lookup"
     },
     "combat-superiority": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "maneuver",
+      "count": { "3": 3, "7": 5, "10": 7, "15": 9 },
+      "options": ["Ambush","Bait and Switch","Brace","Commander's Strike","Commanding Presence","Disarming Attack","Distracting Strike","Evasive Footwork","Feinting Attack","Goading Attack","Grappling Strike","Lunging Attack","Maneuvering Attack","Menacing Attack","Parry","Precision Attack","Pushing Attack","Quick Toss","Rally","Riposte","Sweeping Attack","Tactical Assessment","Trip Attack"]
     },
+    "ambush": { "type": "lookup" },
+    "bait-and-switch": { "type": "lookup" },
+    "brace": { "type": "lookup" },
+    "commanders-strike": { "type": "lookup" },
+    "commanding-presence": { "type": "lookup" },
+    "disarming-attack": { "type": "lookup" },
+    "distracting-strike": { "type": "lookup" },
+    "evasive-footwork": { "type": "lookup" },
+    "feinting-attack": { "type": "lookup" },
+    "goading-attack": { "type": "lookup" },
+    "grappling-strike": { "type": "lookup" },
+    "lunging-attack": { "type": "lookup" },
+    "maneuvering-attack": { "type": "lookup" },
+    "menacing-attack": { "type": "lookup" },
+    "parry": { "type": "lookup" },
+    "precision-attack": { "type": "lookup" },
+    "pushing-attack": { "type": "lookup" },
+    "quick-toss": { "type": "lookup" },
+    "rally": { "type": "lookup" },
+    "riposte": { "type": "lookup" },
+    "sweeping-attack": { "type": "lookup" },
+    "tactical-assessment": { "type": "lookup" },
+    "trip-attack": { "type": "lookup" },
     "combat-wild-shape": {
-      "type": "none"
+      "type": "lookup"
     },
     "command-undead": {
-      "type": "none"
+      "type": "lookup"
     },
     "conjuration-savant": {
-      "type": "none"
+      "type": "lookup"
     },
     "controlled-chaos": {
-      "type": "none"
+      "type": "lookup"
     },
     "corona-of-light": {
-      "type": "none"
+      "type": "lookup"
     },
     "create-thrall": {
-      "type": "none"
+      "type": "lookup"
     },
     "cutting-words": {
-      "type": "none"
+      "type": "lookup"
     },
     "dampen-elements": {
-      "type": "none"
+      "type": "lookup"
     },
     "dark-delirium": {
-      "type": "none"
+      "type": "lookup"
     },
     "dark-ones-blessing": {
-      "type": "none"
+      "type": "lookup"
     },
     "dark-ones-own-luck": {
-      "type": "none"
+      "type": "lookup"
     },
     "death-strike": {
-      "type": "none"
+      "type": "lookup"
     },
     "defensive-tactics": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "hunter-defense",
+      "count": 1,
+      "options": ["Escape the Horde", "Multiattack Defense", "Steel Will"]
     },
     "disciple-of-life": {
-      "type": "none"
+      "type": "lookup"
     },
     "disciple-of-the-elements": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "discipline",
+      "count": { "3": 2, "6": 3, "11": 4, "17": 5 },
+      "options": ["Breath of Winter","Clench of the North Wind","Eternal Mountain Defense","Fangs of the Fire Snake","Fist of Four Thunders","Flames of the Phoenix","Gong of the Summit","Mist Stance","Ride the Wind","River of Hungry Flame","Rush of the Gale Spirits","Shape the Flowing River","Sweeping Cinder Strike","Unbroken Air","Water Whip","Wave of Rolling Earth"],
+      "levelPrereqs": { "Breath of Winter":17, "Clench of the North Wind":6, "Eternal Mountain Defense":11, "Fangs of the Fire Snake":3, "Fist of Four Thunders":3, "Flames of the Phoenix":11, "Gong of the Summit":6, "Mist Stance":6, "Ride the Wind":11, "River of Hungry Flame":17, "Rush of the Gale Spirits":6, "Shape the Flowing River":3, "Sweeping Cinder Strike":6, "Unbroken Air":3, "Water Whip":3, "Wave of Rolling Earth":17 }
     },
+    "breath-of-winter": { "type": "lookup" },
+    "clench-of-the-north-wind": { "type": "lookup" },
+    "eternal-mountain-defense": { "type": "lookup" },
+    "fangs-of-the-fire-snake": { "type": "lookup" },
+    "fist-of-four-thunders": { "type": "lookup" },
+    "flames-of-the-phoenix": { "type": "lookup" },
+    "gong-of-the-summit": { "type": "lookup" },
+    "mist-stance": { "type": "lookup" },
+    "ride-the-wind": { "type": "lookup" },
+    "river-of-hungry-flame": { "type": "lookup" },
+    "rush-of-the-gale-spirits": { "type": "lookup" },
+    "shape-the-flowing-river": { "type": "lookup" },
+    "sweeping-cinder-strike": { "type": "lookup" },
+    "unbroken-air": { "type": "lookup" },
+    "water-whip": { "type": "lookup" },
+    "wave-of-rolling-earth": { "type": "lookup" },
     "divination-savant": {
-      "type": "none"
+      "type": "lookup"
     },
     "divine-strike-life": {
-      "type": "none"
+      "type": "lookup"
     },
     "divine-strike-nature": {
-      "type": "none"
+      "type": "lookup"
     },
     "divine-strike-tempest": {
-      "type": "none"
+      "type": "lookup"
     },
     "divine-strike-trickery": {
-      "type": "none"
+      "type": "lookup"
     },
     "divine-strike-war": {
-      "type": "none"
+      "type": "lookup"
     },
     "domain-spells-knowledge": {
       "type": "innate",
@@ -460,226 +561,245 @@
       "ability": "wisdom"
     },
     "draconic-presence": {
-      "type": "none"
+      "type": "lookup"
     },
     "draconic-resilience": {
-      "type": "none"
+      "type": "lookup"
     },
     "dragon-wings": {
-      "type": "none"
+      "type": "lookup"
     },
     "durable-summons": {
-      "type": "none"
+      "type": "lookup"
     },
     "elder-champion": {
-      "type": "none"
+      "type": "lookup"
     },
     "eldritch-strike": {
-      "type": "none"
+      "type": "lookup"
     },
     "elemental-affinity": {
-      "type": "none"
+      "type": "lookup"
     },
     "elemental-attunement-11": {
-      "type": "none"
+      "type": "lookup"
     },
     "elemental-attunement-17": {
-      "type": "none"
+      "type": "lookup"
     },
     "elemental-attunement-6": {
-      "type": "none"
+      "type": "lookup"
     },
     "elemental-wild-shape": {
-      "type": "none"
+      "type": "lookup"
     },
     "empowered-evocation": {
-      "type": "none"
+      "type": "lookup"
     },
     "enchantment-savant": {
-      "type": "none"
+      "type": "lookup"
     },
     "entropic-ward": {
-      "type": "none"
+      "type": "lookup"
     },
     "evocation-savant": {
-      "type": "none"
+      "type": "lookup"
     },
     "exceptional-training": {
-      "type": "none"
+      "type": "lookup"
     },
     "expert-divination": {
-      "type": "none"
+      "type": "lookup"
     },
     "extra-attack-valor": {
-      "type": "none"
+      "type": "lookup"
     },
     "fast-hands": {
-      "type": "none"
+      "type": "lookup"
     },
     "fey-presence": {
-      "type": "none"
+      "type": "lookup"
     },
     "fiendish-resilience": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "resistance-type",
+      "count": 1,
+      "options": ["acid", "cold", "fire", "lightning", "thunder"]
     },
     "fighting-style-archery": {
-      "type": "none"
+      "type": "lookup"
     },
     "fighting-style-defense": {
-      "type": "none"
+      "type": "lookup"
     },
     "fighting-style-dueling": {
-      "type": "none"
+      "type": "lookup"
     },
     "fighting-style-great-weapon-fighting": {
-      "type": "none"
+      "type": "lookup"
     },
     "fighting-style-protection": {
-      "type": "none"
+      "type": "lookup"
     },
     "fighting-style-two-weapon-fighting": {
-      "type": "none"
+      "type": "lookup"
     },
     "focused-conjuration": {
-      "type": "none"
+      "type": "lookup"
     },
     "frenzy": {
-      "type": "none"
+      "type": "lookup"
     },
     "greater-portent": {
-      "type": "none"
+      "type": "lookup"
     },
     "grim-harvest": {
-      "type": "none"
+      "type": "lookup"
     },
     "holy-nimbus": {
-      "type": "none"
+      "type": "lookup"
     },
     "hunters-prey": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "hunter-prey",
+      "count": 1,
+      "options": ["Colossus Slayer", "Giant Killer", "Horde Breaker"]
     },
     "hurl-through-hell": {
-      "type": "none"
+      "type": "lookup"
     },
     "hypnotic-gaze": {
-      "type": "none"
+      "type": "lookup"
     },
     "illusion-savant": {
-      "type": "none"
+      "type": "lookup"
     },
     "illusory-reality": {
-      "type": "none"
+      "type": "lookup"
     },
     "illusory-self": {
-      "type": "none"
+      "type": "lookup"
     },
     "impostor": {
-      "type": "none"
+      "type": "lookup"
     },
     "improved-abjuration": {
-      "type": "none"
+      "type": "lookup"
     },
     "improved-combat-superiority": {
-      "type": "none"
+      "type": "lookup"
     },
     "improved-critical": {
-      "type": "none"
+      "type": "lookup"
     },
     "improved-duplicity": {
-      "type": "none"
+      "type": "lookup"
     },
     "improved-flare": {
-      "type": "none"
+      "type": "lookup"
     },
     "improved-minor-illusion": {
-      "type": "none"
+      "type": "cantrips",
+      "options": ["Minor Illusion"],
+      "count": 1,
+      "ability": "intelligence"
     },
     "improved-war-magic": {
-      "type": "none"
+      "type": "lookup"
     },
     "infiltration-expertise": {
-      "type": "none"
+      "type": "lookup"
     },
     "instinctive-charm": {
-      "type": "none"
+      "type": "lookup"
     },
     "intimidating-presence": {
-      "type": "none"
+      "type": "lookup"
     },
     "inured-to-undead": {
-      "type": "none"
+      "type": "lookup"
     },
     "know-your-enemy": {
-      "type": "none"
+      "type": "lookup"
     },
     "lands-stride": {
-      "type": "none"
+      "type": "lookup"
     },
     "mage-hand-legerdemain": {
-      "type": "none"
+      "type": "lookup"
     },
     "magical-ambush": {
-      "type": "none"
+      "type": "lookup"
     },
     "malleable-illusions": {
-      "type": "none"
+      "type": "lookup"
     },
     "master-of-nature": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": ["command", "speak with animals"]
+      },
+      "ability": "wisdom"
     },
     "master-transmuter": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "transmuter-master",
+      "count": 1,
+      "options": ["Major Transformation", "Panacea", "Restore Life", "Restore Youth"]
     },
     "metamagic-careful-spell": {
-      "type": "none"
+      "type": "lookup"
     },
     "metamagic-distant-spell": {
-      "type": "none"
+      "type": "lookup"
     },
     "metamagic-empowered-spell": {
-      "type": "none"
+      "type": "lookup"
     },
     "metamagic-extended-spell": {
-      "type": "none"
+      "type": "lookup"
     },
     "metamagic-heightened-spell": {
-      "type": "none"
+      "type": "lookup"
     },
     "metamagic-quickened-spell": {
-      "type": "none"
+      "type": "lookup"
     },
     "metamagic-subtle-spell": {
-      "type": "none"
+      "type": "lookup"
     },
     "metamagic-twinned-spell": {
-      "type": "none"
+      "type": "lookup"
     },
     "mindless-rage": {
-      "type": "none"
+      "type": "lookup"
     },
     "minor-alchemy": {
-      "type": "none"
+      "type": "lookup"
     },
     "minor-conjuration": {
-      "type": "none"
+      "type": "lookup"
     },
     "misty-escape": {
-      "type": "none"
+      "type": "lookup"
     },
     "multiattack": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "hunter-attack",
+      "count": 1,
+      "options": ["Volley", "Whirlwind Attack"]
     },
     "natural-recovery": {
-      "type": "none"
+      "type": "lookup"
     },
     "natures-sanctuary": {
-      "type": "none"
+      "type": "lookup"
     },
     "natures-ward": {
-      "type": "none"
+      "type": "lookup"
     },
     "necromancy-savant": {
-      "type": "none"
+      "type": "lookup"
     },
     "oath-spells-ancients": {
       "type": "innate",
@@ -760,204 +880,298 @@
       "ability": "charisma"
     },
     "open-hand-technique": {
-      "type": "none"
+      "type": "lookup"
     },
     "opportunist": {
-      "type": "none"
+      "type": "lookup"
     },
     "overchannel": {
-      "type": "none"
+      "type": "lookup"
     },
     "pact-boon-blade": {
-      "type": "none"
+      "type": "lookup"
     },
     "pact-boon-chain": {
-      "type": "none"
+      "type": "lookup"
     },
     "pact-boon-tome": {
-      "type": "none"
+      "type": "cantrips",
+      "class": "global",
+      "spellList": "all",
+      "count": 3,
+      "ability": "charisma"
     },
     "peerless-skill": {
-      "type": "none"
+      "type": "lookup"
     },
     "portent": {
-      "type": "none"
+      "type": "lookup"
     },
     "potent-cantrip": {
-      "type": "none"
+      "type": "lookup"
     },
     "potent-spellcasting": {
-      "type": "none"
+      "type": "lookup"
     },
     "potent-spellcasting-light": {
-      "type": "none"
+      "type": "lookup"
     },
     "primal-strike": {
-      "type": "none"
+      "type": "lookup"
     },
     "projected-ward": {
-      "type": "none"
+      "type": "lookup"
     },
     "purity-of-spirit": {
-      "type": "none"
+      "type": "lookup"
     },
     "quivering-palm": {
-      "type": "none"
+      "type": "lookup"
     },
     "rangers-companion": {
-      "type": "none"
+      "type": "lookup"
     },
     "read-thoughts": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "1": ["suggestion"]
+      },
+      "ability": "charisma"
     },
-    "relenless-avenger": {
-      "type": "none"
+    "relentless-avenger": {
+      "type": "lookup"
     },
     "relentless": {
-      "type": "none"
+      "type": "lookup"
     },
     "remarkable-athlete": {
-      "type": "none"
+      "type": "lookup"
     },
     "retaliation": {
-      "type": "none"
+      "type": "lookup"
     },
     "sculpt-spells": {
-      "type": "none"
+      "type": "lookup"
     },
     "second-story-work": {
-      "type": "none"
+      "type": "lookup"
     },
     "shadow-arts": {
-      "type": "none"
+      "type": "cantrips",
+      "options": ["Minor Illusion"],
+      "count": 1,
+      "ability": "wisdom"
     },
     "shadow-step": {
-      "type": "none"
+      "type": "lookup"
     },
     "shapechanger": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "10": ["polymorph"]
+      },
+      "ability": "intelligence"
     },
     "share-spells": {
-      "type": "none"
+      "type": "lookup"
     },
     "soul-of-vengeance": {
-      "type": "none"
+      "type": "lookup"
     },
     "spell-bombardment": {
-      "type": "none"
+      "type": "lookup"
     },
     "spell-resistance": {
-      "type": "none"
+      "type": "lookup"
     },
     "spell-thief": {
-      "type": "none"
+      "type": "lookup"
     },
     "spellcasting-arcane-trickster": {
-      "type": "none"
+      "type": "mainspell",
+      "spellcasting": {
+        "ability": "intelligence",
+        "progression": "third",
+        "cantripsKnown": {
+          "3": 2, "4": 2, "7": 3, "10": 4, "13": 4, "16": 4, "19": 5
+        },
+        "spellsKnown": {
+          "3": 3, "4": 4, "5": 4, "6": 4, "7": 5, "8": 6, "9": 6,
+          "10": 7, "11": 8, "12": 8, "13": 9, "14": 10, "15": 10,
+          "16": 11, "17": 11, "18": 11, "19": 12, "20": 13
+        },
+        "spellList": "wizard",
+        "spellSlotTable": {
+          "3": {"1": 2}, "4": {"1": 3}, "5": {"1": 3}, "6": {"1": 3},
+          "7": {"1": 4, "2": 2}, "8": {"1": 4, "2": 2}, "9": {"1": 4, "2": 2},
+          "10": {"1": 4, "2": 3}, "11": {"1": 4, "2": 3}, "12": {"1": 4, "2": 3},
+          "13": {"1": 4, "2": 3, "3": 2}, "14": {"1": 4, "2": 3, "3": 2},
+          "15": {"1": 4, "2": 3, "3": 2}, "16": {"1": 4, "2": 3, "3": 3},
+          "17": {"1": 4, "2": 3, "3": 3}, "18": {"1": 4, "2": 3, "3": 3},
+          "19": {"1": 4, "2": 3, "3": 3, "4": 1}, "20": {"1": 4, "2": 3, "3": 3, "4": 1}
+        }
+      }
     },
     "spellcasting-eldritch-knight": {
-      "type": "none"
+      "type": "mainspell",
+      "spellcasting": {
+        "ability": "intelligence",
+        "progression": "third",
+        "cantripsKnown": {
+          "3": 2, "4": 2, "7": 3, "10": 4, "13": 4, "16": 4, "19": 5
+        },
+        "spellsKnown": {
+          "3": 3, "4": 4, "5": 4, "6": 4, "7": 5, "8": 6, "9": 6,
+          "10": 7, "11": 8, "12": 8, "13": 9, "14": 10, "15": 10,
+          "16": 11, "17": 11, "18": 11, "19": 12, "20": 13
+        },
+        "spellList": "wizard",
+        "spellSlotTable": {
+          "3": {"1": 2}, "4": {"1": 3}, "5": {"1": 3}, "6": {"1": 3},
+          "7": {"1": 4, "2": 2}, "8": {"1": 4, "2": 2}, "9": {"1": 4, "2": 2},
+          "10": {"1": 4, "2": 3}, "11": {"1": 4, "2": 3}, "12": {"1": 4, "2": 3},
+          "13": {"1": 4, "2": 3, "3": 2}, "14": {"1": 4, "2": 3, "3": 2},
+          "15": {"1": 4, "2": 3, "3": 2}, "16": {"1": 4, "2": 3, "3": 3},
+          "17": {"1": 4, "2": 3, "3": 3}, "18": {"1": 4, "2": 3, "3": 3},
+          "19": {"1": 4, "2": 3, "3": 3, "4": 1}, "20": {"1": 4, "2": 3, "3": 3, "4": 1}
+        }
+      }
     },
     "spirit-seeker": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "3": ["beast sense", "speak with animals"]
+      },
+      "ability": "wisdom"
     },
     "spirit-walker": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "7": ["commune with nature"]
+      },
+      "ability": "wisdom"
     },
     "split-enchantment": {
-      "type": "none"
+      "type": "lookup"
     },
     "stormborn": {
-      "type": "none"
+      "type": "lookup"
     },
     "student-of-war": {
-      "type": "none"
+      "type": "proficiency",
+      "proficiencyType": "tool",
+      "options": ["Smith's tools", "Leatherworker's tools", "Carpenter's tools", "Woodcarver's tools", "Jeweler's tools", "Tinker's tools", "Cook's utensils", "Alchemist's supplies", "Herbalism kit", "Disguise kit", "Thieves' tools", "Navigator's tools", "Poisoner's kit", "Painter's supplies", "Brewer's supplies", "Calligrapher's supplies", "Mason's tools", "Potter's tools", "Weaver's tools"],
+      "count": 1
     },
     "superior-critical": {
-      "type": "none"
+      "type": "lookup"
     },
     "superior-hunters-defense": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "hunter-superior",
+      "count": 1,
+      "options": ["Evasion", "Uncanny Dodge", "Stand Against the Tide"]
     },
     "supreme-healing": {
-      "type": "none"
+      "type": "lookup"
     },
     "supreme-sneak": {
-      "type": "none"
+      "type": "lookup"
     },
     "survivor": {
-      "type": "none"
+      "type": "lookup"
     },
     "thiefs-reflexes": {
-      "type": "none"
+      "type": "lookup"
     },
     "third-eye": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "third-eye",
+      "count": 1,
+      "options": ["Darkvision", "See Invisibility", "Ethereal Sight", "Greater Comprehension"]
     },
     "thought-shield": {
-      "type": "none"
+      "type": "lookup"
     },
     "thousand-forms": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "13": ["alter self"]
+      },
+      "ability": "wisdom"
     },
     "thunderbolt-strike": {
-      "type": "none"
+      "type": "lookup"
     },
     "tides-of-chaos": {
-      "type": "none"
+      "type": "lookup"
     },
     "totem-spirit": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "totem-spirit",
+      "count": 1,
+      "options": ["Bear", "Eagle", "Wolf"]
     },
     "totemic-attunement": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "totem-attunement",
+      "count": 1,
+      "options": ["Bear", "Eagle", "Wolf"]
     },
     "tranquility": {
-      "type": "none"
+      "type": "lookup"
     },
     "transmutation-savant": {
-      "type": "none"
+      "type": "lookup"
     },
     "transmuters-stone": {
-      "type": "none"
+      "type": "choice",
+      "choiceType": "transmuter-stone",
+      "count": 1,
+      "options": ["Darkvision 60 ft", "Resistance to one damage type", "Speed +10 ft", "Proficiency in Constitution saves"]
     },
     "undead-thralls": {
-      "type": "none"
+      "type": "innate",
+      "spellLevels": {
+        "6": ["animate dead"]
+      },
+      "ability": "intelligence"
     },
     "undying-sentinel": {
-      "type": "none"
+      "type": "lookup"
     },
     "use-magic-device": {
-      "type": "none"
+      "type": "lookup"
     },
     "versatile-trickster": {
-      "type": "none"
+      "type": "lookup"
     },
     "visions-of-the-past": {
-      "type": "none"
+      "type": "lookup"
     },
     "war-magic": {
-      "type": "none"
+      "type": "lookup"
     },
     "war-priest": {
-      "type": "none"
+      "type": "lookup"
     },
     "warding-flare": {
-      "type": "none"
+      "type": "lookup"
     },
     "weapon-bond": {
-      "type": "none"
+      "type": "lookup"
     },
     "wholeness-of-body": {
-      "type": "none"
+      "type": "lookup"
     },
     "wild-magic-surge": {
-      "type": "none"
+      "type": "lookup"
     },
     "wrath-of-the-storm": {
-      "type": "none"
+      "type": "lookup"
     },
     "eldritchKnight": {
+      "type": "mainspell",
       "spellcasting": {
         "ability": "intelligence",
         "progression": "third",
@@ -1074,6 +1288,7 @@
       }
     },
     "arcaneTrickster": {
+      "type": "mainspell",
       "spellcasting": {
         "ability": "intelligence",
         "progression": "third",

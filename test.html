@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DND Smoke Tests</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        .pass { color: #2a7; }
+        .fail { color: #c33; font-weight: bold; }
+        .group { margin: 16px 0 4px; font-weight: bold; font-size: 1.1em; }
+        .case { margin-left: 16px; }
+        #summary { font-size: 1.2em; margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Smoke Tests</h1>
+    <div id="summary">Loading data...</div>
+    <div id="test-output"></div>
+
+    <script src="js/states/UserSelectedState.js"></script>
+    <script src="js/character/CharacterSheet.js"></script>
+    <script src="js/character/CharacterStorage.js"></script>
+    <script src="js/effects/RecalculationFlags.js"></script>
+    <script src="js/effects/EffectHandler.js"></script>
+    <script src="js/states/UIState.js"></script>
+    <script src="js/states/DataLoaders.js"></script>
+    <script src="js/render/TooltipSystem.js"></script>
+    <script src="js/render/Render.js"></script>
+    <script src="js/renderdebug.js"></script>
+    <script>
+    function getDefaultSheet() {
+        return {
+            name: '', lvl: 1, race: '', subrace: '', class: '', subclass: '',
+            stats: { strength: 8, dexterity: 8, constitution: 8, intelligence: 8, wisdom: 8, charisma: 8 },
+            statModifiers: { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 },
+            maxHp: 10, currentHp: 10, speed: 30, armorClass: 10, initiative: 0,
+            vision: { nightvision: null, dayvision: null },
+            proficiencies: { skills: [], weapons: [], armor: [], tools: [], savingThrows: [] },
+            expertises: [], languages: [], features: [], feats: [],
+            spellcastingAbility: null, spellSaveDC: 0, spellAttackMod: 0, spellPreparationType: null,
+            spellbookSpells: [], knownCantrips: [], knownSpells: [], preparedSpells: [],
+            spellSlots: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 },
+            maxCantripsKnown: 0, maxSpellsKnown: 0, ritualSpells: []
+        };
+    }
+    let passCount = 0, failCount = 0;
+    const out = document.getElementById('test-output');
+    const summary = document.getElementById('summary');
+
+    function logGroup(name) {
+        const div = document.createElement('div');
+        div.className = 'group';
+        div.textContent = name;
+        out.appendChild(div);
+    }
+
+    function assert(name, cond, detail) {
+        const div = document.createElement('div');
+        div.className = 'case ' + (cond ? 'pass' : 'fail');
+        div.textContent = (cond ? 'PASS' : 'FAIL') + ' — ' + name + (cond ? '' : ' (' + (detail || 'n/a') + ')');
+        out.appendChild(div);
+        if (cond) passCount++; else failCount++;
+    }
+
+    function eq(name, actual, expected) {
+        assert(name, actual === expected, 'expected ' + JSON.stringify(expected) + ', got ' + JSON.stringify(actual));
+    }
+
+    function approx(name, actual, expected, tolerance) {
+        const t = tolerance == null ? 0.0001 : tolerance;
+        assert(name, Math.abs(actual - expected) <= t, 'expected ' + expected + ' ± ' + t + ', got ' + actual);
+    }
+
+    function makeCharacter(opts) {
+        userSelection = resetUserSelection();
+        characterSheet = getDefaultSheet();
+        Object.assign(userSelection, opts.user || {});
+        if (opts.stats) {
+            Object.assign(userSelection.stats, opts.stats);
+        }
+        if (opts.feats) userSelection.feats = [...opts.feats];
+        if (opts.featChoices) userSelection.featChoices = opts.featChoices;
+        if (opts.selectedFeatureChoices) {
+            userSelection.selectedFeatureChoices = { ...userSelection.selectedFeatureChoices, ...opts.selectedFeatureChoices };
+        }
+        recalculateAll();
+    }
+
+    async function runTests() {
+        try {
+            await loadAllGameData();
+        } catch (e) {
+            summary.textContent = 'Data load failed: ' + e.message;
+            return;
+        }
+
+        logGroup('recalcMaxHp');
+        makeCharacter({ user: { class: 'fighter', lvl: 1 }, stats: { constitution: 14 } });
+        approx('fighter L1 CON 14 = (10+2)*1 = 12', characterSheet.maxHp, 12);
+
+        makeCharacter({ user: { class: 'fighter', lvl: 5 }, stats: { constitution: 14 } });
+        approx('fighter L5 CON 14 = (10+2)*5 = 60', characterSheet.maxHp, 60);
+
+        makeCharacter({ user: { class: 'wizard', lvl: 1 }, stats: { constitution: 10 } });
+        approx('wizard L1 CON 10 = (6+0)*1 = 6', characterSheet.maxHp, 6);
+
+        logGroup('Tough feat (+2 HP/level)');
+        makeCharacter({ user: { class: 'fighter', lvl: 1 }, stats: { constitution: 14 }, feats: ['Tough'] });
+        approx('fighter L1 + Tough: 12 + 2 = 14', characterSheet.maxHp, 14);
+
+        makeCharacter({ user: { class: 'fighter', lvl: 5 }, stats: { constitution: 14 }, feats: ['Tough'] });
+        approx('fighter L5 + Tough: 60 + 10 = 70', characterSheet.maxHp, 70);
+
+        logGroup('recalcStats (feat stat bonuses)');
+        makeCharacter({ user: { class: 'fighter', lvl: 1 }, stats: { strength: 10, constitution: 10 }, feats: ['Alert'] });
+        eq('Alert +1 DEX: 8 base + 1 = 9', characterSheet.stats.dexterity, 9);
+
+        makeCharacter({ user: { class: 'fighter', lvl: 1 }, stats: { strength: 8 }, feats: ['Observant'] });
+        eq('Observant default (any → first option = intelligence): +1 INT', characterSheet.stats.intelligence, 8 + 1);
+
+        makeCharacter({ user: { class: 'fighter', lvl: 1 }, stats: { wisdom: 8 }, feats: ['Observant'], featChoices: { observant: { stat: 'wisdom' } } });
+        eq('Observant WIS choice: +1 WIS', characterSheet.stats.wisdom, 8 + 1);
+
+        logGroup('recalcProficiencies (feat armor)');
+        makeCharacter({ user: { class: 'wizard', lvl: 1 }, feats: ['Lightly Armored'] });
+        assert('wizard + Lightly Armored has light armor', characterSheet.proficiencies.armor.includes('light'));
+
+        makeCharacter({ user: { class: 'wizard', lvl: 1 }, feats: ['Medium Armor Master'] });
+        assert('wizard + Medium Armor Master has medium armor', characterSheet.proficiencies.armor.includes('medium'));
+
+        logGroup('recalcSavingThrows (feat save prof)');
+        makeCharacter({ user: { class: 'wizard', lvl: 1 }, feats: ['Resilient'] });
+        const wizardBaseSaves = window.classesData.wizard.proficiencies.savingThrows;
+        assert('wizard base saves preserved', wizardBaseSaves.every(s => characterSheet.proficiencies.savingThrows.includes(s)));
+        assert('wizard + Resilient: +1 save (default first option = strength)', characterSheet.proficiencies.savingThrows.length === wizardBaseSaves.length + 1);
+        assert('+strength in saves', characterSheet.proficiencies.savingThrows.includes('strength'));
+
+        makeCharacter({ user: { class: 'wizard', lvl: 1 }, feats: ['Resilient'], featChoices: { 'resilient-__secondary-save': { stat: 'strength' } } });
+        assert('wizard + Resilient(STR): strength in saves', characterSheet.proficiencies.savingThrows.includes('strength'));
+        assert('wizard + Resilient(STR): only one new save added (no duplicate)', characterSheet.proficiencies.savingThrows.filter(s => s === 'strength').length === 1);
+
+        logGroup('recalcSpellcasting (full casters)');
+        makeCharacter({ user: { class: 'wizard', lvl: 1, race: 'human', stats: { intelligence: 14 } } });
+        eq('wizard L1 INT 14: spellcastingAbility=intelligence', characterSheet.spellcastingAbility, 'intelligence');
+        approx('wizard L1 INT 14: spellSaveDC = 8+2+2=12', characterSheet.spellSaveDC, 12);
+        approx('wizard L1 INT 14: spellAttackMod = 2+2=4', characterSheet.spellAttackMod, 4);
+        eq('wizard L1: spellPreparationType=spellbook', characterSheet.spellPreparationType, 'spellbook');
+        eq('wizard L1: spellSlots[1] = 2', characterSheet.spellSlots[1], 2);
+
+        makeCharacter({ user: { class: 'cleric', lvl: 1, race: 'human', stats: { wisdom: 14 } } });
+        eq('cleric L1 WIS 14: spellcastingAbility=wisdom', characterSheet.spellcastingAbility, 'wisdom');
+        eq('cleric L1: spellPreparationType=prepare', characterSheet.spellPreparationType, 'prepare');
+
+        logGroup('Eldritch Knight third-caster spellcasting');
+        makeCharacter({
+            user: { class: 'fighter', lvl: 3, race: 'human', stats: { intelligence: 14 } },
+            selectedFeatureChoices: { 'Martial Archetype': 'eldritchKnight' }
+        });
+        eq('fighter L3 + EK: spellcastingAbility=intelligence', characterSheet.spellcastingAbility, 'intelligence');
+        eq('fighter L3 + EK: spellProgression=third', characterSheet.spellProgression, 'third');
+        eq('fighter L3 + EK: spellPreparationType=known', characterSheet.spellPreparationType, 'known');
+        eq('fighter L3 + EK: spellListClass=wizard', characterSheet.spellListClass, 'wizard');
+        approx('fighter L3 + EK: spellSlots[1]=2 (third-caster L3)', characterSheet.spellSlots[1], 2);
+        eq('fighter L3 + EK: maxCantripsKnown=2 (third-caster L3)', characterSheet.maxCantripsKnown, 2);
+        eq('fighter L3 + EK: maxSpellsKnown=3 (third-caster L3)', characterSheet.maxSpellsKnown, 3);
+
+        logGroup('Arcane Trickster third-caster spellcasting');
+        makeCharacter({
+            user: { class: 'rogue', lvl: 3, race: 'human', stats: { intelligence: 14 } },
+            selectedFeatureChoices: { 'Roguish Archetype': 'arcaneTrickster' }
+        });
+        eq('rogue L3 + AT: spellcastingAbility=intelligence', characterSheet.spellcastingAbility, 'intelligence');
+        eq('rogue L3 + AT: spellSlots[1]=2', characterSheet.spellSlots[1], 2);
+
+        logGroup('Warlock pact magic (Charisma, known)');
+        makeCharacter({ user: { class: 'warlock', lvl: 1, race: 'human', stats: { charisma: 14 } } });
+        eq('warlock L1: spellcastingAbility=charisma', characterSheet.spellcastingAbility, 'charisma');
+        eq('warlock L1: spellPreparationType=known', characterSheet.spellPreparationType, 'known');
+
+        logGroup('Paladin Charisma casting');
+        makeCharacter({ user: { class: 'paladin', lvl: 2, race: 'human', stats: { charisma: 14 } } });
+        eq('paladin L2 CHA 14: spellcastingAbility=charisma', characterSheet.spellcastingAbility, 'charisma');
+
+        logGroup('Subclass override (composite name)');
+        makeCharacter({ user: { class: 'wizard', lvl: 6, race: 'human', stats: { intelligence: 14 } }, selectedFeatureChoices: { 'Arcane Tradition': 'abjurer' } });
+        assert('wizard L6 + abjurer has Projected Ward in subclass features', characterSheet.features.some(f => f.source === 'subclass' && f.name === 'projected-ward'));
+
+        logGroup('No-subclass fallback');
+        makeCharacter({ user: { class: 'fighter', lvl: 1, race: 'human' } });
+        eq('fighter L1 no subclass: spellcastingAbility=null', characterSheet.spellcastingAbility, null);
+
+        summary.textContent = passCount + ' passed, ' + failCount + ' failed';
+        summary.style.background = failCount === 0 ? '#e6ffe6' : '#ffe6e6';
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runTests);
+    } else {
+        runTests();
+    }
+    </script>
+</body>
+</html>

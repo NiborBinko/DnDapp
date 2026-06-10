@@ -20,10 +20,11 @@ function recalcAll() {
     
     recalcRaceEffects(); recalcClassBase(); recalcFeatures();
     clearRemovedFeatureSelections();
-    recalcProficiencies(); recalcKnownCantrips();
+    recalcChoices(); // Create choice entries + add features from selected options
+    recalcProficiencies(); recalcKnownCantrips(); // Processes choice-option prof features
     recalcStats();
     recalcStatModifiers();
-    recalcMaxHp();  recalcVision(); recalcSpeed();
+    recalcMaxHp();  recalcVision(); recalcSpeed(); // Processes choice-option vision features
     recalcSpellcasting(); recalcSpellSlots(); recalcInnateSpells(); recalcFeats();
     recalcCantrips(); recalcMaxSpells();
     recalcSavingThrows(); recalcResistances();
@@ -78,17 +79,30 @@ function recalcResistances() {
  * Clears selections for features that no longer exist in characterSheet.features
  */
 function clearRemovedFeatureSelections() {
-    const currentFeatureNames = characterSheet.features ? characterSheet.features.map(f => f.name.toLowerCase()) : [];
+    const currentFeatures = characterSheet.features || [];
     Object.keys(userSelection.featureChoices).forEach(key => {
-        // Always delete "+1 proficiency" - handled by increasing skill limit instead
-        if (key.toLowerCase() === '+1 proficiency') {
+        const lowerKey = key.toLowerCase();
+        if (lowerKey === '+1 proficiency') {
             delete userSelection.featureChoices[key];
             return;
         }
-        const featureStillExists = currentFeatureNames.some(name => key === name || key.startsWith(name + '-'));
-        if (!featureStillExists) {
-            delete userSelection.featureChoices[key];
+        // Key format for class features: {name}-{level}-{instanceIndex}
+        // Non-class features: just {name}
+        const levelSuffixMatch = lowerKey.match(/^(.+)-(\d+)-(\d+)$/);
+        if (levelSuffixMatch) {
+            const baseName = levelSuffixMatch[1];
+            const featureLevel = parseInt(levelSuffixMatch[2], 10);
+            const instanceExists = currentFeatures.some(f => 
+                f.name.toLowerCase() === baseName && 
+                (f.level || 0) === featureLevel
+            );
+            if (instanceExists) return;
+        } else {
+            // Non-class features: exact match or startsWith for subclass features
+            const featureStillExists = currentFeatures.some(f => key === f.name.toLowerCase() || key.startsWith(f.name.toLowerCase() + '-'));
+            if (featureStillExists) return;
         }
+        delete userSelection.featureChoices[key];
     });
 }
 
@@ -154,8 +168,18 @@ function getAllFeats() {
 
 // Helper: Get cantrips based on class and spellList
 function getAvailableCantrips(effect) {
-    const cls = effect.class || 'wizard';
     const spellListType = effect.spellList;
+    
+    if (effect.class === 'global') {
+        const allCantrips = new Set();
+        Object.values(window.classesData || {}).forEach(cls => {
+            const cantrips = cls.spellList?.['0'] || [];
+            cantrips.forEach(c => allCantrips.add(c));
+        });
+        return [...allCantrips].sort();
+    }
+    
+    const cls = effect.class || 'wizard';
     const classData = window.classesData?.[cls];
     
     if (!classData?.spellList) return [];
@@ -662,6 +686,15 @@ function recalcSpellcasting() {
 function recalcInnateSpells() {
     characterSheet.innateSpells = [];
 
+    function buildSourceLabel(feature) {
+        const id = feature.sourceId || feature.source;
+        const name = feature.source === 'race' ? (window.racesData?.[id]?.name || id)
+            : feature.source === 'class' ? (window.classesData?.[id]?.name || id)
+            : id;
+        const featureName = feature.name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        return `${name} - ${featureName}`;
+    }
+
     characterSheet.features?.forEach(feature => {
         const effect = getFeatureEffect(feature.name);
         if (effect?.type === 'innate') {
@@ -671,20 +704,22 @@ function recalcInnateSpells() {
                 const selectedTerrain = choiceEntry?.selected?.filter(s => s !== null)?.[0];
                 if (selectedTerrain && effect.terrainSpells?.[selectedTerrain]) {
                     const ability = effect.ability || null;
+                    const origin = `${buildSourceLabel(feature)} (${selectedTerrain})`;
                     Object.keys(effect.terrainSpells[selectedTerrain]).forEach(lvl => {
                         if (userSelection.lvl >= parseInt(lvl)) {
                             effect.terrainSpells[selectedTerrain][lvl].forEach(spell => {
-                                characterSheet.innateSpells.push({ name: spell, ability: ability });
+                                characterSheet.innateSpells.push({ name: spell, ability: ability, origin: origin });
                             });
                         }
                     });
                 }
             } else {
                 const ability = effect.ability || null;
+                const origin = buildSourceLabel(feature);
                 Object.keys(effect.spellLevels || {}).forEach(lvl => {
                     if (userSelection.lvl >= parseInt(lvl)) {
                         effect.spellLevels[lvl].forEach(spell => {
-                            characterSheet.innateSpells.push({ name: spell, ability: ability });
+                            characterSheet.innateSpells.push({ name: spell, ability: ability, origin: origin });
                         });
                     }
                 });
@@ -830,26 +865,68 @@ function recalcFeats() {
  * @requires characterSheet.features, window.descriptions
  * @modifies characterSheet.stats
  */
+function optionNameToEffectKey(name) {
+    return name.toLowerCase().replace(/'/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function recalcChoices(skipFeatureAdding) {
+    if (!characterSheet.features) return;
+    const currentLevel = userSelection.lvl || 1;
+    characterSheet.features.forEach(feature => {
+        const effect = getFeatureEffect(feature.name, feature.source);
+        if (!effect || effect.type !== 'choice') return;
+        const countMap = effect.count;
+        let resolvedCount = 1;
+        if (typeof countMap === 'object' && !Array.isArray(countMap)) {
+            resolvedCount = 1;
+            Object.entries(countMap).forEach(([lvlStr, cnt]) => {
+                if (currentLevel >= parseInt(lvlStr, 10)) resolvedCount = cnt;
+            });
+        } else {
+            resolvedCount = parseInt(countMap, 10) || 1;
+        }
+        const options = effect.options || [];
+        if (options.length === 0) return;
+        const resolvedEffect = { ...effect, count: resolvedCount, options };
+        const extraFields = { choiceType: effect.choiceType };
+        if (effect.levelPrereqs) extraFields.levelPrereqs = effect.levelPrereqs;
+        if (effect.choiceType === 'resistance-type') extraFields.proficiencyType = 'resistance';
+        const selections = ensureFeatureChoice(feature, resolvedEffect, options, 'choice', extraFields);
+        
+        // Process individual selected options as features (for non-lookup effects)
+        // Skipped when called from EFFECT_DISPATCH to avoid timing issues
+        if (!skipFeatureAdding && selections && selections.length > 0) {
+            selections.forEach(optName => {
+                const optKey = optionNameToEffectKey(optName);
+                const optEffect = window.classEffectsData?.effects?.[optKey] || window.subclassEffectsData?.effects?.[optKey] || null;
+                if (optEffect && optEffect.type !== 'lookup' && optEffect.type !== 'none') {
+                    const alreadyPresent = characterSheet.features.some(f => f.name.toLowerCase() === optKey);
+                    if (!alreadyPresent) {
+                        characterSheet.features.push({
+                            name: optKey,
+                            source: 'choice-option',
+                            sourceId: optKey,
+                            level: currentLevel
+                        });
+                    }
+                }
+            });
+        }
+    });
+}
+window.recalcChoices = recalcChoices;
+
 function recalcStats() {
     const featBonuses = getFeatStatBonuses();
     const raceBonuses = window.raceStatBonuses || {};
-    const choiceBonuses = window.featureChoiceBonuses || {};
 
     const statCap = window.statCap || {};
     window.STAT_NAMES.forEach(stat => {
         const cap = statCap[stat] || 20;
-        characterSheet.stats[stat] = Math.min(cap, (userSelection.stats[stat] || 8) + (raceBonuses[stat] || 0) + (choiceBonuses[stat] || 0) + (featBonuses[stat] || 0));
+        characterSheet.stats[stat] = Math.min(cap, (userSelection.stats[stat] || 8) + (raceBonuses[stat] || 0) + (featBonuses[stat] || 0));
     });
 
     recalcFeaturesByType('stat', (effect, feature) => {
-        // Skip if already handled by applyChoiceBonuses (prevents double bonus)
-        // Use prefix matching since featureChoices keys now include suffixes like "-4-0"
-        const baseKey = feature.name.toLowerCase();
-        const alreadyHandled = Object.entries(userSelection.featureChoices || {}).some(([k, v]) => 
-            (k === baseKey || k.startsWith(baseKey + '-')) && v.selected?.some(s => s !== null)
-        );
-        if (alreadyHandled) return;
-        
         const selections = ensureFeatureChoice(feature, effect, effect.options, 'stat', { value: effect.value });
         if (selections) {
             selections.forEach(stat => {

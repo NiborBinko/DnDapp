@@ -858,3 +858,22 @@ button {
     padding: 3px 0;
     font-size: 0.95em;
 }
+.spellcasting-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 0.85em;
+}
+.spellcasting-table th,
+.spellcasting-table td {
+    border: 1px solid var(--border);
+    padding: 3px 6px;
+    text-align: center;
+}
+.spellcasting-table th {
+    background: var(--bg-raised);
+    font-weight: bold;
+}
+.spellcasting-table tr:nth-child(even) {
+    background: var(--bg-subtle);
+}
